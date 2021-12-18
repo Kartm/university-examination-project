@@ -8,7 +8,7 @@ This is a starter project containing:
 1. Clone the repo
 2. Install Docker on your PC
 3. Launch Docker
-4. Run: `docker-compose up` from the root directory
+4. Run from the **ROOT PROJECT DIRECTORY**: `docker-compose up`
     * frontend is launched at http://localhost:8080/ 
     * backend is launched at http://localhost:3000/api 
     * database is launched at http://localhost:3306/

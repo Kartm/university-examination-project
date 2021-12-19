@@ -18,6 +18,12 @@ In case of problems with Docker, you can clean it by executing these two command
 docker rm -f $(docker ps -a -q) 
 docker system prune -a -f --volumes
 ```
+In case of problems with mysql metada or any docker container build on `docker-compose build` with arm64 machines
+1. Type `softwareupdate --install-rosetta.` on your terminal
+2. Instead of docker-compose build use `DOCKER_DEFAULT_PLATFORM=linux/amd64 docker-compose build` on terminal in your selected IDE
+
+
+
 
 
 # Accessing the database

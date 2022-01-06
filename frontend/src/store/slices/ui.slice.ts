@@ -7,7 +7,7 @@ const slice = createSlice({
   },
   reducers: {
     updateTitle: (state, action) => {
-      state.title = action.payload;
+      return { ...state, title: action.payload };
     },
     //   logoutSuccess: (state, action) => {
     //     state.user = null;

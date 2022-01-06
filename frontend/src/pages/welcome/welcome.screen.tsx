@@ -13,7 +13,7 @@ const WelcomeScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(updateTitleAction("Welcome!"));
+    dispatch(updateTitleAction("Pass | Examination system"));
   });
 
   return (

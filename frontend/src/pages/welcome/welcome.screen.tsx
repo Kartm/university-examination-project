@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import Container from "../../components/style/container.component";
 import Content from "../../components/style/content.component";
@@ -14,7 +14,7 @@ const WelcomeScreen = () => {
 
   useEffect(() => {
     dispatch(updateTitleAction("Welcome!"));
-  }, []);
+  });
 
   return (
     <Container>

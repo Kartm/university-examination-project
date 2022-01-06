@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Redirect, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import Container from "../../../components/style/container.component";
 import Content from "../../../components/style/content.component";

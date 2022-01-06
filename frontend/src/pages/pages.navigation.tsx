@@ -22,7 +22,7 @@ import { RootState } from "../store/configure.store";
 import { useSelector } from "react-redux";
 
 const PagesNavigation = () => {
-  const { title } = useSelector((state) => state.ui);
+  const { title } = useSelector((state: RootState) => state.ui);
 
   useEffect(() => {
     console.log(title);

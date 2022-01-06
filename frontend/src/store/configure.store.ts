@@ -1,9 +1,14 @@
-import { configureStore } from '@reduxjs/toolkit';
-import MeSlice from './slices/me.slice';
+import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers } from "redux";
+import ui from "./slices/ui.slice";
 
-export const store = configureStore({
-    reducer: {
-        meStore: MeSlice.reducer
-    }
-})
-export type RootState = ReturnType<typeof store.getState>
+const reducer = combineReducers({
+  ui,
+});
+
+const store = configureStore({
+  reducer,
+});
+
+export default store;
+export type RootState = ReturnType<typeof store.getState>;

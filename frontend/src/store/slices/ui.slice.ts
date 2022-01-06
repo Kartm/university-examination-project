@@ -7,7 +7,7 @@ const slice = createSlice({
   },
   reducers: {
     updateTitle: (state, action) => {
-      return { ...state, title: action.payload };
+      state.title = action.payload;
     },
     //   logoutSuccess: (state, action) => {
     //     state.user = null;
@@ -17,11 +17,10 @@ const slice = createSlice({
 export default slice.reducer;
 // actions
 const { updateTitle } = slice.actions;
-export const updateTitleAction =
-  ({ title }) =>
-  async (dispatch) => {
-    dispatch(updateTitle({ title }));
-  };
+export const updateTitleAction = (title: string) => async (dispatch) => {
+  document.title = title;
+  dispatch(updateTitle(title));
+};
 // export const logout = () => async (dispatch) => {
 //   try {
 //     // const res = await api.post('/api/auth/logout/')

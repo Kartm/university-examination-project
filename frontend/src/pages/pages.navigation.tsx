@@ -22,15 +22,11 @@ import { RootState } from "../store/configure.store";
 import { useSelector } from "react-redux";
 
 const PagesNavigation = () => {
-  const { title } = useSelector((state: RootState) => state.ui);
-
-  useEffect(() => {
-    console.log(title);
-  }, []);
+  const ui = useSelector((state: RootState) => state.ui);
 
   return (
     <Router>
-      <Header title={title} />
+      <Header title={ui.title} />
       <Switch>
         <Route exact path="/" component={WelcomeScreen} />
         <Route exact path="/create" component={CreateScreen} />
@@ -63,9 +59,6 @@ const PagesNavigation = () => {
           path="/:testParticipateUuid/finish"
           component={ParticipateFinishScreen}
         />
-        {/* <Route exact path="/signin" component={SigninScreen} />
-        <Route exact path="/signup" component={SignupScreen} />
-        <Route exact path="/connected" component={ConnectedScreen} /> */}
         <Route exact path="/404" component={NotFoundScreen} />
         <Redirect to="/404" />
       </Switch>

@@ -13,7 +13,7 @@ const WelcomeScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(updateTitleAction({ title: "Welcome!" }));
+    dispatch(updateTitleAction("Welcome!"));
   }, []);
 
   return (

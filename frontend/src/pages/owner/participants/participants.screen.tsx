@@ -27,7 +27,7 @@ const ParticipantsScreen = () => {
           Participants screen
           {testOwnerUuid}
         </Text>
-        <Link to={`/${testOwnerUuid}/questions`} style={{ marginRight: 10 }}>
+        <Link to={`/${testOwnerUuid}/editor/questions`} style={{ marginRight: 10 }}>
           <Button text="Next (add questions)" color="primary" />
         </Link>
       </Content>

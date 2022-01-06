@@ -5,11 +5,52 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
     // const res = await get(`/users/me`);
     // return await res.json();
 
+    const mockExam: Exam = {
+        uuid: 'placeholder-exam-uuid',
+        title: 'Super cool exam',
+        settings: {
+            settings_uuid: 'xdddd',
+            allow_going_back: false,
+            show_points_per_question: false,
+            show_results_overview: false,
+        },
+        questions: [
+            {
+                question_uuid: 'eins',
+                name: 'question 1',
+                question_type: {
+                    question_type_uuid: 'open-uuid',
+                    name: 'OPEN'
+                },
+                question_choices: [
+
+                ]
+            },
+            {
+                question_uuid: 'zwei',
+                name: 'question 2',
+                question_type: {
+                    question_type_uuid: 'single-choice-uuid',
+                    name: 'SINGLE_CHOICE'
+                },
+                question_choices: [
+                    {
+                        question_choice_id: 'a',
+                        is_correct: true,
+                        text: 'AAA'
+                    },
+                    {
+                        question_choice_id: 'b',
+                        is_correct: false,
+                        text: 'BBB'
+                    }
+                ]
+            }
+        ]
+    }
+
     const mockData = await new Promise((res, rej) => {
-        res({
-            uuid: '123e4567-e89b-12d3-a456-426652340000',
-            title: 'test exam'
-        } as Exam)
+        res(mockExam)
     });
 
     return {

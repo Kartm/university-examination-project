@@ -32,7 +32,7 @@ const ParticipateScreen = () => {
       <Content>
         <Text h1 style={{ marginBottom: 20 }}>
           Participate screen
-          {testParticipateUuid}
+          <br/>[TODO]
         </Text>
         <Link
           to={`/${testParticipateUuid}/questions`}

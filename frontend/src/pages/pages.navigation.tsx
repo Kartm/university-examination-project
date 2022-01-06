@@ -33,15 +33,15 @@ const PagesNavigation = () => {
         <Route exact path="/:testOwnerUuid/editor" component={SettingsScreen} />
         <Route
           exact
-          path="/:testOwnerUuid/participants"
+          path="/:testOwnerUuid/editor/participants"
           component={ParticipantsScreen}
         />
         <Route
           exact
-          path="/:testOwnerUuid/questions"
+          path="/:testOwnerUuid/editor/questions"
           component={QuestionsScreen}
         />
-        <Route exact path="/:testOwnerUuid/finish" component={FinishScreen} />
+        <Route exact path="/:testOwnerUuid/editor/finish" component={FinishScreen} />
         <Route exact path="/:testOwnerUuid/results" component={ResultsScreen} />
 
         <Route

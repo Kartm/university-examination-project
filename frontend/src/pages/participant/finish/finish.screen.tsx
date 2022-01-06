@@ -4,8 +4,10 @@ import { useParams } from "react-router-dom";
 import Container from "../../../components/style/container.component";
 import Content from "../../../components/style/content.component";
 import Text from "../../../components/style/text.component";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {updateTitleAction} from "../../../store/slices/ui.slice";
+import {RootState} from "../../../store/configure.store";
+import {getExamByUuid} from "../../../store/slices/exam.slice";
 
 interface ParticipateFinishParams {
   testParticipateUuid: string;
@@ -14,9 +16,14 @@ interface ParticipateFinishParams {
 const ParticipateFinishScreen = () => {
   const { testParticipateUuid } = useParams<ParticipateFinishParams>();
   const dispatch = useDispatch();
+  const examState = useSelector((state: RootState) => state.exam);
 
   useEffect(() => {
-    dispatch(updateTitleAction("Pass | {exam_name} - finish attempt"));
+    dispatch(getExamByUuid(testParticipateUuid));
+  }, []);
+
+  useEffect(() => {
+    dispatch(updateTitleAction(`Pass | ${examState.exam?.title || ''} - finish attempt`));
   });
 
   return (
@@ -24,7 +31,7 @@ const ParticipateFinishScreen = () => {
       <Content>
         <Text h1 style={{ marginBottom: 20 }}>
           Finish screen
-          {testParticipateUuid}
+          <br/> [TODO]
         </Text>
       </Content>
     </Container>

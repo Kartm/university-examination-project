@@ -27,7 +27,7 @@ const SettingsScreen = () => {
           Settings screen
           {testOwnerUuid}
         </Text>
-        <Link to={`/${testOwnerUuid}/participants`} style={{ marginRight: 10 }}>
+        <Link to={`/${testOwnerUuid}/editor/participants`} style={{ marginRight: 10 }}>
           <Button text="Next (add participants)" color="primary" />
         </Link>
       </Content>

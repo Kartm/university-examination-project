@@ -27,7 +27,7 @@ const QuestionsScreen = () => {
           Questions screen
           {testOwnerUuid}
         </Text>
-        <Link to={`/${testOwnerUuid}/finish`} style={{ marginRight: 10 }}>
+        <Link to={`/${testOwnerUuid}/editor/finish`} style={{ marginRight: 10 }}>
           <Button text="Next (finish)" color="primary" />
         </Link>
       </Content>

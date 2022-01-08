@@ -1,4 +1,4 @@
-import { Body, ConflictException, Controller, ForbiddenException, Get, HttpStatus, NotFoundException, Param, Post, Res } from '@nestjs/common';
+import { Body, ConflictException, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common';
 import { AuthUser } from '../../shared/decorators/auth-user.decorator';
 import { Roles } from '../../shared/decorators/roles.decorators';
 import { User } from '../users/interfaces/user.interface';
@@ -22,7 +22,7 @@ export class AuthController {
         if (!user)
             throw new NotFoundException("No user found");
 
-        var token = await this.authService.createToken(user);
+        const token = await this.authService.createToken(user);
 
         return {
             token
@@ -52,8 +52,8 @@ export class AuthController {
     @Get('refresh-token')
     @Roles("user", "premium", "admin")
     async refreshToken(@AuthUser() user: JwtPayload): Promise<{ me: User, token: string }> {
-        var me = await this.usersService.findMe(user.id);
-        var token = await this.authService.createToken(me);
+        const me = await this.usersService.findMe(user.id);
+        const token = await this.authService.createToken(me);
 
         return {
             me,

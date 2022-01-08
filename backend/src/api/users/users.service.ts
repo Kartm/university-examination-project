@@ -18,7 +18,7 @@ export class UsersService {
         userEntity.email = user.email;
         userEntity.role = "user";
 
-        let userCreated = await this.userRepository.save(userEntity);
+        const userCreated = await this.userRepository.save(userEntity);
         delete userCreated.password;
         return userCreated;
     }

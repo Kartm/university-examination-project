@@ -1,25 +1,69 @@
-import React from 'react';
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import HomeScreen from './home/home.screen';
-import SigninScreen from './signin/signin.screen';
-import SignupScreen from './signup/signup.screen';
-import ConnectedScreen from './connected/connected.screen';
-import NotFoundScreen from './404/not-found.screen';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
+import WelcomeScreen from "./welcome/welcome.screen";
+import NotFoundScreen from "./404/not-found.screen";
+import CreateScreen from "./owner/create/create.screen";
+import SettingsScreen from "./owner/settings/settings.screen";
+import ParticipantsScreen from "./owner/participants/participants.screen";
+import QuestionsScreen from "./owner/questions/questions.screen";
+import ResultsScreen from "./owner/results/results.screen";
+import FinishScreen from "./owner/finish/finish.screen";
+import ParticipateScreen from "./participant/participate/participate.screen";
+import ParticipateQuestionsScreen from "./participant/questions/questions.screen";
+import ParticipateFinishScreen from "./participant/finish/finish.screen";
+import { Header } from "../components/style/header.component";
+
+import { RootState } from "../store/configure.store";
+import { useSelector } from "react-redux";
 
 const PagesNavigation = () => {
+  const ui = useSelector((state: RootState) => state.ui);
 
-    return (
-        <Router>
-            <Switch>
-                <Route exact path="/" component={HomeScreen} />
-                <Route exact path="/signin" component={SigninScreen} />
-                <Route exact path="/signup" component={SignupScreen} />
-                <Route exact path="/connected" component={ConnectedScreen} />
-                <Route exact path="/404" component={NotFoundScreen} />
-                <Redirect to='/404' />
-            </Switch>
-        </Router>
-    );
-}
+  return (
+    <Router>
+      <Header title={ui.title} />
+      <Switch>
+        <Route exact path="/" component={WelcomeScreen} />
+        <Route exact path="/create" component={CreateScreen} />
+        <Route exact path="/:testOwnerUuid/editor" component={SettingsScreen} />
+        <Route
+          exact
+          path="/:testOwnerUuid/editor/participants"
+          component={ParticipantsScreen}
+        />
+        <Route
+          exact
+          path="/:testOwnerUuid/editor/questions"
+          component={QuestionsScreen}
+        />
+        <Route exact path="/:testOwnerUuid/editor/finish" component={FinishScreen} />
+        <Route exact path="/:testOwnerUuid/results" component={ResultsScreen} />
+
+        <Route
+          exact
+          path="/:testParticipateUuid/"
+          component={ParticipateScreen}
+        />
+        <Route
+          exact
+          path="/:testParticipateUuid/questions"
+          component={ParticipateQuestionsScreen}
+        />
+        <Route
+          exact
+          path="/:testParticipateUuid/finish"
+          component={ParticipateFinishScreen}
+        />
+        <Route exact path="/404" component={NotFoundScreen} />
+        <Redirect to="/404" />
+      </Switch>
+    </Router>
+  );
+};
 
 export default PagesNavigation;

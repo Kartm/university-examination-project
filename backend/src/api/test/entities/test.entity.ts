@@ -11,11 +11,11 @@ export class TestEntity implements TestInterface
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => SettingsEntity, settings => settings.tests, {cascade :true})
-    settings: SettingsInterface;
-
-    @ManyToOne(() => OwnerEntity, owner => owner.tests, {cascade :true})
-    owner : OwnerInterface;
+    // @ManyToOne(() => SettingsEntity, settings => settings.tests, {cascade :true})
+    // settings: SettingsInterface;
+    //
+    // @ManyToOne(() => OwnerEntity, owner => owner.tests, {cascade :true})
+    // owner : OwnerInterface;
 
     @Column()
     name : string;

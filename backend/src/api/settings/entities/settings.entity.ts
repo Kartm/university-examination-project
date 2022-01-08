@@ -18,7 +18,7 @@ export class SettingsEntity implements SettingsInterface
     @Column()
     show_results_overview: boolean;
 
-    @OneToMany(() => TestEntity, test => test.settings)
-    tests: TestInterface[];
+    // @OneToMany(() => TestEntity, test => test.settings)
+    // tests: TestInterface[];
 
 }

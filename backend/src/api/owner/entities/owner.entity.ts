@@ -12,7 +12,7 @@ export class OwnerEntity implements OwnerInterface
     @Column()
     name: string;
 
-    @OneToMany(() => TestEntity, test => test.owner)
-    tests: TestInterface[]
+    // @OneToMany(() => TestEntity, test => test.owner)
+    // tests: TestInterface[]
 
 }

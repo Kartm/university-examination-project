@@ -21,10 +21,10 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^7.0.0",
-    "@nestjs/core": "^7.0.0",
-    "@nestjs/platform-express": "^7.0.0",
-    "@nestjs/typeorm": "^7.1.4",
+    "@nestjs/common": "^7.6.18",
+    "@nestjs/core": "^7.6.18",
+    "@nestjs/platform-express": "^7.6.18",
+    "@nestjs/typeorm": "^7.1.5",
     "aws-sdk": "^2.786.0",
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.4.0",

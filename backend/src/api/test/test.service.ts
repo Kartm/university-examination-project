@@ -12,23 +12,31 @@ export class TestService
 
     tests : TestInterface[] = [];
 
+    // async getAllTests() {
+    //     // return this.tests;
+    //     return this.testRepository
+    //         .createQueryBuilder("Test")
+    //         .getMany()
+    // }
+    //
+    // async addTest(test: TestInterface) {
+    //     // this.tests.push(test);
+    //     // return test;
+    //     const testEntity = new TestEntity()
+    //     testEntity.id = test.id;
+    //     testEntity.settings = test.settings
+    //     testEntity.name = test.name
+    //     testEntity.owner = test.owner;
+    //     testEntity.owner_link = test.owner_link;
+    //     return await this.testRepository.save(testEntity);
+    // }
     async getAllTests() {
-        // return this.tests;
-        return this.testRepository
-            .createQueryBuilder("Test")
-            .getMany()
+        return this.tests;
     }
 
     async addTest(test: TestInterface) {
-        // this.tests.push(test);
-        // return test;
-        const testEntity = new TestEntity()
-        testEntity.id = test.id;
-        testEntity.settings = test.settings
-        testEntity.name = test.name
-        testEntity.owner = test.owner;
-        testEntity.owner_link = test.owner_link;
-        return await this.testRepository.save(testEntity);
+        this.tests.push(test);
+        return test;
     }
 
 }

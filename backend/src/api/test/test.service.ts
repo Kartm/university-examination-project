@@ -1,15 +1,12 @@
-import {HttpException, HttpStatus, Injectable, NotFoundException} from "@nestjs/common";
+import {Injectable} from "@nestjs/common";
 import {InjectRepository} from "@nestjs/typeorm";
-import {TestEntity} from "./entities/test.entity";
 import {Repository} from "typeorm";
 import {TestInterface} from "./interfaces/test.interface";
-import {FindByIndex} from "../../APIHelpers/FindByIndex";
+import {CommonApi} from "../../APIHelpers/CommonApi";
 import {v4 as uuidv4} from 'uuid';
 
 @Injectable()
 export class TestService {
-    constructor(@InjectRepository(TestEntity) private testRepository: Repository<TestEntity>) {
-    }
 
     tests: TestInterface[] = [];
 
@@ -20,17 +17,15 @@ export class TestService {
 
     addTest(test: TestInterface) {
 
-        test.id = uuidv4();
-        this.tests.push(test);
-        return test;
+        return CommonApi.addEntity(test, this.tests)
     }
 
     getOneTest(id: string) : TestInterface {
-        return FindByIndex.findEntity(id, this.tests)[0];
+        return CommonApi.findEntity(id, this.tests)[0];
     }
 
     updateTest(id: string, newTest: TestInterface) {
-        const test : TestInterface = FindByIndex.findEntity(id, this.tests)[0];
+        const test : TestInterface = CommonApi.findEntity(id, this.tests)[0];
         if(newTest.settings)
         {
             test.settings = newTest.settings
@@ -51,8 +46,7 @@ export class TestService {
     }
 
     removeTest(id: string) {
-        const arrayIndex = FindByIndex.findEntity(id, this.tests)[1]
-        this.tests.splice(arrayIndex,1);
+        CommonApi.removeEntity(id, this.tests)
     }
 
 

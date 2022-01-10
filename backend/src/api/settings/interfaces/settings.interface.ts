@@ -1,10 +1,7 @@
-import {TestInterface} from "../../test/interfaces/test.interface";
+import {IIdHaver} from "../../../APIHelpers/IIdHaver";
 
-export interface SettingsInterface
-{
-    id?: number;
+export interface SettingsInterface extends IIdHaver {
     show_results_overview?: boolean;
     allow_going_back?: boolean;
     show_points_per_question?: boolean;
-    tests?: TestInterface[];
 }

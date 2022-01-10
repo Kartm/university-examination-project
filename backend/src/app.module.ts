@@ -11,7 +11,8 @@ import {AuthGuard} from './shared/guards/auth.guard';
 import {ConfigService} from './shared/config/config.service';
 import {TestModule} from "./api/test/test.module";
 import {SettingsModule} from "./api/settings/settings.module";
-import {QuestionTypeModule} from "./api/QuestionType/questionType.module";
+import {QuestionTypeModule} from "./api/questionType/questionType.module";
+import {OwnerModule} from "./api/owner/owner.module";
 
 @Module({
     imports: [
@@ -35,7 +36,8 @@ import {QuestionTypeModule} from "./api/QuestionType/questionType.module";
         ConfigModule,
         TestModule,
         SettingsModule,
-        QuestionTypeModule
+        QuestionTypeModule,
+        OwnerModule
     ],
     controllers: [
         AppController

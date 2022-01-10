@@ -1,8 +1,6 @@
-import {TestInterface} from "../../test/interfaces/test.interface";
+import {IIdHaver} from "../../../APIHelpers/IIdHaver";
 
-export interface OwnerInterface
+export interface OwnerInterface extends IIdHaver
 {
-    id_owner?: number;
     name?: string;
-    tests?: TestInterface[]
 }

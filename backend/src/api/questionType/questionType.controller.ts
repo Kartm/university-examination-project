@@ -17,7 +17,6 @@ export class QuestionTypeController
     @Get(":id")
     getOneQuestionType(@Param("id") id : string)
     {
-        console.log(id);
         return this.questionTypeService.getOneQuestionType(id);
     }
 

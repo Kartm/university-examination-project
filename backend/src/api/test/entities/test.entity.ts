@@ -9,7 +9,7 @@ import {SettingsEntity} from "../../settings/entities/settings.entity";
 export class TestEntity implements TestInterface
 {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: string;
 
     // @ManyToOne(() => SettingsEntity, settings => settings.tests, {cascade :true})
     // settings: SettingsInterface;

@@ -13,28 +13,15 @@ export class TestService {
 
     tests: TestInterface[] = [];
 
-    // async getAllTests() {
-    //     // return this.tests;
-    //     return this.testRepository
-    //         .createQueryBuilder("Test")
-    //         .getMany()
-    // }
-    //
-    // async addTest(test: TestInterface) {
-    //     const testEntity = new TestEntity()
-    //     testEntity.id = test.id;
-    //     testEntity.settings = test.settings
-    //     testEntity.name = test.name
-    //     testEntity.owner = test.owner;
-    //     testEntity.owner_link = test.owner_link;
-    //     return await this.testRepository.save(testEntity);
-    // }
+
     getAllTests() {
         return this.tests;
     }
 
     addTest(test: TestInterface) {
+
         test.id = uuidv4();
+        console.log(test.id);
         this.tests.push(test);
         return test;
     }
@@ -69,20 +56,6 @@ export class TestService {
         this.tests.splice(arrayIndex,1);
     }
 
-    private findTest(id : string)
-    {
-        const arrayIndex = this.tests.findIndex(entity=>entity.id === id)
-        const test = this.tests[arrayIndex];
-        if(!test)
-        {
-            throw new NotFoundException();
-        }
-        return [test, arrayIndex];
-    }
-
-    private getNextId(): number {
-        return this.tests.length;
-    }
 
 
 

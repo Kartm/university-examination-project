@@ -1,8 +1,8 @@
 import {IIdHaver} from "../../../APIHelpers/IIdHaver";
 
 export interface TestInterface extends IIdHaver{
-    settings?: number;
-    owner?: number;
+    settings_id?: string;
+    owner_id?: string;
     name?: string;
     owner_link?: string;
 }

@@ -1,9 +1,6 @@
 import {Injectable} from "@nestjs/common";
-import {InjectRepository} from "@nestjs/typeorm";
-import {Repository} from "typeorm";
 import {TestInterface} from "./interfaces/test.interface";
 import {CommonApi} from "../../APIHelpers/CommonApi";
-import {v4 as uuidv4} from 'uuid';
 
 @Injectable()
 export class TestService {
@@ -26,13 +23,13 @@ export class TestService {
 
     updateTest(id: string, newTest: TestInterface) {
         const test : TestInterface = CommonApi.findEntity(id, this.tests)[0];
-        if(newTest.settings)
+        if(newTest.settings_id)
         {
-            test.settings = newTest.settings
+            test.settings_id = newTest.settings_id
         }
-        if(newTest.owner)
+        if(newTest.owner_id)
         {
-            test.owner = newTest.owner
+            test.owner_id = newTest.owner_id
         }
         if (newTest.name) {
             test.name = newTest.name;

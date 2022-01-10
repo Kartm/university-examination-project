@@ -3,7 +3,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {TestEntity} from "./entities/test.entity";
 import {Repository} from "typeorm";
 import {TestInterface} from "./interfaces/test.interface";
-import {APIHelpers} from "../../APIHelpers";
+import {FindByIndex} from "../../APIHelpers/FindByIndex";
 import {v4 as uuidv4} from 'uuid';
 
 @Injectable()
@@ -21,17 +21,16 @@ export class TestService {
     addTest(test: TestInterface) {
 
         test.id = uuidv4();
-        console.log(test.id);
         this.tests.push(test);
         return test;
     }
 
     getOneTest(id: string) : TestInterface {
-        return APIHelpers.findEntity(id, this.tests)[0];
+        return FindByIndex.findEntity(id, this.tests)[0];
     }
 
     updateTest(id: string, newTest: TestInterface) {
-        const test : TestInterface = APIHelpers.findEntity(id, this.tests)[0];
+        const test : TestInterface = FindByIndex.findEntity(id, this.tests)[0];
         if(newTest.settings)
         {
             test.settings = newTest.settings
@@ -52,7 +51,7 @@ export class TestService {
     }
 
     removeTest(id: string) {
-        const arrayIndex = APIHelpers.findEntity(id, this.tests)[1]
+        const arrayIndex = FindByIndex.findEntity(id, this.tests)[1]
         this.tests.splice(arrayIndex,1);
     }
 

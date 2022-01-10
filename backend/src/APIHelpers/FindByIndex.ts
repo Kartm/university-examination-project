@@ -1,10 +1,9 @@
 import {NotFoundException} from "@nestjs/common";
+import {IIdHaver} from "./IIdHaver";
 
-export class APIHelpers{
-    public static findEntity<T>(id : string, array : T[]): [T, number]
+export class FindByIndex {
+    public static findEntity(id : string, array : IIdHaver[]): [IIdHaver, number]
     {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         const arrayIndex = array.findIndex(entity=>entity.id === id)
         const entity = array[arrayIndex];
         if(!entity)

@@ -18,24 +18,24 @@ export class LinkService {
         return CommonApi.addEntity(link, this.links);
     }
 
-    getSingleLink(id: number): LinkInterface {
+    getSingleLink(id: string): LinkInterface {
           return CommonApi.findEntity(id, this.links)[0];
 
 
     }
 
-    deleteLink(linkId: number) {
+    deleteLink(linkId: string) {
 
         CommonApi.removeEntity(linkId, this.links)
 
     }
 
-    updateLink(id: number, newLink: LinkInterface) {
-        const test : TestInterface = CommonApi.findEntity(id, this.links)[0];
+    updateLink(id: string, newLink: LinkInterface) {
+        const link : TestInterface = CommonApi.findEntity(id, this.links)[0];
 
     }
 
-    removeLink(id: number) {
+    removeLink(id: string) {
          CommonApi.removeEntity(id, this.links) // why not ; ?
     }
 

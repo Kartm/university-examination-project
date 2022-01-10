@@ -19,7 +19,7 @@ export class LinkController {
 }
 
     @Get(":link_id")
-    getSingleLink(@Param('link_id') id: number) : LinkInterface {
+    getSingleLink(@Param('link_id') id: string) : LinkInterface {
 
         return this.service.getSingleLink(id);
     }
@@ -32,14 +32,14 @@ export class LinkController {
     }
 
     @Delete("link_id")
-    deleteLink(@Param('link_id') link_id: number) {
+    deleteLink(@Param('link_id') link_id: string) {
 
         return this.service.deleteLink(link_id);
 
     }
 
     @Patch("link_id" )
-    updateLink(@Param('link_id') id : number, @Body() test : LinkInterface)
+    updateLink(@Param('link_id') id : string, @Body() test : LinkInterface)
     {
         return this.service.updateLink(id, test);
     }

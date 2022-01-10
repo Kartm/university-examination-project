@@ -27,9 +27,9 @@ export class TestService {
         {
             test.settings_id = newTest.settings_id
         }
-        if(newTest.owner_id)
+        if(newTest.owner_name)
         {
-            test.owner_id = newTest.owner_id
+            test.owner_name = newTest.owner_name
         }
         if (newTest.name) {
             test.name = newTest.name;
@@ -45,8 +45,4 @@ export class TestService {
     removeTest(id: string) {
         CommonApi.removeEntity(id, this.tests)
     }
-
-
-
-
 }

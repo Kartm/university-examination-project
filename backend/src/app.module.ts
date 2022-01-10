@@ -12,7 +12,6 @@ import {ConfigService} from './shared/config/config.service';
 import {TestModule} from "./api/test/test.module";
 import {SettingsModule} from "./api/settings/settings.module";
 import {QuestionTypeModule} from "./api/questionType/questionType.module";
-import {OwnerModule} from "./api/owner/owner.module";
 import {QuestionPresetModule} from "./api/questionPreset/questionPresetModule";
 import {TemplateModule} from "./api/template/template.module";
 
@@ -39,7 +38,6 @@ import {TemplateModule} from "./api/template/template.module";
         TestModule,
         SettingsModule,
         QuestionTypeModule,
-        OwnerModule,
         QuestionPresetModule,
         TemplateModule,
     ],

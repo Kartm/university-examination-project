@@ -25,6 +25,7 @@
     "@nestjs/core": "^7.6.18",
     "@nestjs/platform-express": "^7.6.18",
     "@nestjs/typeorm": "^7.1.5",
+    "@types/uuid": "^8.3.4",
     "aws-sdk": "^2.786.0",
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.4.0",
@@ -34,7 +35,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
-    "typeorm": "^0.2.27"
+    "typeorm": "^0.2.27",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",

@@ -14,6 +14,7 @@ import {SettingsModule} from "./api/settings/settings.module";
 import {QuestionTypeModule} from "./api/questionType/questionType.module";
 import {OwnerModule} from "./api/owner/owner.module";
 import {QuestionPresetModule} from "./api/questionPreset/questionPresetModule";
+import {TemplateModule} from "./api/template/template.module";
 
 @Module({
     imports: [
@@ -39,7 +40,8 @@ import {QuestionPresetModule} from "./api/questionPreset/questionPresetModule";
         SettingsModule,
         QuestionTypeModule,
         OwnerModule,
-        QuestionPresetModule
+        QuestionPresetModule,
+        TemplateModule,
     ],
     controllers: [
         AppController

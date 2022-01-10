@@ -14,6 +14,7 @@ import {SettingsModule} from "./api/settings/settings.module";
 import {QuestionTypeModule} from "./api/questionType/questionType.module";
 import {QuestionPresetModule} from "./api/questionPreset/questionPresetModule";
 import {TemplateModule} from "./api/template/template.module";
+import {QuestionChoiceModule} from "./api/questionChoice/questionChoice.module";
 
 @Module({
     imports: [
@@ -40,6 +41,7 @@ import {TemplateModule} from "./api/template/template.module";
         QuestionTypeModule,
         QuestionPresetModule,
         TemplateModule,
+        QuestionChoiceModule
     ],
     controllers: [
         AppController

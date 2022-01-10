@@ -10,14 +10,13 @@ export class CommonApi {
         return entity;
     }
 
-    public static removeEntity<T extends IIdHaver>(id : string, array : T[])
+    public static removeEntity<T extends IIdHaver>(id : string | number, array : T[])
 {
+
     const index = this.findEntity(id, array)[1];
     return array.splice(index, 1);
 
 }
-
-
 
 
     static removeAllEntities<T extends IIdHaver>(array: T[]) {
@@ -25,7 +24,7 @@ export class CommonApi {
         return array;
     }
 
-    public static findEntity<T extends IIdHaver>(id : string, array : T[]): [T, number]
+    public static findEntity<T extends IIdHaver>(id : string | number, array : T[]): [T, number]
     {
         const arrayIndex = array.findIndex(entity=>entity.id === id)
         const entity = array[arrayIndex];

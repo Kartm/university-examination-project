@@ -30,7 +30,7 @@ export class TestsController
     @Delete(":id")
     removeTest(@Param("id") id : string)
     {
-        return this.service.removeTest(id)
+        return this.service.removeTest(id);
     }
 
     @Patch(":id")

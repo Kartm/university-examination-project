@@ -15,7 +15,6 @@ export class CommonApi {
 
     const index = this.findEntity(id, array)[1];
     return array.splice(index, 1);
-
 }
 
 

@@ -14,7 +14,7 @@ export class SettingsController {
     }
 
     @Get(":id")
-    getOneSettings(@Param(":id") id: string) {
+    getOneSettings(@Param("id") id: string) {
         return this.settingsService.getOneSettings(id);
     }
 
@@ -24,7 +24,7 @@ export class SettingsController {
     }
 
     @Delete(":id")
-    deleteOneSettings(@Param(":id") id : string) {
+    deleteOneSettings(@Param("id") id : string) {
         return this.settingsService.removeOneSetting(id);
     }
 
@@ -35,7 +35,7 @@ export class SettingsController {
     }
 
     @Patch(":id")
-    updateSettings(@Param(":id") id : string, @Body() settings : SettingsInterface)
+    updateSettings(@Param("id") id : string, @Body() settings : SettingsInterface)
     {
         return this.settingsService.updateSettings(id, settings);
     }

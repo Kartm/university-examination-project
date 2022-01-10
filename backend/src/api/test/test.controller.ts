@@ -16,7 +16,7 @@ export class TestsController
     }
 
     @Get(":id")
-    getOneTest(@Param('id') id : number) : TestInterface
+    getOneTest(@Param('id') id : string) : TestInterface
     {
         return this.testService.getOneTest(id);
     }
@@ -28,13 +28,13 @@ export class TestsController
     }
 
     @Delete(":id")
-    removeTest(@Param("id") id : number)
+    removeTest(@Param("id") id : string)
     {
         return this.testService.removeTest(id)
     }
 
     @Patch(":id")
-    updateTest(@Param('id') id : number, @Body() test : TestInterface)
+    updateTest(@Param('id') id : string, @Body() test : TestInterface)
     {
         return this.testService.updateTest(id, test);
     }

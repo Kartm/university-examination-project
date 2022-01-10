@@ -3,6 +3,8 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {TestEntity} from "./entities/test.entity";
 import {Repository} from "typeorm";
 import {TestInterface} from "./interfaces/test.interface";
+import {APIHelpers} from "../../APIHelpers";
+import {v4 as uuidv4} from 'uuid';
 
 @Injectable()
 export class TestService {
@@ -32,17 +34,17 @@ export class TestService {
     }
 
     addTest(test: TestInterface) {
-        test.id = this.getNextId();
+        test.id = uuidv4();
         this.tests.push(test);
         return test;
     }
 
-    getOneTest(id: number) {
-        return this.getAtIndex(id)
+    getOneTest(id: string) : TestInterface {
+        return APIHelpers.findEntity(id, this.tests)[0];
     }
 
-    updateTest(id: number, newTest: TestInterface) {
-        const test = this.getAtIndex(id);
+    updateTest(id: string, newTest: TestInterface) {
+        const test : TestInterface = APIHelpers.findEntity(id, this.tests)[0];
         if(newTest.settings)
         {
             test.settings = newTest.settings
@@ -59,35 +61,29 @@ export class TestService {
             test.owner_link = newTest.owner_link;
         }
         this.tests[id] = test;
-        return this.getAtIndex(id);
+        return test;
     }
 
-    removeTest(id: number) {
-        this.getAtIndex(id);
-        this.tests.splice(id,1);
-        this.updateIds();
+    removeTest(id: string) {
+        const arrayIndex = APIHelpers.findEntity(id, this.tests)[1]
+        this.tests.splice(arrayIndex,1);
     }
 
-    private getAtIndex(id: number): TestInterface {
-        console.log(id, this.tests.length)
-        if (this.tests.length <= id) {
-            throw new NotFoundException("Could not find test");
-        } else if (id < 0) {
-            throw new NotFoundException("Could not find test");
+    private findTest(id : string)
+    {
+        const arrayIndex = this.tests.findIndex(entity=>entity.id === id)
+        const test = this.tests[arrayIndex];
+        if(!test)
+        {
+            throw new NotFoundException();
         }
-        const test = this.tests[id];
-        return {...test};
+        return [test, arrayIndex];
     }
 
     private getNextId(): number {
         return this.tests.length;
     }
 
-    private updateIds() {
-        for (let i = 0; i < this.tests.length; i++) {
-            this.tests[i].id = i;
-        }
-    }
 
 
 }

@@ -33,20 +33,29 @@ const Label = styled.label`
 `
 
 const QuestionComponent = ({question, onValidChange, showPoints, visible}: QuestionParams) => {
-    useEffect(() => {
-      onValidChange(false)
-    }, [])
+  const [selectedCheckboxIds, setSelectedCheckboxIds] = useState<string[]>([])
 
   function onTextChange(e: React.ChangeEvent<HTMLInputElement>) {
       onValidChange(!!e.target.value)
   }
 
-  // todo
-  // function onRadioChange(e: React.ChangeEvent<HTMLInputElement>) {
-  //   if(question.question_type.name === 'OPEN') {
-  //     onValidChange(!!e.target.value)
-  //   }
-  // }
+  function onRadioChange() {
+      onValidChange(true)
+  }
+
+  function onCheckboxChange(question_choice_id: string) {
+    let newSelectedCheckboxIds = [];
+
+    if (selectedCheckboxIds.includes(question_choice_id)) {
+      newSelectedCheckboxIds = [...selectedCheckboxIds.filter(id => id !== question_choice_id)];
+    } else {
+      newSelectedCheckboxIds = [...selectedCheckboxIds, question_choice_id];
+    }
+
+    setSelectedCheckboxIds(newSelectedCheckboxIds)
+
+    onValidChange(newSelectedCheckboxIds.length > 0)
+  }
 
   return (
     <Wrapper style={{display: visible ? 'flex':'none'}}>
@@ -65,6 +74,9 @@ const QuestionComponent = ({question, onValidChange, showPoints, visible}: Quest
                 required={question.question_type.name === 'SINGLE_CHOICE'}
                 name={question.question_uuid}
                 id={choice.question_choice_id}
+                onChange={() => {
+                  question.question_type.name === 'SINGLE_CHOICE' ? onRadioChange() : onCheckboxChange(choice.question_choice_id)
+                }}
               />
               <Label htmlFor={choice.question_choice_id}>{choice.text}</Label>
             </div>

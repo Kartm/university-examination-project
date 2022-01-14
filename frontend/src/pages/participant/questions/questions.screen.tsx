@@ -23,7 +23,7 @@ const ActionsBar = styled.div`
   align-items: center;
   width: 100%;
   margin-top: 64px;
-  
+
   button {
     max-width: 120px;
   }
@@ -42,11 +42,16 @@ const ParticipateQuestionsScreen = () => {
 
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [invalidQuestionIds, setInvalidQuestionIds] = useState<string[]>([]);
-  const selectedQuestion = useMemo(() => examState?.exam?.questions?.length && examState?.exam?.questions[selectedQuestionIndex], [selectedQuestionIndex, examState?.exam?.questions]);
 
   useEffect(() => {
     dispatch(getExamByUuid(testParticipateUuid));
   }, []);
+
+  useEffect(() => {
+    if (examState?.exam?.questions) {
+      setInvalidQuestionIds([...examState.exam.questions.map(q => q.question_uuid)])
+    }
+  }, [examState?.exam?.questions]);
 
   useEffect(() => {
     dispatch(updateTitleAction(`Pass | ${examState.exam?.title || ''}`));
@@ -54,8 +59,8 @@ const ParticipateQuestionsScreen = () => {
 
 
   function questionValidChange(question: Question, isValid: boolean) {
-    if(isValid) {
-      setInvalidQuestionIds(invalidQuestionIds.filter(id => id !== question.question_uuid));
+    if (isValid) {
+      setInvalidQuestionIds([...invalidQuestionIds.filter(id => id !== question.question_uuid)]);
     } else {
       setInvalidQuestionIds([...invalidQuestionIds, question.question_uuid]);
     }
@@ -63,19 +68,17 @@ const ParticipateQuestionsScreen = () => {
 
 
   function goBack() {
-      setSelectedQuestionIndex(Math.max(0, selectedQuestionIndex - 1))
-    // todo validation
+    setSelectedQuestionIndex(Math.max(0, selectedQuestionIndex - 1))
   }
 
   function goForward() {
-      setSelectedQuestionIndex(Math.min(examState?.exam?.questions?.length - 1, selectedQuestionIndex + 1))
-    // todo validation
+    setSelectedQuestionIndex(Math.min(examState?.exam?.questions?.length - 1, selectedQuestionIndex + 1))
   }
 
   function goSubmit() {
-    if(invalidQuestionIds.length > 0) {
-      alert('invalid')
-
+    if (invalidQuestionIds.length > 0) {
+      console.log(invalidQuestionIds)
+      alert("You must answer all questions!");
       return;
     }
 
@@ -84,38 +87,39 @@ const ParticipateQuestionsScreen = () => {
 
   return (
     <Container>
-        <Content>
-          {examState?.exam?.questions?.map((question, i) =>
-              <QuestionComponent
-                visible={selectedQuestionIndex === i}
-              question={question}
-              showPoints={examState?.exam?.settings.show_points_per_question}
-              onValidChange={(isValid) => questionValidChange(question, isValid)}
-            />
-          )}
+      <Content>
+        {examState?.exam?.questions?.map((question, i) =>
+          <QuestionComponent
+            key={question.question_uuid}
+            visible={selectedQuestionIndex === i}
+            question={question}
+            showPoints={examState?.exam?.settings.show_points_per_question}
+            onValidChange={(isValid) => questionValidChange(question, isValid)}
+          />
+        )}
 
 
-          <ActionsBar>
-            <Button
-              style={selectedQuestionIndex === 0 ? {visibility: 'hidden'}: {}}
-              text="Previous"
-              disabled={examState?.exam?.settings.allow_going_back}
-              onClick={() => goBack()}
-            />
+        <ActionsBar>
+          <Button
+            style={selectedQuestionIndex === 0 ? {visibility: 'hidden'} : {}}
+            text="Previous"
+            disabled={examState?.exam?.settings.allow_going_back}
+            onClick={() => goBack()}
+          />
 
-            <Text>{`${selectedQuestionIndex + 1}/${examState?.exam?.questions?.length}`}</Text>
+          <Text>{`${selectedQuestionIndex + 1}/${examState?.exam?.questions?.length}`}</Text>
 
-            {selectedQuestionIndex < examState?.exam?.questions?.length - 1 ?
-              <Button text="Next" onClick={() => goForward()}/>
-              :
-              <Button text="Submit" onClick={() => goSubmit()}/>
-            }
-
-
-          </ActionsBar>
+          {selectedQuestionIndex < examState?.exam?.questions?.length - 1 ?
+            <Button text="Next" onClick={() => goForward()}/>
+            :
+            <Button text="Submit" onClick={() => goSubmit()}/>
+          }
 
 
-        </Content>
+        </ActionsBar>
+
+
+      </Content>
 
 
     </Container>

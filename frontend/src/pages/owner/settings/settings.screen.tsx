@@ -93,7 +93,7 @@ const SettingsScreen = () => {
                 </div>
               </div>
             </div>
-            <Dropdown>
+            <Dropdown options={["1","2","3"]}>
 
             </Dropdown>
 

@@ -19,12 +19,19 @@ const SettingsScreen = () => {
   const [ownerName, setOwnerName] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([])
   const {testOwnerUuid} = useParams<SettingsParams>();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(updateTitleAction("Pass | Exam settings"));
   });
+
+  const settings = [
+      "Show results overview",
+      "Allow going back to previous question",
+      "Display points per question"
+  ]
 
   return (
       <Container>
@@ -51,6 +58,10 @@ const SettingsScreen = () => {
 
                 <div>
                   Date
+                </div>
+
+                <div>
+                  Participants Settings
                 </div>
               </div>
               <div style={{display: 'flex', flexDirection: 'column'}}>
@@ -91,11 +102,11 @@ const SettingsScreen = () => {
                          value={endDate}
                          onChange={(e) => setEndDate(e.target.value)}/>
                 </div>
+                <div style={{display: 'flex', flexDirection: 'row'}}>
+                  <Dropdown options={settings} onChange={(e) => setSelectedOptions(e)}/>
+                </div>
               </div>
             </div>
-            <Dropdown options={["1","2","3"]}>
-
-            </Dropdown>
 
           </form>
           <Link to={`/${testOwnerUuid}/editor/participants`} style={{marginRight: 10}}>

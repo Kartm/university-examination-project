@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import {useState} from 'react'
+import Text from "../../components/style/text.component";
 
 
 // /* Links inside the dropdown */
@@ -24,7 +26,8 @@ const DropdownButton = styled.button`
   color: white;
   padding: 16px;
   font-size: 16px;
-  border: none;`
+  border: none;
+  width: 100%;`
 
 const  DropdownContent = styled.div`
   display: none;
@@ -42,7 +45,8 @@ const  DropdownContent = styled.div`
 
 const DropdownWrapper = styled.div`
   position: relative;
-  display: inline-block;
+  display: block;
+  width: 100%;
   &:hover ${DropdownContent} {
     display: block;
   }
@@ -50,17 +54,39 @@ const DropdownWrapper = styled.div`
     background-color: #3e8e41;
   }`
 
-interface DropdownParams {}
+interface DropdownParams {
+    options: string[]
+    onChange: (selectedOptions: string[]) => void
+}
+
+
 
 const Dropdown= (props: DropdownParams) => {
+    const [openOptions, setOpenOptions] = useState(false)
+    const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+
+    const removeOption = (id) => {
+        setSelectedOptions(selectedOptions.filter((option) => selectedOptions.indexOf(option) !== id))
+    }
+
     return (
         <DropdownWrapper>
-            <DropdownButton>Dropdown</DropdownButton>
-            <DropdownContent>
-                <a href="#">Link 1</a>
-                <a href="#">Link 2</a>
-                <a href="#">Link 3</a>
-            </DropdownContent>
+            <DropdownButton onClick={() => setOpenOptions(!openOptions)}>
+                {/*Dropdown*/}
+                {selectedOptions.map((option, i) => (
+                    <Text>
+                        {option}
+                        <span style={{color: 'red', cursor: 'pointer'}} onClick={() => removeOption(i)}>
+                            X
+                        </span>
+                    </Text>
+                ))}
+            </DropdownButton>
+            {openOptions && <DropdownContent>
+                {props.options.filter(option => !selectedOptions.includes(option))
+                    .map((value, i) =>
+                        <a key={i} onClick={() => setSelectedOptions([...selectedOptions, value])}>{value}</a>)}
+            </DropdownContent>}
         </DropdownWrapper>
     );
 }

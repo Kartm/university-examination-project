@@ -7,7 +7,7 @@ interface QuestionParams {
   onValidChange: (isValid: boolean) => void;
   showPoints: boolean;
   visible: boolean;
-  // onAnswerChange: (answer: string | string[]);
+  // todo onAnswerChange: (answer: string | string[]);
 }
 
 const Wrapper = styled.div`

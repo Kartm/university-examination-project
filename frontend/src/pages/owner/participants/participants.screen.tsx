@@ -63,9 +63,9 @@ const ParticipantsScreen = () => {
           {participants.map((participant, i) => (
               <h3 key={participant.email} style={{display: 'flex'}}>
                 {participant.email} {participant.person}
-                <Text style={{color: 'red', cursor: 'pointer'}} onClick={() => handleDelete(i)}>
+                <span style={{color: 'red', cursor: 'pointer'}} onClick={() => handleDelete(i)}>
                   x
-                </Text>
+                </span>
               </h3>
           ))}
         </Text>

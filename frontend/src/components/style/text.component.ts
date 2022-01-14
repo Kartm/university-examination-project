@@ -9,7 +9,7 @@ type TextProps = {
 }
 
 const Text = styled.p <TextProps>`
-    color: ${colors.light};
+    color: ${colors.dark};
     font-size: 20px;
     font-family: ${fonts.regular};
     margin: 0px;

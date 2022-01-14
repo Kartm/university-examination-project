@@ -29,10 +29,11 @@ type ButtonProps = {
     style?: Object;
     onClick?: () => void;
     loading?: boolean;
+    disabled?: boolean;
 };
 
 const Button = (props: ButtonProps) => {
-    return <Container color={props.color} style={props.style} onClick={props.onClick}>
+    return <Container color={props.color} style={props.style} onClick={props.onClick} disabled={props.disabled}>
         {props.loading ?
             <Loader />
             :

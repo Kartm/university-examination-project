@@ -4,23 +4,6 @@ import {useState} from 'react'
 import Text from "../../components/style/text.component";
 
 
-// /* Links inside the dropdown */
-// .dropdown-content a {
-//     color: black;
-//     padding: 12px 16px;
-//     text-decoration: none;
-//     display: block;
-// }
-
-/* Change color of dropdown links on hover */
-//.dropdown-content a:hover {background-color: #ddd;}
-
-/* Show the dropdown menu on hover */
-// .dropdown:hover .dropdown-content {display: block;}
-
-/* Change the background color of the dropdown button when the dropdown content is shown */
-// .dropdown:hover .dropbtn {background-color: #3e8e41;}
-
 const DropdownButton = styled.button`
   background-color: #04AA6D;
   color: white;

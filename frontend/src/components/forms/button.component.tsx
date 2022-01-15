@@ -14,6 +14,9 @@ export const Container = styled.button <{ color?: "primary" | "secondary" | "lig
     color: white;
     height: 35px;
     width: 100%;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 0 16px;
     
     :focus {
         outline: none;

@@ -87,7 +87,7 @@ const CreateScreen = () => {
         {/* TODO this is hardcoded */}
         <Link
           to="/123e4567-e89b-12d3-a456-426652340000/editor"
-          style={{ marginRight: 10 }}
+          style={{ width: 'auto' }}
         >
           <Button text="Create from scratch" color="primary" />
         </Link>

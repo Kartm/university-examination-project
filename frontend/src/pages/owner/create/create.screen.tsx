@@ -27,6 +27,7 @@ const CreateScreen = () => {
   function handleSelectTemplate(title: string) {
     const template = examState.examTemplates.find(t => t.title === title)!
     // @ts-ignore
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     dispatch(useExamTemplate(template)).then(x => {
       console.log(x)
       // const exam: Exam = x.payload;

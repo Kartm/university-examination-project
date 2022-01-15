@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {Exam, ExamDraft} from "../../models/exam.model";
-import {apiCreateExam, apiGetExamTemplates, getExam} from "../../services/exam.service";
+import {apiCreateExam, apiGetExamTemplates, apiUseExamTemplate, getExam} from "../../services/exam.service";
 
 export interface State {
   exam: Exam | null,

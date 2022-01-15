@@ -227,3 +227,37 @@ export const apiGetExamTemplates = async (): Promise<APIResponse<ExamDraft[]>> =
         data: mockData
     } as APIResponse<ExamDraft[]>;
 };
+
+export const apiUseExamTemplate = async (examTemplate: ExamDraft): Promise<APIResponse<Exam>> => {
+    // const res = await get(`/users/me`);
+    // return await res.json();
+
+    const createdExamFromBackend: Exam = {
+        exam_uuid: 'xdddd',
+        title: '',
+        settings: {
+            settings_uuid: 'xdddd',
+            ...examTemplate.settings
+        },
+        questions: examTemplate.questions.map((q, i) => ({
+            question_uuid: `asdasd${i}`,
+            name: q.name,
+            question_type: q.question_type,
+            question_choices: q.question_choices.map((choice, j) => ({
+                question_choice_id: `asdasd${i}${j}`,
+                text: choice.text,
+                is_correct: choice.is_correct
+            }))
+        }))
+    }
+
+    const mockData = await new Promise((res, rej) => {
+        res(createdExamFromBackend)
+    });
+
+    return {
+        statusCode: 200,
+        message: [],
+        data: mockData
+    } as APIResponse<Exam>;
+};

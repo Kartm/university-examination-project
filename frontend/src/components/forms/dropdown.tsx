@@ -24,6 +24,9 @@ const  DropdownContent = styled.div`
     padding: 12px 16px;
     text-decoration: none;
     display: block;
+    &:hover  {
+      color: darkgrey;
+    }
   }`
 
 const DropdownWrapper = styled.div`
@@ -54,8 +57,10 @@ const Dropdown= (props: DropdownParams) => {
 
     return (
         <DropdownWrapper>
-            <DropdownButton onClick={() => setOpenOptions(!openOptions)}>
-                {/*Dropdown*/}
+            <DropdownButton onClick={(e) => {
+                setOpenOptions(!openOptions)
+                e.preventDefault()
+            }}>
                 {selectedOptions.map((option, i) => (
                     <Text>
                         {option}
@@ -68,7 +73,7 @@ const Dropdown= (props: DropdownParams) => {
             {openOptions && <DropdownContent>
                 {props.options.filter(option => !selectedOptions.includes(option))
                     .map((value, i) =>
-                        <a key={i} onClick={() => setSelectedOptions([...selectedOptions, value])}>{value}</a>)}
+                        <a style={{cursor:'pointer'}} key={i} onClick={() => setSelectedOptions([...selectedOptions, value])}>{value}</a>)}
             </DropdownContent>}
         </DropdownWrapper>
     );

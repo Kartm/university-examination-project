@@ -13,7 +13,6 @@ export const Container = styled.button <{ color?: "primary" | "secondary" | "lig
     border: none;
     color: white;
     height: 35px;
-    width: 100%;
     font-weight: bold;
     text-transform: uppercase;
     padding: 0 16px;

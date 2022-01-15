@@ -29,11 +29,6 @@ const ActionsBar = styled.div`
   }
 `
 
-const QuestionsDdddddd = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
 const ParticipateQuestionsScreen = () => {
   const {testParticipateUuid} = useParams<ParticipateQuestionsParams>();
   const dispatch = useDispatch();

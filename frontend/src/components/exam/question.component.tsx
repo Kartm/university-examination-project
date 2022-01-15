@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Question, QuestionAnswer, QuestionType} from "../../models/exam.model";
+import {Question, QuestionAnswer} from "../../models/exam.model";
 import styled from "styled-components";
 
 interface QuestionParams {
@@ -88,18 +88,18 @@ const QuestionComponent = ({question, showPoints, visible, onValidChange, onAnsw
       <Divider/>
 
       {
-        question.question_type.name === 'OPEN' ?
+        question.question_type === 'OPEN' ?
           <input type="text" required placeholder="Your answer here..." onChange={(e) => onTextChange(e)}/>
           :
           question.question_choices.map(choice =>
             <div key={choice.question_choice_id} style={{marginBottom: '8px'}}>
               <input
-                type={question.question_type.name === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
-                required={question.question_type.name === 'SINGLE_CHOICE'}
+                type={question.question_type === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
+                required={question.question_type === 'SINGLE_CHOICE'}
                 name={question.question_uuid}
                 id={choice.question_choice_id}
                 onChange={() => {
-                  question.question_type.name === 'SINGLE_CHOICE' ? onRadioChange(choice.question_choice_id) : onCheckboxChange(choice.question_choice_id)
+                  question.question_type === 'SINGLE_CHOICE' ? onRadioChange(choice.question_choice_id) : onCheckboxChange(choice.question_choice_id)
                 }}
               />
               <Label htmlFor={choice.question_choice_id}>{choice.text}</Label>

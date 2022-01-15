@@ -21,18 +21,34 @@ const CreateScreen = () => {
     {
       title: 'Simple ABC',
       settings: {
-        settings_uuid: null,
         show_results_overview: false,
         show_points_per_question: true,
         allow_going_back: true,
       },
       questions: [
+        {
+          name: 'Which one?',
+          question_type: 'SINGLE_CHOICE',
+          question_choices: [
+            {
+              text: 'A',
+              is_correct: true,
+            },
+            {
+              text: 'B',
+              is_correct: false,
+            },
+            {
+              text: 'C',
+              is_correct: false,
+            }
+          ]
+        }
       ],
     },
     {
       title: 'Medical exam',
       settings: {
-        settings_uuid: null,
         show_results_overview: false,
         show_points_per_question: true,
         allow_going_back: true,
@@ -43,7 +59,6 @@ const CreateScreen = () => {
     {
       title: 'Test exam',
       settings: {
-        settings_uuid: null,
         show_results_overview: false,
         show_points_per_question: true,
         allow_going_back: true,
@@ -54,7 +69,6 @@ const CreateScreen = () => {
     {
       title: 'CSS basic exam',
       settings: {
-        settings_uuid: null,
         show_results_overview: false,
         show_points_per_question: true,
         allow_going_back: true,

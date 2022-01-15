@@ -19,10 +19,7 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
             {
                 question_uuid: 'eins',
                 name: 'What is your favorite food?',
-                question_type: {
-                    question_type_uuid: 'open-uuid',
-                    name: 'OPEN'
-                },
+                question_type: 'OPEN',
                 question_choices: [
 
                 ]
@@ -30,10 +27,7 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
             {
                 question_uuid: 'zwei',
                 name: 'Which pill?',
-                question_type: {
-                    question_type_uuid: 'single-choice-uuid',
-                    name: 'SINGLE_CHOICE'
-                },
+                question_type: 'SINGLE_CHOICE',
                 question_choices: [
                     {
                         question_choice_id: 'asssss',
@@ -50,10 +44,7 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
             {
                 question_uuid: 'drei',
                 name: 'What does CSS stand for?',
-                question_type: {
-                    question_type_uuid: 'multi-choice-uuid',
-                    name: 'MULTI_CHOICE'
-                },
+                question_type: 'MULTI_CHOICE',
                 question_choices: [
                     {
                         question_choice_id: 'ammmm',

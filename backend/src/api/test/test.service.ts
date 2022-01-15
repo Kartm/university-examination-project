@@ -1,6 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {TestInterface} from "./interfaces/test.interface";
 import {CommonApi} from "../../APIHelpers/CommonApi";
+import * as nodemailer from "nodemailer"
 
 @Injectable()
 export class TestService {
@@ -9,6 +10,30 @@ export class TestService {
 
 
     getAllTests() {
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'xxx@gmail.com',
+                pass: ''
+            }
+        });
+
+        const mailOptions = {
+            from: 'youremail@gmail.com',
+            to: "xxx@gmail.com",
+            subject: 'Sending Email using Node.js',
+            text: 'That was easy!'
+        };
+
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
         return this.tests;
     }
 

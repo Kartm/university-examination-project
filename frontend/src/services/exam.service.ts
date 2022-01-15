@@ -233,18 +233,18 @@ export const apiUseExamTemplate = async (examTemplate: ExamDraft): Promise<APIRe
     // return await res.json();
 
     const createdExamFromBackend: Exam = {
-        exam_uuid: 'xdddd',
+        exam_uuid: '856ad28a-74a4-4f2a-bff7-ca93e9280143',
         title: '',
         settings: {
-            settings_uuid: 'xdddd',
+            settings_uuid: '14999764-317c-4692-827a-558adce51bc7',
             ...examTemplate.settings
         },
         questions: examTemplate.questions.map((q, i) => ({
-            question_uuid: `asdasd${i}`,
+            question_uuid: `d10e63fd-11ed-4042-8f89-2cb0233bca65------${i}`,
             name: q.name,
             question_type: q.question_type,
             question_choices: q.question_choices.map((choice, j) => ({
-                question_choice_id: `asdasd${i}${j}`,
+                question_choice_id: `5e31a0b6-6ca0-4c01-91ba-10abb65d0f0c-----${i}${j}`,
                 text: choice.text,
                 is_correct: choice.is_correct
             }))

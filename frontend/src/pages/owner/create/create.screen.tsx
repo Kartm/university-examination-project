@@ -29,9 +29,8 @@ const CreateScreen = () => {
     // @ts-ignore
     // eslint-disable-next-line react-hooks/rules-of-hooks
     dispatch(useExamTemplate(template)).then(x => {
-      console.log(x)
-      // const exam: Exam = x.payload;
-      // history.push(`/${exam.exam_uuid}/editor`);
+      const exam: Exam = x.payload;
+      history.push(`/${exam.exam_uuid}/editor`);
     })
   }
 

@@ -10,7 +10,7 @@ import {updateTitleAction} from "../../../store/slices/ui.slice";
 import {RootState} from "../../../store/configure.store";
 import {getExamByUuid} from "../../../store/slices/exam.slice";
 import QuestionComponent from "../../../components/exam/question.component";
-import {Question} from "../../../models/exam.model";
+import {Question, QuestionAnswer} from "../../../models/exam.model";
 import styled from "styled-components";
 
 interface ParticipateQuestionsParams {
@@ -37,6 +37,7 @@ const ParticipateQuestionsScreen = () => {
 
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [invalidQuestionIds, setInvalidQuestionIds] = useState<string[]>([]);
+  const [questionAnswers, setQuestionAnswers] = useState<QuestionAnswer[]>([]);
 
   useEffect(() => {
     dispatch(getExamByUuid(testParticipateUuid));
@@ -77,7 +78,21 @@ const ParticipateQuestionsScreen = () => {
       return;
     }
 
+    console.log(questionAnswers)
+
     history.push(`/${testParticipateUuid}/finish`);
+  }
+
+  function answerChange(answer: QuestionAnswer) {
+    const answerExistsAlready = questionAnswers.findIndex((qa: QuestionAnswer) => qa.question_id === answer.question_id) !== -1;
+
+    let newQuestionAnswers = [...questionAnswers];
+
+    if (answerExistsAlready) {
+      newQuestionAnswers = newQuestionAnswers.filter(qa => qa.question_id !== answer.question_id)
+    }
+
+    setQuestionAnswers([...newQuestionAnswers, answer]);
   }
 
   return (
@@ -90,6 +105,7 @@ const ParticipateQuestionsScreen = () => {
             question={question}
             showPoints={examState?.exam?.settings.show_points_per_question}
             onValidChange={(isValid) => questionValidChange(question, isValid)}
+            onAnswerChange={answerChange}
           />
         )}
 

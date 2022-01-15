@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from "react";
-import {Question, QuestionType} from "../../models/exam.model";
+import {Question, QuestionAnswer, QuestionType} from "../../models/exam.model";
 import styled from "styled-components";
 
 interface QuestionParams {
   question: Question;
-  onValidChange: (isValid: boolean) => void;
   showPoints: boolean;
   visible: boolean;
-  // todo onAnswerChange: (answer: string | string[]);
+  onValidChange: (isValid: boolean) => void;
+  onAnswerChange: (answer: QuestionAnswer) => void;
 }
 
 const Wrapper = styled.div`
@@ -32,15 +32,31 @@ const Label = styled.label`
   margin-left: 8px;
 `
 
-const QuestionComponent = ({question, onValidChange, showPoints, visible}: QuestionParams) => {
+const QuestionComponent = ({question, showPoints, visible, onValidChange, onAnswerChange}: QuestionParams) => {
   const [selectedCheckboxIds, setSelectedCheckboxIds] = useState<string[]>([])
 
   function onTextChange(e: React.ChangeEvent<HTMLInputElement>) {
       onValidChange(!!e.target.value)
+
+      const answer: QuestionAnswer = {
+        question_id: question.question_uuid,
+        question_choice_ids: [],
+        answer_text: e.target.value
+      }
+
+      onAnswerChange(answer)
   }
 
-  function onRadioChange() {
+  function onRadioChange(question_choice_id: string) {
       onValidChange(true)
+
+    const answer: QuestionAnswer = {
+        question_id: question.question_uuid,
+        question_choice_ids: [question_choice_id],
+        answer_text: null
+      }
+
+    onAnswerChange(answer)
   }
 
   function onCheckboxChange(question_choice_id: string) {
@@ -55,6 +71,14 @@ const QuestionComponent = ({question, onValidChange, showPoints, visible}: Quest
     setSelectedCheckboxIds(newSelectedCheckboxIds)
 
     onValidChange(newSelectedCheckboxIds.length > 0)
+
+    const answer: QuestionAnswer = {
+      question_id: question.question_uuid,
+      question_choice_ids: newSelectedCheckboxIds,
+      answer_text: null
+    }
+
+    onAnswerChange(answer)
   }
 
   return (
@@ -75,7 +99,7 @@ const QuestionComponent = ({question, onValidChange, showPoints, visible}: Quest
                 name={question.question_uuid}
                 id={choice.question_choice_id}
                 onChange={() => {
-                  question.question_type.name === 'SINGLE_CHOICE' ? onRadioChange() : onCheckboxChange(choice.question_choice_id)
+                  question.question_type.name === 'SINGLE_CHOICE' ? onRadioChange(choice.question_choice_id) : onCheckboxChange(choice.question_choice_id)
                 }}
               />
               <Label htmlFor={choice.question_choice_id}>{choice.text}</Label>

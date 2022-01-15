@@ -29,3 +29,13 @@ export interface Exam {
     settings: Settings;
     questions: Question[];
 }
+
+export interface QuestionAnswer {
+    question_answer_id?: string;
+    question_id: string;
+    question_choice_ids: string[];
+    answer_text: string | null;
+    seconds_spent?: number;
+    tab_focus_lost_count?: number;
+    // todo check_status
+}

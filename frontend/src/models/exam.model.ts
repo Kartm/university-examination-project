@@ -34,7 +34,7 @@ export interface Exam {
     questions: Question[];
 }
 
-export interface ExamDraft extends Exam {exam_uuid: null, settings: SettingsDraft, questions: QuestionDraft[]}
+export interface ExamDraft extends Omit<Exam, 'exam_uuid'> {settings: SettingsDraft, questions: QuestionDraft[]}
 
 
 export interface QuestionAnswer {

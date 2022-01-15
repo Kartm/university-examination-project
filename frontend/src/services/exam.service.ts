@@ -6,7 +6,7 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
     // return await res.json();
 
     const mockExam: Exam = {
-        uuid: 'placeholder-exam-uuid',
+        exam_uuid: 'placeholder-exam-uuid',
         title: 'Super cool exam',
         settings: {
             settings_uuid: 'xdddd',

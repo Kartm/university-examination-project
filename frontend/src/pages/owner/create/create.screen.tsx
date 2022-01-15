@@ -7,7 +7,6 @@ import Button from "../../../components/forms/button.component";
 import Text from "../../../components/style/text.component";
 import {useDispatch} from "react-redux";
 import {updateTitleAction} from "../../../store/slices/ui.slice";
-import Dropdown from "../../../components/forms/dropdown";
 import {Exam, ExamDraft} from "../../../models/exam.model";
 
 const CreateScreen = () => {
@@ -20,7 +19,6 @@ const CreateScreen = () => {
 
   const templates: ExamDraft[] = [
     {
-      exam_uuid: null,
       title: 'Simple ABC',
       settings: {
         settings_uuid: null,
@@ -29,21 +27,46 @@ const CreateScreen = () => {
         allow_going_back: true,
       },
       questions: [
-        {
-          question_uuid: null,
-          name: "Yes or no?",
-          question_type: ""
-        }
+      ],
+    },
+    {
+      title: 'Medical exam',
+      settings: {
+        settings_uuid: null,
+        show_results_overview: false,
+        show_points_per_question: true,
+        allow_going_back: true,
+      },
+      questions: [
+      ],
+    },
+    {
+      title: 'Test exam',
+      settings: {
+        settings_uuid: null,
+        show_results_overview: false,
+        show_points_per_question: true,
+        allow_going_back: true,
+      },
+      questions: [
+      ],
+    },
+    {
+      title: 'CSS basic exam',
+      settings: {
+        settings_uuid: null,
+        show_results_overview: false,
+        show_points_per_question: true,
+        allow_going_back: true,
+      },
+      questions: [
       ],
     }
-    // "Simple ABC",
-    // "Medical exam",
-    // "Test exam",
-    // "CSS basic exam",
   ]
 
-  function handleSelectTemplate(value: string) {
-    console.log(value)
+  function handleSelectTemplate(title: string) {
+    const template = templates.find(t => t.title === title)!
+    console.log(template)
     return undefined;
   }
 
@@ -53,7 +76,9 @@ const CreateScreen = () => {
         <div style={{display: 'flex', flexDirection: 'row'}}>
           <select onChange={(e) => handleSelectTemplate(e.target.value)}>
             <option disabled selected>Select a template</option>
-            {templates.map((value, i) => <option key={i} value={value}>{value}</option>)}
+            {templates.map((value, i) =>
+              <option key={i} value={value.title}>{value.title} - {value.questions.length} questions</option>)
+            }
           </select>
         </div>
         <Text style={{ marginTop: 20, marginBottom: 20 }}>

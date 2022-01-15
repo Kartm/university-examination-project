@@ -5,6 +5,8 @@ export interface Settings {
     show_points_per_question: boolean;
 }
 
+export interface SettingsDraft extends Settings {settings_uuid: null}
+
 export interface QuestionType {
     question_type_uuid: string;
     name: string;
@@ -23,12 +25,17 @@ export interface Question {
     question_choices: QuestionChoice[];
 }
 
+export interface QuestionDraft extends Question {question_uuid: null}
+
 export interface Exam {
-    uuid: string;
+    exam_uuid: string;
     title: string;
     settings: Settings;
     questions: Question[];
 }
+
+export interface ExamDraft extends Exam {exam_uuid: null, settings: SettingsDraft, questions: QuestionDraft[]}
+
 
 export interface QuestionAnswer {
     question_answer_id?: string;

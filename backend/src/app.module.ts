@@ -17,6 +17,7 @@ import {TemplateModule} from "./api/template/template.module";
 import {QuestionChoiceModule} from "./api/questionChoice/questionChoice.module";
 import {QuestionModule} from "./api/question/question.module";
 import {QuestionAnswerModule} from "./api/questionAnswer/questionAnswer.module";
+import {ParticipantModule} from "./api/participant/participant.module";
 
 @Module({
     imports: [
@@ -45,7 +46,9 @@ import {QuestionAnswerModule} from "./api/questionAnswer/questionAnswer.module";
         TemplateModule,
         QuestionChoiceModule,
         QuestionModule,
-        QuestionAnswerModule
+        QuestionAnswerModule,
+        ParticipantModule
+
     ],
     controllers: [
         AppController

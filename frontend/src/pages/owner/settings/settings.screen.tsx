@@ -43,7 +43,7 @@ const SettingsScreen = () => {
           </Text>
           <form>
             <div style={{display: 'flex', flexDirection: 'row'}}>
-              <div style={{color: 'white'}}>
+              <div>
                 <div>
                   Email
                 </div>

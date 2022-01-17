@@ -7,6 +7,7 @@ import Button from "../../../components/forms/button.component";
 import Text from "../../../components/style/text.component";
 import {useDispatch} from "react-redux";
 import {updateTitleAction} from "../../../store/slices/ui.slice";
+import Popup from "../../../components/layout/popup";
 
 interface QuestionsParams {
   testOwnerUuid: string;
@@ -27,6 +28,11 @@ const QuestionsScreen = () => {
           Questions screen
           {testOwnerUuid}
         </Text>
+
+        <Popup show={true}>
+          <h3>Add Question</h3>
+        </Popup>
+
         <Link to={`/${testOwnerUuid}/editor/finish`} style={{ marginRight: 10 }}>
           <Button text="Next (finish)" color="primary" />
         </Link>

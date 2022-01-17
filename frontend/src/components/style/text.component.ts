@@ -6,10 +6,11 @@ type TextProps = {
     h1?: boolean;
     h2?: boolean;
     h3?: boolean;
+    color?: string;
 }
 
 const Text = styled.p <TextProps>`
-    color: ${colors.dark};
+    color: ${props => props.color || colors.dark};
     font-size: 20px;
     font-family: ${fonts.regular};
     margin: 0px;

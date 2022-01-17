@@ -17,5 +17,5 @@ interface HeaderProps {
 }
 
 export const Header = (props: HeaderProps) => {
-  return <Wrapper><Text>{props.title}</Text></Wrapper>;
+  return <Wrapper><Text color={'#FFFFFF'}>{props.title}</Text></Wrapper>;
 };

@@ -1,42 +1,78 @@
 import {Injectable} from "@nestjs/common";
 import {LinkInterface} from "./interface/link.interface";
 import {CommonApi} from "../../APIHelpers/CommonApi";
-import {TestInterface} from "../test/interfaces/test.interface";
+import {ParticipantInterface} from "../participant/interfaces/participant.interface";
+import {ParticipantService} from "../participant/participant.service";
+
 
 @Injectable()
 
 export class LinkService {
 
-    links: LinkInterface[] = [];
+    static links: LinkInterface[] = [];
 
 
-    getAllLinks() {
+    static getAllLinks() {
         return this.links;
     }
 
-    addLink(link: LinkInterface) {
+    static addLink(link: LinkInterface) {
         return CommonApi.addEntity(link, this.links);
     }
 
-    getSingleLink(id: number): LinkInterface {
-          return CommonApi.findEntity(id, this.links)[0];
-
-
+    static getSingleLink(id: string): LinkInterface {
+        const link = CommonApi.findEntity(id, this.links)[0];
+        if(!link) return null;
+        if(link.used) return null;
+        const participant : ParticipantInterface = ParticipantService.participants.find(participant => participant.id === link.participant_id);
+        link.used = true;
+        LinkService.updateLink(id, link);
+        return participant;
+    }
+    static checkLink (linkFromPath : string)
+    {
+        const link : LinkInterface = LinkService.getSingleLink(linkFromPath);
+        if(!link) return null;
+        if(link.used) return null;
+        const participant : ParticipantInterface = ParticipantService.participants.find(participant => participant.id === link.participant_id);
+        link.used = true;
+        LinkService.updateLink(linkFromPath, link);
+        return participant;
     }
 
-    deleteLink(linkId: number) {
+    static deleteLink(linkId: string) {
 
         CommonApi.removeEntity(linkId, this.links)
 
     }
 
-    updateLink(id: number, newLink: LinkInterface) {
-        const test : TestInterface = CommonApi.findEntity(id, this.links)[0];
 
+
+
+
+    static updateLink(id: string, newLink: LinkInterface) {
+        const link_ : LinkInterface = CommonApi.findEntity(id, this.links)[0];
+
+        if(newLink.participant_id)
+        {
+            link_.participant_id = newLink.participant_id
+        }
+        if (newLink.used) {
+            link_.used = newLink.used;
+        }
+        if(newLink.sent_at)
+        {
+            link_.sent_at = newLink.sent_at;
+        }
+        this.links[id] = link_;
+        return link_;
     }
 
-    removeLink(id: number) {
+
+
+    static removeLink(id: string) {
          CommonApi.removeEntity(id, this.links) // why not ; ?
     }
 
 }
+

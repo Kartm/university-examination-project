@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { QuestionTypeInterface } from '../interfaces/questionType.interface';
+import { QuestionTypeInterface } from '../api/questionType/interfaces/questionType.interface';
 
 @Entity("questionType")
 export class questionTypeEntity implements QuestionTypeInterface {

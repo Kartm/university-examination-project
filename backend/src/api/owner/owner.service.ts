@@ -1,48 +1,48 @@
 import {Injectable} from "@nestjs/common";
-import {QuestionPresetInterface} from "./interfaces/questionPreset.interface";
+import {ownerInterface} from "./interfaces/owner.interface";
 import {CommonApi} from "../../APIHelpers/CommonApi";
 
 @Injectable()
-export class QuestionPresetService
+export class ownerService
 {
-    questionPresets : QuestionPresetInterface[] = [];
+    owners : ownerInterface[] = [];
 
 
-    getAllQuestionPreset() {
-        return this.questionPresets;
+    getAllowner() {
+        return this.owners;
     }
 
-    getOneQuestionPreset(id: string) {
-        return CommonApi.findEntity(id, this.questionPresets)[0];
+    getOneowner(id: string) {
+        return CommonApi.findEntity(id, this.owners)[0];
     }
 
-    addQuestionPresset(questionPreset: QuestionPresetInterface) {
-        return CommonApi.addEntity(questionPreset, this.questionPresets);
+    addQuestionPresset(owner: ownerInterface) {
+        return CommonApi.addEntity(owner, this.owners);
     }
 
-    removeAllQuestionPreset() {
-        return CommonApi.removeAllEntities(this.questionPresets);
+    removeAllowner() {
+        return CommonApi.removeAllEntities(this.owners);
     }
 
-    removeOneQuestionPreset(id: string) {
-        return CommonApi.removeEntity(id, this.questionPresets);
+    removeOneowner(id: string) {
+        return CommonApi.removeEntity(id, this.owners);
     }
 
-    updateQuestionPreset(id: string, newQuestionPreset: QuestionPresetInterface) {
-        const [questionPreset, index] = CommonApi.findEntity(id, this.questionPresets);
-        if(newQuestionPreset.template_id)
+    updateowner(id: string, newowner: ownerInterface) {
+        const [owner, index] = CommonApi.findEntity(id, this.owners);
+        if(newowner.template_id)
         {
-            questionPreset.template_id = newQuestionPreset.template_id;
+            owner.template_id = newowner.template_id;
         }
-        if(newQuestionPreset.question_type_id)
+        if(newowner.question_type_id)
         {
-            questionPreset.question_type_id = newQuestionPreset.question_type_id;
+            owner.question_type_id = newowner.question_type_id;
         }
-        if(newQuestionPreset.question_num)
+        if(newowner.question_num)
         {
-            questionPreset.question_num = newQuestionPreset.question_num;
+            owner.question_num = newowner.question_num;
         }
-        this.questionPresets[index] = questionPreset;
-        return questionPreset;
+        this.owners[index] = owner;
+        return owner;
     }
 }

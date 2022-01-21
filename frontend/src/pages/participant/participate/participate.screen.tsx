@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { Link, useParams } from "react-router-dom";
 
 import Container from "../../../components/style/container.component";
@@ -15,6 +15,10 @@ interface ParticipateParams {
 }
 
 const ParticipateScreen = () => {
+  const hasStartPassed = true
+  const startDate = '21.01.2022'
+  const startTime = '15:00'
+
   const { testParticipateUuid } = useParams<ParticipateParams>();
   const examState = useSelector((state: RootState) => state.exam);
   const dispatch = useDispatch();
@@ -31,15 +35,24 @@ const ParticipateScreen = () => {
     <Container>
       <Content>
         <Text h1 style={{ marginBottom: 20 }}>
-          Participate screen
-          <br/>[TODO]
+          {examState.exam?.title || ''}
+          <br/>
         </Text>
-        <Link
-          to={`/${testParticipateUuid}/questions`}
-          style={{ marginRight: 10 }}
+        <div style={{color: 'darkgrey'}}>
+          <h3> Start Date: {startDate}</h3>
+          <h3> Start Time: {startTime}</h3>
+        </div>
+        <br/>
+        {hasStartPassed ? <Link
+            to={`/${testParticipateUuid}/questions`}
+            style={{marginRight: 10}}
         >
-          <Button text="Next (questions)" color="primary" />
+          <Button text="START EXAM" color="primary"/>
         </Link>
+        :
+        <div style={{color: 'darkgrey'}}>
+          <h2>Looks like it's not yet time for the exam</h2>
+        </div>}
       </Content>
     </Container>
   );

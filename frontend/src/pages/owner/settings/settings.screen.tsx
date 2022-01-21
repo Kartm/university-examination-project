@@ -18,7 +18,8 @@ const SettingsScreen = () => {
   const [ownerEmail, setOwnerEmail] = useState('')
   const [ownerName, setOwnerName] = useState('')
   const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
+  const [startTime, setStartTime] = useState('')
+  const [endTime, setEndTime] = useState('')
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
   const {testOwnerUuid} = useParams<SettingsParams>();
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ const SettingsScreen = () => {
           </Text>
           <form>
             <div style={{display: 'flex', flexDirection: 'row'}}>
-              <div style={{color: 'white'}}>
+              <div>
                 <div>
                   Email
                 </div>
@@ -57,7 +58,11 @@ const SettingsScreen = () => {
                 </div>
 
                 <div>
-                  Date
+                  Start Date
+                </div>
+
+                <div>
+                  Test Duration
                 </div>
 
                 <div>
@@ -79,29 +84,40 @@ const SettingsScreen = () => {
                        placeholder='Write your name'
                        value={ownerName}
                        onChange={(e) => setOwnerName(e.target.value)}/>
+                <input type='text'
+                       onFocus={
+                         (e)=> {
+                           e.currentTarget.type = "date";
+                           e.currentTarget.focus();
+                         }
+                       }
+                       placeholder='Start Date'
+                       value={startDate}
+                       onChange={(e) => setStartDate(e.target.value)}/>
 
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                   <input type='text'
                          onFocus={
                            (e)=> {
-                             e.currentTarget.type = "date";
+                             e.currentTarget.type = "time";
                              e.currentTarget.focus();
                            }
                          }
-                         placeholder='Start Date'
-                         value={startDate}
-                         onChange={(e) => setStartDate(e.target.value)}/>
+                         placeholder='Start Time'
+                         value={startTime}
+                         onChange={(e) => setStartTime(e.target.value)}/>
                   <input type='text'
                          onFocus={
                            (e)=> {
-                             e.currentTarget.type = "date";
+                             e.currentTarget.type = "time";
                              e.currentTarget.focus();
                            }
                          }
-                         placeholder='End Date'
-                         value={endDate}
-                         onChange={(e) => setEndDate(e.target.value)}/>
+                         placeholder='End Time'
+                         value={endTime}
+                         onChange={(e) => setEndTime(e.target.value)}/>
                 </div>
+                <br/>
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                   <Dropdown options={settings} onChange={(e) => setSelectedOptions(e)}/>
                 </div>

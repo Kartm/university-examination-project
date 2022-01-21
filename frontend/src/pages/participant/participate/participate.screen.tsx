@@ -15,7 +15,7 @@ interface ParticipateParams {
 }
 
 const ParticipateScreen = () => {
-  const hasStartPassed = false
+  const hasStartPassed = true
   const startDate = '21.01.2022'
   const startTime = '15:00'
 

@@ -30,17 +30,17 @@ export class SettingsService
 
     updateSettings(id: string, newSettings: SettingsInterface) {
         const [settings, index] = CommonApi.findEntity(id, this.settings);
-        if(newSettings.show_results_overview)
+        if(newSettings.show_results_overview !== undefined)
         {
-            settings.show_results_overview = newSettings.show_results_overview;
+            settings.show_results_overview = !!newSettings.show_results_overview;
         }
-        if(newSettings.allow_going_back)
+        if(newSettings.allow_going_back !== undefined)
         {
-            settings.allow_going_back = newSettings.allow_going_back;
+            settings.allow_going_back = !!newSettings.allow_going_back;
         }
-        if(newSettings.show_points_per_question)
+        if(newSettings.show_points_per_question !== undefined)
         {
-            settings.show_points_per_question = newSettings.show_points_per_question;
+            settings.show_points_per_question = !!newSettings.show_points_per_question;
         }
         this.settings[index] = settings;
         return settings;

@@ -7,10 +7,11 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
     // return await res.json();
 
     const mockExam: Exam = {
-        exam_uuid: 'placeholder-exam-uuid',
-        title: 'Super cool exam',
+        id: 'placeholder-exam-uuid',
+        name: 'Super cool exam',
+        owner_name: 'jan kowalski',
         settings: {
-            settings_uuid: 'xdddd',
+            id: 'xdddd',
             allow_going_back: false,
             // todo points per question
             show_points_per_question: true,
@@ -79,77 +80,34 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
 };
 
 export const apiCreateExam = async (): Promise<APIResponse<Exam>> => {
-    // const res = await get(`/users/me`);
-    // return await res.json();
-
-    const emptyExamFromBackend: Exam = {
-        exam_uuid: '123e4567-e89b-12d3-a456-426652340000',
-        title: '',
-        settings: {
-            settings_uuid: '2d5598a9-7067-4b2f-bd72-97b290fa1fcf',
-            allow_going_back: false,
-            show_points_per_question: false,
-            show_results_overview: false,
-        },
-        questions: [
-            // {
-            //     question_uuid: 'eins',
-            //     name: 'What is your favorite food?',
-            //     question_type: 'OPEN',
-            //     question_choices: [
-            //
-            //     ]
-            // },
-            // {
-            //     question_uuid: 'zwei',
-            //     name: 'Which pill?',
-            //     question_type: 'SINGLE_CHOICE',
-            //     question_choices: [
-            //         {
-            //             question_choice_id: 'asssss',
-            //             is_correct: true,
-            //             text: 'Red'
-            //         },
-            //         {
-            //             question_choice_id: 'bsssss',
-            //             is_correct: false,
-            //             text: 'Blue'
-            //         }
-            //     ]
-            // },
-            // {
-            //     question_uuid: 'drei',
-            //     name: 'What does CSS stand for?',
-            //     question_type: 'MULTI_CHOICE',
-            //     question_choices: [
-            //         {
-            //             question_choice_id: 'ammmm',
-            //             is_correct: true,
-            //             text: 'Cascading Style Sheet'
-            //         },
-            //         {
-            //             question_choice_id: 'bmmmm',
-            //             is_correct: false,
-            //             text: 'Computing Style Sheet'
-            //         },
-            //         {
-            //             question_choice_id: 'cmmmm',
-            //             is_correct: false,
-            //             text: 'Creative Styling Sheet'
-            //         }
-            //     ]
-            // }
-        ]
-    }
-
-    const mockData = await new Promise((res, rej) => {
-        res(emptyExamFromBackend)
+    const settingsRequest = await post(`/settings/`, {
+        show_results_overview: true,
+        allow_going_back: true,
+        show_points_per_question: true,
     });
+
+    const settings = await settingsRequest.json()
+
+    const examRequest = await post(`/tests/`, {
+        name: 'some exam',
+        owner_name: 'jan kowalski',
+        settings_id: settings.id,
+    });
+
+    const exam = await examRequest.json()
+
+    const examFromBackend: Exam = {
+        id: exam.data.id,
+        name: exam.data.name,
+        owner_name: exam.data.owner_name,
+        settings: settings.data,
+        questions: []
+    }
 
     return {
         statusCode: 200,
         message: [],
-        data: mockData
+        data: examFromBackend
     } as APIResponse<Exam>;
 };
 
@@ -159,7 +117,8 @@ export const apiGetExamTemplates = async (): Promise<APIResponse<ExamDraft[]>> =
 
     const examTemplatesFromBackend: ExamDraft[] = [
         {
-            title: 'Simple ABC',
+            name: 'Simple ABC',
+            owner_name: 'jan kowalski',
             settings: {
                 show_results_overview: false,
                 show_points_per_question: true,
@@ -187,7 +146,8 @@ export const apiGetExamTemplates = async (): Promise<APIResponse<ExamDraft[]>> =
             ],
         },
         {
-            title: 'Medical exam',
+            name: 'Medical exam',
+            owner_name: 'jan kowalski',
             settings: {
                 show_results_overview: false,
                 show_points_per_question: true,
@@ -197,7 +157,8 @@ export const apiGetExamTemplates = async (): Promise<APIResponse<ExamDraft[]>> =
             ],
         },
         {
-            title: 'Test exam',
+            name: 'Test exam',
+            owner_name: 'jan kowalski',
             settings: {
                 show_results_overview: false,
                 show_points_per_question: true,
@@ -207,7 +168,8 @@ export const apiGetExamTemplates = async (): Promise<APIResponse<ExamDraft[]>> =
             ],
         },
         {
-            title: 'CSS basic exam',
+            name: 'CSS basic exam',
+            owner_name: 'jan kowalski',
             settings: {
                 show_results_overview: false,
                 show_points_per_question: true,
@@ -234,10 +196,11 @@ export const apiUseExamTemplate = async (examTemplate: ExamDraft): Promise<APIRe
     // return await res.json();
 
     const createdExamFromBackend: Exam = {
-        exam_uuid: '856ad28a-74a4-4f2a-bff7-ca93e9280143',
-        title: '',
+        id: '856ad28a-74a4-4f2a-bff7-ca93e9280143',
+        name: '',
+        owner_name: 'jan kowalski',
         settings: {
-            settings_uuid: '14999764-317c-4692-827a-558adce51bc7',
+            id: '14999764-317c-4692-827a-558adce51bc7',
             ...examTemplate.settings
         },
         questions: examTemplate.questions.map((q, i) => ({
@@ -270,7 +233,7 @@ export const apiPublishExam = async (exam: Exam): Promise<APIResponse<Exam>> => 
         "exam_uuid": "856ad28a-74a4-4f2a-bff7-ca93e9280143",
         "title": "new exam",
         "settings": {
-            "settings_uuid": "14999764-317c-4692-827a-558adce51bc7",
+            "id": "14999764-317c-4692-827a-558adce51bc7",
             "show_results_overview": false,
             "show_points_per_question": true,
             "allow_going_back": true
@@ -301,7 +264,7 @@ export const apiPublishExam = async (exam: Exam): Promise<APIResponse<Exam>> => 
         ]
     }
 
-    const settingsToCreate = {...exampleExam.settings, settings_uuid: undefined}
+    const settingsToCreate = {...exampleExam.settings, id: undefined}
 
     const settingsResponse = await (await post(`/settings`, settingsToCreate)).json();
     console.log(`created settings with id ${settingsResponse.data.id}`)

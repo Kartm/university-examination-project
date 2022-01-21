@@ -50,7 +50,7 @@ const ParticipateQuestionsScreen = () => {
   }, [examState?.exam?.questions]);
 
   useEffect(() => {
-    dispatch(updateTitleAction(`Pass | ${examState.exam?.title || ''}`));
+    dispatch(updateTitleAction(`Pass | ${examState.exam?.name || ''}`));
   });
 
 

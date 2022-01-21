@@ -28,14 +28,14 @@ const ParticipateScreen = () => {
   }, [examState]);
 
   useEffect(() => {
-    dispatch(updateTitleAction(`Pass | ${examState.exam?.title || ''}`));
+    dispatch(updateTitleAction(`Pass | ${examState.exam?.name || ''}`));
   });
 
   return (
     <Container>
       <Content>
         <Text h1 style={{ marginBottom: 20 }}>
-          {examState.exam?.title || ''}
+          {examState.exam?.name || ''}
           <br/>
         </Text>
         <div style={{color: 'darkgrey'}}>

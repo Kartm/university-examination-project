@@ -1,11 +1,11 @@
 export interface Settings {
-    settings_uuid: string;
+    id: string;
     show_results_overview: boolean;
     allow_going_back: boolean;
     show_points_per_question: boolean;
 }
 
-export type SettingsDraft = Omit<Settings, 'settings_uuid'>
+export type SettingsDraft = Omit<Settings, 'id'>
 
 export interface QuestionChoice {
     question_choice_id: string;
@@ -25,13 +25,14 @@ export interface Question {
 export interface QuestionDraft extends Omit<Omit<Question, 'question_uuid'>, 'question_choices'> {question_choices: QuestionChoiceDraft[]}
 
 export interface Exam {
-    exam_uuid: string;
-    title: string;
+    id: string;
+    name: string;
+    owner_name: string;
     settings: Settings;
     questions: Question[];
 }
 
-export interface ExamDraft extends Omit<Omit<Omit<Exam, 'exam_uuid'>, 'settings'>, 'questions'> {settings: SettingsDraft, questions: QuestionDraft[]}
+export interface ExamDraft extends Omit<Omit<Omit<Exam, 'id'>, 'settings'>, 'questions'> {settings: SettingsDraft, questions: QuestionDraft[]}
 
 export interface QuestionAnswer {
     question_answer_id?: string;

@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const slice = createSlice({
   name: "ui",
   initialState: {
-    title: "test title",
+    title: "test name",
   },
   reducers: {
     updateTitle: (state, action) => {

@@ -24,13 +24,13 @@ const CreateScreen = () => {
     dispatch(updateTitleAction("Pass | Create an exam"));
   });
 
-  function handleSelectTemplate(title: string) {
-    const template = examState.examTemplates.find(t => t.title === title)!
+  function handleSelectTemplate(name: string) {
+    const template = examState.examTemplates.find(t => t.name === name)!
     // @ts-ignore
     // eslint-disable-next-line react-hooks/rules-of-hooks
     dispatch(useExamTemplate(template)).then(x => {
       const exam: Exam = x.payload;
-      history.push(`/${exam.exam_uuid}/editor`);
+      history.push(`/${exam.id}/editor`);
     })
   }
 
@@ -38,8 +38,8 @@ const CreateScreen = () => {
     // @ts-ignore
     dispatch(createExam()).then(x => {
       const exam: Exam = x.payload;
-
-      history.push(`/${exam.exam_uuid}/editor`);
+      console.log(exam)
+      history.push(`/${exam.id}/editor`);
     });
   }
 
@@ -50,7 +50,7 @@ const CreateScreen = () => {
           <select onChange={(e) => handleSelectTemplate(e.target.value)}>
             <option disabled selected>Select a template</option>
             {examState.examTemplates.map((value, i) =>
-              <option key={i} value={value.title}>{value.title} - {value.questions.length} questions</option>)
+              <option key={i} value={value.name}>{value.name} - {value.questions.length} questions</option>)
             }
           </select>
         </div>

@@ -26,7 +26,7 @@ const ParticipateFinishScreen = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(updateTitleAction(`Pass | ${examState.exam?.title || ''} - finish attempt`));
+    dispatch(updateTitleAction(`Pass | ${examState.exam?.name || ''} - finish attempt`));
   });
 
   return (

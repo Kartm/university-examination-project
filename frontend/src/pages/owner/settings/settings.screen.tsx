@@ -76,7 +76,7 @@ const SettingsScreen = () => {
                        onChange={(e) => setOwnerEmail(e.target.value)}/>
 
                 <input type='text'
-                       placeholder='Enter the exam title'
+                       placeholder='Enter the exam name'
                        value={testName}
                        onChange={(e) => setTestName(e.target.value)}/>
 

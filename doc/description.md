@@ -1,5 +1,5 @@
 ---
-title: React NestJS Starter with continuous integration and AWS deployment
+name: React NestJS Starter with continuous integration and AWS deployment
 description:  Starter includes user authentication, Rest API integration, Docker, continuous integration, clean file structure and best practices, AWS deployment
 ogtitle: Web starter React.js NestJS
 ogdescription: Modern full-stack starter that allows you to create your web application.

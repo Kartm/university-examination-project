@@ -1,5 +1,6 @@
 import { APIResponse } from "../models/api.model";
-import {Exam, ExamDraft} from "../models/exam.model";
+import {Exam, ExamDraft, Settings} from "../models/exam.model";
+import {post} from "./utils.service";
 
 export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
     // const res = await get(`/users/me`);
@@ -251,6 +252,8 @@ export const apiUseExamTemplate = async (examTemplate: ExamDraft): Promise<APIRe
         }))
     }
 
+    console.log(JSON.parse(JSON.stringify(createdExamFromBackend)))
+
     const mockData = await new Promise((res, rej) => {
         res(createdExamFromBackend)
     });
@@ -259,5 +262,65 @@ export const apiUseExamTemplate = async (examTemplate: ExamDraft): Promise<APIRe
         statusCode: 200,
         message: [],
         data: mockData
+    } as APIResponse<Exam>;
+};
+
+export const apiPublishExam = async (exam: Exam): Promise<APIResponse<Exam>> => {
+    const exampleExam = {
+        "exam_uuid": "856ad28a-74a4-4f2a-bff7-ca93e9280143",
+        "title": "new exam",
+        "settings": {
+            "settings_uuid": "14999764-317c-4692-827a-558adce51bc7",
+            "show_results_overview": false,
+            "show_points_per_question": true,
+            "allow_going_back": true
+        },
+        "questions": [
+            {
+                "question_uuid": "d10e63fd-11ed-4042-8f89-2cb0233bca65------0",
+                "name": "Which one?",
+                "question_type": "SINGLE_CHOICE",
+                "question_choices": [
+                    {
+                        "question_choice_id": "5e31a0b6-6ca0-4c01-91ba-10abb65d0f0c-----00",
+                        "text": "A",
+                        "is_correct": true
+                    },
+                    {
+                        "question_choice_id": "5e31a0b6-6ca0-4c01-91ba-10abb65d0f0c-----01",
+                        "text": "B",
+                        "is_correct": false
+                    },
+                    {
+                        "question_choice_id": "5e31a0b6-6ca0-4c01-91ba-10abb65d0f0c-----02",
+                        "text": "C",
+                        "is_correct": false
+                    }
+                ]
+            }
+        ]
+    }
+
+    const settingsToCreate = {...exampleExam.settings, settings_uuid: undefined}
+
+    const settingsResponse = await (await post(`/settings`, settingsToCreate)).json();
+    console.log(`created settings with id ${settingsResponse.data.id}`)
+
+    const questionsToCreate = exampleExam.questions.map(q => ({...q, question_uuid: undefined}))
+
+    // todo not now, there's missing endpoint
+    const questionResponse = await (await post(`/question`, {
+
+    })).json();
+
+    const questionChoiceResponse = await (await post(`/question`, {
+
+    })).json();
+
+    return {
+        statusCode: 200,
+        message: [],
+        // @ts-ignore
+        data: {}
     } as APIResponse<Exam>;
 };

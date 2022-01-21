@@ -1,13 +1,16 @@
 import React, {useEffect, useState} from "react";
-import { Link, useParams } from "react-router-dom";
+import {Link, useHistory, useParams} from "react-router-dom";
 
 import Container from "../../../components/style/container.component";
 import Content from "../../../components/style/content.component";
 import Button from "../../../components/forms/button.component";
 import Text from "../../../components/style/text.component";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {updateTitleAction} from "../../../store/slices/ui.slice";
 import Dropdown from "../../../components/forms/dropdown";
+import {createExam, getExamByUuid, UpdateExamSettings, updateExamSettings} from "../../../store/slices/exam.slice";
+import {Exam} from "../../../models/exam.model";
+import {RootState} from "../../../store/configure.store";
 
 interface SettingsParams {
   testOwnerUuid: string;
@@ -21,18 +24,50 @@ const SettingsScreen = () => {
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
-  const {testOwnerUuid} = useParams<SettingsParams>();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const examState = useSelector((state: RootState) => state.exam);
+
+  const {testOwnerUuid} = useParams<SettingsParams>();
+
 
   useEffect(() => {
     dispatch(updateTitleAction("Pass | Exam settings"));
   });
+
+  useEffect(() => {
+    dispatch(getExamByUuid(testOwnerUuid));
+  }, []);
+
 
   const settings = [
       "Show results overview",
       "Allow going back to previous question",
       "Display points per question"
   ]
+
+  function onNextButtonClicked() {
+    // convert component's state to something backend will understand
+
+    const update: UpdateExamSettings = {
+      id: testOwnerUuid,
+      name: testName,
+      owner_name: ownerName,
+      settings: {
+        id: examState.exam.settings.id,
+        show_points_per_question: selectedOptions.includes('Display points per question'),
+        show_results_overview: selectedOptions.includes('Show results overview'),
+        allow_going_back: selectedOptions.includes('Allow going back to previous question')
+      }
+    }
+
+    console.log(update)
+
+    // @ts-ignore
+    dispatch(updateExamSettings(update)).then(x => {
+      history.push(`/${testOwnerUuid}/editor/participants`);
+    });
+  }
 
   return (
       <Container>
@@ -125,9 +160,8 @@ const SettingsScreen = () => {
             </div>
 
           </form>
-          <Link to={`/${testOwnerUuid}/editor/participants`} style={{marginRight: 10}}>
-            <Button text="Next (add participants)" color="primary"/>
-          </Link>
+
+          <Button text="Next (add participants)" color="primary" onClick={() => onNextButtonClicked()}/>
         </Content>
       </Container>
   );

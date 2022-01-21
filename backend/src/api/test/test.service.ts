@@ -23,7 +23,7 @@ export class TestService {
 
 
     addTest(test: TestInterface) {
-
+        console.log(test)
         return CommonApi.addEntity(test, this.tests)
     }
 
@@ -99,7 +99,11 @@ export class TestService {
         {
             test.owner_link = newTest.owner_link;
         }
-        this.tests[id] = test;
+
+        const testToChangeIndex = this.tests.findIndex((t => t.id === test.id));
+
+        this.tests[testToChangeIndex] = test
+
         return test;
     }
 

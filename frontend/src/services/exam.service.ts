@@ -1,22 +1,25 @@
 import { APIResponse } from "../models/api.model";
 import {Exam, ExamDraft, Settings} from "../models/exam.model";
-import {post} from "./utils.service";
+import {patch, put, post, get} from "./utils.service";
+import {UpdateExamSettings} from "../store/slices/exam.slice";
 
 export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
-    // const res = await get(`/users/me`);
-    // return await res.json();
+    const examRequest = await get(`/tests/${uuid}/`);
 
-    const mockExam: Exam = {
-        id: 'placeholder-exam-uuid',
-        name: 'Super cool exam',
-        owner_name: 'jan kowalski',
-        settings: {
-            id: 'xdddd',
-            allow_going_back: false,
-            // todo points per question
-            show_points_per_question: true,
-            show_results_overview: false,
-        },
+    const exam = await examRequest.json()
+
+    const settingsRequest = await get(`/settings/${exam.data.settings_id}/`);
+
+    const settings = await settingsRequest.json()
+
+    console.log(exam, settings)
+
+    const examFromBackend: Exam = {
+        id: exam.data.id,
+        name: exam.data.name,
+        owner_name: exam.data.owner_name,
+        settings: settings.data,
+        // todo
         questions: [
             {
                 question_uuid: 'eins',
@@ -68,14 +71,10 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
         ]
     }
 
-    const mockData = await new Promise((res, rej) => {
-        res(mockExam)
-    });
-
     return {
         statusCode: 200,
         message: [],
-        data: mockData
+        data: examFromBackend
     } as APIResponse<Exam>;
 };
 
@@ -91,7 +90,40 @@ export const apiCreateExam = async (): Promise<APIResponse<Exam>> => {
     const examRequest = await post(`/tests/`, {
         name: 'some exam',
         owner_name: 'jan kowalski',
-        settings_id: settings.id,
+        settings_id: settings.data.id,
+    });
+
+    const exam = await examRequest.json()
+
+    const examFromBackend: Exam = {
+        id: exam.data.id,
+        name: exam.data.name,
+        owner_name: exam.data.owner_name,
+        settings: settings.data,
+        questions: []
+    }
+
+    return {
+        statusCode: 200,
+        message: [],
+        data: examFromBackend
+    } as APIResponse<Exam>;
+};
+
+export const apiUpdateExamSettings = async (update: UpdateExamSettings): Promise<APIResponse<Exam>> => {
+
+    const settingsRequest = await patch(`/settings/${update.settings.id}/`, {
+        show_results_overview: update.settings.show_results_overview,
+        allow_going_back: update.settings.allow_going_back,
+        show_points_per_question: update.settings.show_points_per_question,
+    });
+
+    const settings = await settingsRequest.json()
+
+    const examRequest = await patch(`/tests/${update.id}/`, {
+        name: update.name,
+        owner_name: update.owner_name,
+        settings_id: settings.data.id,
     });
 
     const exam = await examRequest.json()

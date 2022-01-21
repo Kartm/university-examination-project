@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {Exam, ExamDraft} from "../../models/exam.model";
+import {Exam, ExamDraft, Settings} from "../../models/exam.model";
 import {
   apiCreateExam,
   apiGetExamTemplates,
-  apiPublishExam,
+  apiPublishExam, apiUpdateExamSettings,
   apiUseExamTemplate,
   getExam
 } from "../../services/exam.service";
@@ -11,6 +11,13 @@ import {
 export interface State {
   exam: Exam | null,
   examTemplates: ExamDraft[],
+}
+
+export interface UpdateExamSettings {
+  id: string;
+  name: string;
+  owner_name: string;
+  settings: Settings;
 }
 
 const slice = createSlice({
@@ -67,6 +74,14 @@ export const publishExam = (exam: Exam) => async (dispatch) => {
   try {
     const publishedExam = await apiPublishExam(exam);
     return dispatch(setExam(publishedExam.data));
+  } catch (e) {
+    return console.error(e.message);
+  }
+};
+export const updateExamSettings = (update: UpdateExamSettings) => async (dispatch) => {
+  try {
+    const exam = await apiUpdateExamSettings(update);
+    return dispatch(setExam(exam.data));
   } catch (e) {
     return console.error(e.message);
   }

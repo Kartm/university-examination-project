@@ -56,9 +56,7 @@ const ParticipantsScreen = () => {
       <Content>
         <Text h1 style={{ marginBottom: 20 }}>
           Participants screen
-          {/*<p>{testOwnerUuid}</p>*/}
         </Text>
-        <Button text="Upload File" color="primary" />
         <span>
           {participants.map((participant, i) => (
               <h3 key={participant.email} style={{display: 'flex'}}>

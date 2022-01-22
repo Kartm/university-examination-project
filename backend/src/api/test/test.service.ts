@@ -14,14 +14,14 @@ export class TestService {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'xxx@gmail.com',
-                pass: ''
+                user: 'berkaymertkocak99@gmail.com',
+                pass: 'okclkwhxjnojpmhn'
             }
         });
 
         const mailOptions = {
-            from: 'youremail@gmail.com',
-            to: "xxx@gmail.com",
+            from: 'berkaymertkocak99@gmail.com',
+            to: "berkaymertkocak_99@outlook.com",
             subject: 'Sending Email using Node.js',
             text: 'That was easy!'
         };

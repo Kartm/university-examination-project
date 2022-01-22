@@ -5,13 +5,14 @@ import Container from "../../../components/style/container.component";
 import Content from "../../../components/style/content.component";
 import Button from "../../../components/forms/button.component";
 import Text from "../../../components/style/text.component";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {updateTitleAction} from "../../../store/slices/ui.slice";
 import Popup from "../../../components/layout/popup";
 import AddQuestion from "../../../components/layout/add.question";
 import QuestionComponent from "../../../components/exam/question.component";
-import {Question} from "../../../models/exam.model";
-import {getQuestionTypes} from "../../../store/slices/exam.slice";
+import {Question, QuestionDraft} from "../../../models/exam.model";
+import {getExamByUuid, getQuestionTypes} from "../../../store/slices/exam.slice";
+import {RootState} from "../../../store/configure.store";
 
 interface QuestionsParams {
   testOwnerUuid: string;
@@ -19,11 +20,12 @@ interface QuestionsParams {
 
 const QuestionsScreen = () => {
   const [showPopup, setShowPopup] = useState<boolean>(false)
-  const [questions, setQuestions] = useState<Question[]>([])
+  const [questions, setQuestions] = useState<(Question)[]>([])
 
 
   const {testOwnerUuid} = useParams<QuestionsParams>();
   const dispatch = useDispatch();
+  const examState = useSelector((state: RootState) => state.exam);
 
 
   useEffect(() => {
@@ -31,8 +33,15 @@ const QuestionsScreen = () => {
   });
 
   useEffect(() => {
+    dispatch(getExamByUuid(testOwnerUuid));
     dispatch(getQuestionTypes());
   }, [])
+
+  useEffect(() => {
+    if(examState.exam != null) {
+      setQuestions(examState.exam.questions)
+    }
+  }, [examState.exam?.questions])
 
   return (
     <Container>
@@ -50,7 +59,7 @@ const QuestionsScreen = () => {
               question={question}
               showPoints={true}
               visible={true}
-              onValidChange={() => (console.log(question))}
+              onValidChange={() => {}}
               onAnswerChange={() => (console.log(question))}/>))}
         </div>
 

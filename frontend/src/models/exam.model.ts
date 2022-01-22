@@ -23,13 +23,13 @@ export interface QuestionType {
 export type QuestionTypeDraft = Omit<QuestionType, 'id'>
 
 export interface Question {
-    question_uuid: string;
+    id: string;
     name: string;
     question_type_id: string;
     question_choices: QuestionChoice[];
 }
 
-export interface QuestionDraft extends Omit<Omit<Question, 'question_uuid'>, 'question_choices'> {question_choices: QuestionChoiceDraft[]}
+export interface QuestionDraft extends Omit<Omit<Question, 'id'>, 'question_choices'> {question_choices: QuestionChoiceDraft[]}
 
 export interface Exam {
     id: string;

@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {Exam, ExamDraft, ParticipantDraft, QuestionType, Settings} from "../../models/exam.model";
+import {Exam, ExamDraft, ParticipantDraft, QuestionDraft, QuestionType, Settings} from "../../models/exam.model";
 import {
   apiCreateExam,
   apiGetExamTemplates, apiGetQuestionTypes,
-  apiPublishExam, apiUpdateExamParticipants, apiUpdateExamSettings,
+  apiPublishExam, apiUpdateExamParticipants, apiUpdateExamQuestions, apiUpdateExamSettings,
   apiUseExamTemplate,
   getExam
 } from "../../services/exam.service";
@@ -23,6 +23,10 @@ export interface UpdateExamSettings {
 
 export interface UpdateExamParticipants {
   participants: ParticipantDraft[];
+}
+
+export interface UpdateExamQuestions {
+  questions: QuestionDraft[];
 }
 
 const slice = createSlice({
@@ -97,7 +101,15 @@ export const updateExamSettings = (update: UpdateExamSettings) => async (dispatc
 };
 export const updateExamParticipants = (update: UpdateExamParticipants) => async (dispatch) => {
   try {
-    const participants = await apiUpdateExamParticipants(update);
+    await apiUpdateExamParticipants(update);
+    return true;
+  } catch (e) {
+    return console.error(e.message);
+  }
+};
+export const updateExamQuestions = (update: UpdateExamQuestions) => async (dispatch) => {
+  try {
+    await apiUpdateExamQuestions(update);
     return true;
   } catch (e) {
     return console.error(e.message);

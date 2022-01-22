@@ -3,13 +3,13 @@ import {
   Exam,
   ExamDraft,
   Participant,
-  ParticipantDraft,
+  ParticipantDraft, Question,
   QuestionType,
   QuestionTypeDraft,
   Settings
 } from "../models/exam.model";
 import {patch, put, post, get} from "./utils.service";
-import {UpdateExamParticipants, UpdateExamSettings} from "../store/slices/exam.slice";
+import {UpdateExamParticipants, UpdateExamQuestions, UpdateExamSettings} from "../store/slices/exam.slice";
 
 export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
   const examRequest = await get(`/tests/${uuid}/`);
@@ -34,13 +34,13 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
     // todo
     questions: [
       {
-        question_uuid: 'eins',
+        id: 'eins',
         name: 'What is your favorite food?',
         question_type_id: 'OPEN',
         question_choices: []
       },
       {
-        question_uuid: 'zwei',
+        id: 'zwei',
         name: 'Which pill?',
         question_type_id: 'SINGLE_CHOICE',
         question_choices: [
@@ -57,7 +57,7 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
         ]
       },
       {
-        question_uuid: 'drei',
+        id: 'drei',
         name: 'What does CSS stand for?',
         question_type_id: 'MULTI_CHOICE',
         question_choices: [
@@ -174,6 +174,29 @@ export const apiUpdateExamParticipants = async (update: UpdateExamParticipants):
   } as APIResponse<Participant[]>;
 };
 
+export const apiUpdateExamQuestions = async (update: UpdateExamQuestions): Promise<APIResponse<Question[]>> => {
+  console.log(update.questions)
+
+  // const participantPromises = update.questions.map(participant => "id" in participant ?
+  //   put(`/participant/${(participant as Participant).id}/`, participant) :
+  //   post(`/participant/`, participant))
+  //
+  // const updatedParticipants: Participant[] = await new Promise((res, rej) => {
+  //   Promise.all(participantPromises).then(values => {
+  //     Promise.all(values.map(response => response.json())).then(jsons => {
+  //       const finalParticipants = jsons.map(j => j.data)
+  //       res(finalParticipants)
+  //     })
+  //   });
+  // });
+
+  return {
+    statusCode: 200,
+    message: [],
+    data: []
+  } as APIResponse<Question[]>;
+};
+
 export const apiGetExamTemplates = async (): Promise<APIResponse<ExamDraft[]>> => {
   // const res = await get(`/users/me`);
   // return await res.json();
@@ -264,7 +287,7 @@ export const apiUseExamTemplate = async (examTemplate: ExamDraft): Promise<APIRe
       ...examTemplate.settings
     },
     questions: examTemplate.questions.map((q, i) => ({
-      question_uuid: `d10e63fd-11ed-4042-8f89-2cb0233bca65------${i}`,
+      id: `d10e63fd-11ed-4042-8f89-2cb0233bca65------${i}`,
       name: q.name,
       question_type_id: q.question_type_id,
       question_choices: q.question_choices.map((choice, j) => ({
@@ -300,7 +323,7 @@ export const apiPublishExam = async (exam: Exam): Promise<APIResponse<Exam>> => 
     },
     "questions": [
       {
-        "question_uuid": "d10e63fd-11ed-4042-8f89-2cb0233bca65------0",
+        "id": "d10e63fd-11ed-4042-8f89-2cb0233bca65------0",
         "name": "Which one?",
         "question_type_id": "SINGLE_CHOICE",
         "question_choices": [
@@ -329,7 +352,7 @@ export const apiPublishExam = async (exam: Exam): Promise<APIResponse<Exam>> => 
   const settingsResponse = await (await post(`/settings`, settingsToCreate)).json();
   console.log(`created settings with id ${settingsResponse.data.id}`)
 
-  const questionsToCreate = exampleExam.questions.map(q => ({...q, question_uuid: undefined}))
+  const questionsToCreate = exampleExam.questions.map(q => ({...q, id: undefined}))
 
   // todo not now, there's missing endpoint
   const questionResponse = await (await post(`/question`, {})).json();

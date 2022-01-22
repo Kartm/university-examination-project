@@ -45,7 +45,7 @@ const ParticipateQuestionsScreen = () => {
 
   useEffect(() => {
     if (examState?.exam?.questions) {
-      setInvalidQuestionIds([...examState.exam.questions.map(q => q.question_uuid)])
+      setInvalidQuestionIds([...examState.exam.questions.map(q => q.id)])
     }
   }, [examState?.exam?.questions]);
 
@@ -56,9 +56,9 @@ const ParticipateQuestionsScreen = () => {
 
   function questionValidChange(question: Question, isValid: boolean) {
     if (isValid) {
-      setInvalidQuestionIds([...invalidQuestionIds.filter(id => id !== question.question_uuid)]);
+      setInvalidQuestionIds([...invalidQuestionIds.filter(id => id !== question.id)]);
     } else {
-      setInvalidQuestionIds([...invalidQuestionIds, question.question_uuid]);
+      setInvalidQuestionIds([...invalidQuestionIds, question.id]);
     }
   }
 
@@ -100,7 +100,7 @@ const ParticipateQuestionsScreen = () => {
       <Content>
         {examState?.exam?.questions?.map((question, i) =>
           <QuestionComponent
-            key={question.question_uuid}
+            key={question.id}
             visible={selectedQuestionIndex === i}
             question={question}
             showPoints={examState?.exam?.settings.show_points_per_question}

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Question, QuestionAnswer} from "../../models/exam.model";
+import {Question, QuestionAnswer, QuestionDraft} from "../../models/exam.model";
 import styled from "styled-components";
 
 interface QuestionParams {
@@ -39,7 +39,7 @@ const QuestionComponent = ({question, showPoints, visible, onValidChange, onAnsw
       onValidChange(!!e.target.value)
 
       const answer: QuestionAnswer = {
-        question_id: question.question_uuid,
+        question_id: question.id,
         question_choice_ids: [],
         answer_text: e.target.value
       }
@@ -51,7 +51,7 @@ const QuestionComponent = ({question, showPoints, visible, onValidChange, onAnsw
       onValidChange(true)
 
     const answer: QuestionAnswer = {
-        question_id: question.question_uuid,
+        question_id: question.id,
         question_choice_ids: [question_choice_id],
         answer_text: null
       }
@@ -73,7 +73,7 @@ const QuestionComponent = ({question, showPoints, visible, onValidChange, onAnsw
     onValidChange(newSelectedCheckboxIds.length > 0)
 
     const answer: QuestionAnswer = {
-      question_id: question.question_uuid,
+      question_id: question.id,
       question_choice_ids: newSelectedCheckboxIds,
       answer_text: null
     }
@@ -96,7 +96,7 @@ const QuestionComponent = ({question, showPoints, visible, onValidChange, onAnsw
               <input
                 type={question.question_type_id === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
                 required={question.question_type_id === 'SINGLE_CHOICE'}
-                name={question.question_uuid}
+                name={question.id}
                 id={choice.question_choice_id}
                 onChange={() => {
                   question.question_type_id === 'SINGLE_CHOICE' ? onRadioChange(choice.question_choice_id) : onCheckboxChange(choice.question_choice_id)

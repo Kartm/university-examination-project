@@ -1,30 +1,46 @@
 import {Injectable} from "@nestjs/common";
 import {LinkInterface} from "./interface/link.interface";
 import {CommonApi} from "../../APIHelpers/CommonApi";
+import {ParticipantInterface} from "../participant/interfaces/participant.interface";
+import {ParticipantService} from "../participant/participant.service";
 
 
 @Injectable()
 
 export class LinkService {
 
-    links: LinkInterface[] = [];
+    static links: LinkInterface[] = [];
 
 
-    getAllLinks() {
+    static getAllLinks() {
         return this.links;
     }
 
-    addLink(link: LinkInterface) {
+    static addLink(link: LinkInterface) {
         return CommonApi.addEntity(link, this.links);
     }
 
-    getSingleLink(id: string): LinkInterface {
-          return CommonApi.findEntity(id, this.links)[0];
-
-
+    static getSingleLink(id: string): LinkInterface {
+        const link = CommonApi.findEntity(id, this.links)[0];
+        if(!link) return null;
+        if(link.used) return null;
+        const participant : ParticipantInterface = ParticipantService.participants.find(participant => participant.id === link.participant_id);
+        link.used = true;
+        LinkService.updateLink(id, link);
+        return participant;
+    }
+    static checkLink (linkFromPath : string)
+    {
+        const link : LinkInterface = LinkService.getSingleLink(linkFromPath);
+        if(!link) return null;
+        if(link.used) return null;
+        const participant : ParticipantInterface = ParticipantService.participants.find(participant => participant.id === link.participant_id);
+        link.used = true;
+        LinkService.updateLink(linkFromPath, link);
+        return participant;
     }
 
-    deleteLink(linkId: string) {
+    static deleteLink(linkId: string) {
 
         CommonApi.removeEntity(linkId, this.links)
 
@@ -34,7 +50,7 @@ export class LinkService {
 
 
 
-    updateLink(id: string, newLink: LinkInterface) {
+    static updateLink(id: string, newLink: LinkInterface) {
         const link_ : LinkInterface = CommonApi.findEntity(id, this.links)[0];
 
         if(newLink.participant_id)
@@ -52,9 +68,9 @@ export class LinkService {
         return link_;
     }
 
-    
 
-    removeLink(id: string) {
+
+    static removeLink(id: string) {
          CommonApi.removeEntity(id, this.links) // why not ; ?
     }
 

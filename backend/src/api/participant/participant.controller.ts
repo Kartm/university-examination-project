@@ -14,31 +14,31 @@ export class ParticipantController {
     @Get()
     getAllParticipants()
     {
-        return this.service.getAllParticipants();
+        return ParticipantService.getAllParticipants();
     }
 
     @Get(":id")
     getOneParticipant(@Param('id') id : string) :ParticipantInterface
     {
-        return this.service.getOneParticipant(id);
+        return ParticipantService.getOneParticipant(id);
     }
 
     @Post()
     addParticipant(@Body() participant : ParticipantInterface)
     {
-        return this.service.addParticipant(participant);
+        return ParticipantService.addParticipant(participant);
     }
 
     @Delete(":id")
     removeParticipant(@Param("id") id : string)
     {
-        return this.service.removeParticipant(id);
+        return ParticipantService.removeParticipant(id);
     }
 
     @Patch(":id")
     updateParticipant(@Param('id') id : string, @Body() participant: ParticipantInterface)
     {
-        return this.service.updateParticipant(id, participant);
+        return ParticipantService.updateParticipant(id, participant);
     }
 
 }

@@ -7,24 +7,24 @@ import {CommonApi} from "../../APIHelpers/CommonApi";
 @Injectable()
 export class ParticipantService {
 
-    participants: ParticipantInterface[] = [];
+    static participants: ParticipantInterface[] = [];
 
 
 
-    getAllParticipants() {
+    static getAllParticipants() {
         return this.participants;
     }
 
-    addParticipant(participant: ParticipantInterface) {
+    static addParticipant(participant: ParticipantInterface) {
 
         return CommonApi.addEntity(participant, this.participants)
     }
 
-    getOneParticipant(id: string) : ParticipantInterface {
+    static getOneParticipant(id: string) : ParticipantInterface {
         return CommonApi.findEntity(id, this.participants)[0];
     }
 
-    updateParticipant(id: string, newParticipant: ParticipantInterface) {
+    static updateParticipant(id: string, newParticipant: ParticipantInterface) {
         const participant : ParticipantInterface = CommonApi.findEntity(id, this.participants)[0];
         if(newParticipant.test_id)
         {
@@ -45,7 +45,7 @@ export class ParticipantService {
         return test;
     }
 
-    removeParticipant(id: string) {
+    static removeParticipant(id: string) {
         CommonApi.removeEntity(id, this.participants)
     }
 

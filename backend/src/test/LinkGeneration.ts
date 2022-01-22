@@ -2,8 +2,11 @@
 // import {LinkInterface} from "../api/link/interface/link.interface";
 // import {v4 as uuidv4} from "uuid";
 //
-// const generateNewLink = (test_id : string, participant : ParticipantInterface) =>
+// const generateNewLink = (test_id : string) =>
 // {
+//     const participants : ParticipantInterface[] = getParticipantsFromDatabase(test_id);
+//     participants.forEach(participant => {
+//
 //     const linkGuid = uuidv4();
 //     const link : LinkInterface = {
 //         id: linkGuid,
@@ -12,12 +15,11 @@
 //         sent_at: Date.now().toString(),
 //         link: linkGuid,
 //     };
-//
 //     sendEmail(link.link, participant.email);
+//     })
 // }
 //
 //
-// // http/localhost/linkid?=fjhs3-dfhjklas-423-fs
 // const checkLink = (linkFromPath : string) =>
 // {
 //     const link : LinkInterface = getLinkFromDatabase(linkFromPath);

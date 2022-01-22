@@ -28,7 +28,7 @@ export class TestService {
     }
 
 
-    private generateLinks (test_id : string)
+     generateLinks (test_id : string)
     {
         const participants : ParticipantInterface[] = this.getParticipantsFromDatabase(test_id);
         participants.forEach(participant => {
@@ -46,16 +46,17 @@ export class TestService {
         })
     }
 
-    private getParticipantsFromDatabase(test_id : string)
+   getParticipantsFromDatabase(test_id : string)
     {
         return ParticipantService.participants.filter(participant => participant.test_id === test_id);
     }
 
 
-    private sendMail(link : string, email : string) {
+    sendMail(link : string, email : string) {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
+                //TODO change mail
                 user: 'berkaymertkocak99@gmail.com',
                 pass: 'okclkwhxjnojpmhn'
             }
@@ -103,7 +104,7 @@ export class TestService {
         CommonApi.removeEntity(id, this.tests)
     }
 
-    private saveLinkInDatabase(link: LinkInterface) {
+     saveLinkInDatabase(link: LinkInterface) {
         LinkService.links.push(link);
     }
 

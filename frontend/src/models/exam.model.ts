@@ -13,7 +13,7 @@ export interface QuestionChoice {
     is_correct: boolean;
 }
 
-export type QuestionChoiceDraft = Omit<QuestionChoice, 'question_choice_id'>
+export interface QuestionChoiceDraft extends Omit<QuestionChoice, 'question_choice_id'> {question_choice_id?: string}
 
 export interface QuestionType {
     id: string;
@@ -22,14 +22,19 @@ export interface QuestionType {
 
 export type QuestionTypeDraft = Omit<QuestionType, 'id'>
 
+export interface LocalQuestion {
+    id?: string;
+    name: string;
+    question_type: QuestionType;
+    question_choices: QuestionChoiceDraft[];
+}
+
 export interface Question {
     id: string;
     name: string;
-    question_type_id: string;
-    question_choices: QuestionChoice[];
+    test_id : string;
+    question_type_id : string;
 }
-
-export interface QuestionDraft extends Omit<Omit<Question, 'id'>, 'question_choices'> {question_choices: QuestionChoiceDraft[]}
 
 export interface Exam {
     id: string;
@@ -39,7 +44,7 @@ export interface Exam {
     questions: Question[];
 }
 
-export interface ExamDraft extends Omit<Omit<Omit<Exam, 'id'>, 'settings'>, 'questions'> {settings: SettingsDraft, questions: QuestionDraft[]}
+export interface ExamDraft extends Omit<Omit<Omit<Exam, 'id'>, 'settings'>, 'questions'> {settings: SettingsDraft, questions: Question[]}
 
 export interface QuestionAnswer {
     question_answer_id?: string;

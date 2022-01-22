@@ -8,7 +8,7 @@ import Text from "../../../components/style/text.component";
 import {useDispatch, useSelector} from "react-redux";
 import {updateTitleAction} from "../../../store/slices/ui.slice";
 import {RootState} from "../../../store/configure.store";
-import {getExamByUuid} from "../../../store/slices/exam.slice";
+import {getExamByUuid, getQuestionTypes, questionToLocalQuestion} from "../../../store/slices/exam.slice";
 import QuestionComponent from "../../../components/exam/question.component";
 import {Question, QuestionAnswer} from "../../../models/exam.model";
 import styled from "styled-components";
@@ -34,6 +34,7 @@ const ParticipateQuestionsScreen = () => {
   const dispatch = useDispatch();
   const examState = useSelector((state: RootState) => state.exam);
   const history = useHistory();
+  const questionTypes = useSelector((state: RootState) => state.exam.questionTypes);
 
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [invalidQuestionIds, setInvalidQuestionIds] = useState<string[]>([]);
@@ -41,6 +42,7 @@ const ParticipateQuestionsScreen = () => {
 
   useEffect(() => {
     dispatch(getExamByUuid(testParticipateUuid));
+    dispatch(getQuestionTypes());
   }, []);
 
   useEffect(() => {
@@ -102,7 +104,7 @@ const ParticipateQuestionsScreen = () => {
           <QuestionComponent
             key={question.id}
             visible={selectedQuestionIndex === i}
-            question={question}
+            localQuestion={questionToLocalQuestion(question, questionTypes)}
             showPoints={examState?.exam?.settings.show_points_per_question}
             onValidChange={(isValid) => questionValidChange(question, isValid)}
             onAnswerChange={answerChange}

@@ -33,51 +33,51 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
     settings: settings.data,
     // todo
     questions: [
-      {
-        id: 'eins',
-        name: 'What is your favorite food?',
-        question_type_id: 'OPEN',
-        question_choices: []
-      },
-      {
-        id: 'zwei',
-        name: 'Which pill?',
-        question_type_id: 'SINGLE_CHOICE',
-        question_choices: [
-          {
-            question_choice_id: 'asssss',
-            is_correct: true,
-            text: 'Red'
-          },
-          {
-            question_choice_id: 'bsssss',
-            is_correct: false,
-            text: 'Blue'
-          }
-        ]
-      },
-      {
-        id: 'drei',
-        name: 'What does CSS stand for?',
-        question_type_id: 'MULTI_CHOICE',
-        question_choices: [
-          {
-            question_choice_id: 'ammmm',
-            is_correct: true,
-            text: 'Cascading Style Sheet'
-          },
-          {
-            question_choice_id: 'bmmmm',
-            is_correct: false,
-            text: 'Computing Style Sheet'
-          },
-          {
-            question_choice_id: 'cmmmm',
-            is_correct: false,
-            text: 'Creative Styling Sheet'
-          }
-        ]
-      }
+      // {
+      //   id: 'eins',
+      //   name: 'What is your favorite food?',
+      //   question_type_id: 'OPEN',
+      //   question_choices: []
+      // },
+      // {
+      //   id: 'zwei',
+      //   name: 'Which pill?',
+      //   question_type_id: 'SINGLE_CHOICE',
+      //   question_choices: [
+      //     {
+      //       question_choice_id: 'asssss',
+      //       is_correct: true,
+      //       text: 'Red'
+      //     },
+      //     {
+      //       question_choice_id: 'bsssss',
+      //       is_correct: false,
+      //       text: 'Blue'
+      //     }
+      //   ]
+      // },
+      // {
+      //   id: 'drei',
+      //   name: 'What does CSS stand for?',
+      //   question_type_id: 'MULTI_CHOICE',
+      //   question_choices: [
+      //     {
+      //       question_choice_id: 'ammmm',
+      //       is_correct: true,
+      //       text: 'Cascading Style Sheet'
+      //     },
+      //     {
+      //       question_choice_id: 'bmmmm',
+      //       is_correct: false,
+      //       text: 'Computing Style Sheet'
+      //     },
+      //     {
+      //       question_choice_id: 'cmmmm',
+      //       is_correct: false,
+      //       text: 'Creative Styling Sheet'
+      //     }
+      //   ]
+      // }
     ]
   }
 
@@ -211,24 +211,24 @@ export const apiGetExamTemplates = async (): Promise<APIResponse<ExamDraft[]>> =
         allow_going_back: true,
       },
       questions: [
-        {
-          name: 'Which one?',
-          question_type_id: 'SINGLE_CHOICE',
-          question_choices: [
-            {
-              text: 'A',
-              is_correct: true,
-            },
-            {
-              text: 'B',
-              is_correct: false,
-            },
-            {
-              text: 'C',
-              is_correct: false,
-            }
-          ]
-        }
+        // {
+        //   name: 'Which one?',
+        //   question_type_id: 'SINGLE_CHOICE',
+        //   // question_choices: [
+        //   //   {
+        //   //     text: 'A',
+        //   //     is_correct: true,
+        //   //   },
+        //   //   {
+        //   //     text: 'B',
+        //   //     is_correct: false,
+        //   //   },
+        //   //   {
+        //   //     text: 'C',
+        //   //     is_correct: false,
+        //   //   }
+        //   // ]
+        // }
       ],
     },
     {
@@ -290,11 +290,8 @@ export const apiUseExamTemplate = async (examTemplate: ExamDraft): Promise<APIRe
       id: `d10e63fd-11ed-4042-8f89-2cb0233bca65------${i}`,
       name: q.name,
       question_type_id: q.question_type_id,
-      question_choices: q.question_choices.map((choice, j) => ({
-        question_choice_id: `5e31a0b6-6ca0-4c01-91ba-10abb65d0f0c-----${i}${j}`,
-        text: choice.text,
-        is_correct: choice.is_correct
-      }))
+      test_id: '856ad28a-74a4-4f2a-bff7-ca93e9280143',
+      question_choices: [],
     }))
   }
 

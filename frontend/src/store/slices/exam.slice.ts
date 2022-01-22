@@ -1,5 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {Exam, ExamDraft, ParticipantDraft, QuestionDraft, QuestionType, Settings} from "../../models/exam.model";
+import {
+  Exam,
+  ExamDraft,
+  LocalQuestion,
+  ParticipantDraft,
+  Question,
+  QuestionType,
+  Settings
+} from "../../models/exam.model";
 import {
   apiCreateExam,
   apiGetExamTemplates, apiGetQuestionTypes,
@@ -26,8 +34,17 @@ export interface UpdateExamParticipants {
 }
 
 export interface UpdateExamQuestions {
-  questions: QuestionDraft[];
+  questions: LocalQuestion[];
 }
+
+export const questionToLocalQuestion = (q: Question, questionTypes: QuestionType[]): LocalQuestion => (
+  {
+    id: q.id,
+    name: q.name,
+    question_type: questionTypes.find(qt => qt.id === q.question_type_id)!,
+    question_choices: [], // todo
+  }
+)
 
 const slice = createSlice({
   name: "exam",
@@ -118,7 +135,7 @@ export const updateExamQuestions = (update: UpdateExamQuestions) => async (dispa
 export const getQuestionTypes = () => async (dispatch) => {
   try {
     const questionTypes = await apiGetQuestionTypes();
-    return dispatch(setQuestionTypes(questionTypes));
+    return dispatch(setQuestionTypes(questionTypes.data));
   } catch (e) {
     return console.error(e.message);
   }

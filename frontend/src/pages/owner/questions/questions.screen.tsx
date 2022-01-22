@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
+import {Link, useHistory, useParams} from "react-router-dom";
 
 import Container from "../../../components/style/container.component";
 import Content from "../../../components/style/content.component";
@@ -10,8 +10,13 @@ import {updateTitleAction} from "../../../store/slices/ui.slice";
 import Popup from "../../../components/layout/popup";
 import AddQuestion from "../../../components/layout/add.question";
 import QuestionComponent from "../../../components/exam/question.component";
-import {Question, QuestionDraft} from "../../../models/exam.model";
-import {getExamByUuid, getQuestionTypes} from "../../../store/slices/exam.slice";
+import {LocalQuestion, Question, QuestionAnswer} from "../../../models/exam.model";
+import {
+  getExamByUuid,
+  getQuestionTypes, questionToLocalQuestion,
+  updateExamParticipants,
+  UpdateExamParticipants
+} from "../../../store/slices/exam.slice";
 import {RootState} from "../../../store/configure.store";
 
 interface QuestionsParams {
@@ -19,13 +24,15 @@ interface QuestionsParams {
 }
 
 const QuestionsScreen = () => {
-  const [showPopup, setShowPopup] = useState<boolean>(false)
-  const [questions, setQuestions] = useState<(Question)[]>([])
+  const [showPopup, setShowPopup] = useState(false)
+  const [localQuestions, setLocalQuestions] = useState<LocalQuestion[]>([])
 
 
   const {testOwnerUuid} = useParams<QuestionsParams>();
   const dispatch = useDispatch();
   const examState = useSelector((state: RootState) => state.exam);
+  const questionTypes = useSelector((state: RootState) => state.exam.questionTypes);
+  const history = useHistory();
 
 
   useEffect(() => {
@@ -39,9 +46,24 @@ const QuestionsScreen = () => {
 
   useEffect(() => {
     if(examState.exam != null) {
-      setQuestions(examState.exam.questions)
+      setLocalQuestions(examState.exam.questions.map(q => questionToLocalQuestion(q, questionTypes)))
     }
   }, [examState.exam?.questions])
+
+  function handleAnswerChange(localQuestion: LocalQuestion, answer: QuestionAnswer) {
+    console.log(localQuestion, answer)
+  }
+
+  function onNextButtonClicked() {
+    console.log(localQuestions)
+    // // convert component's state to something backend will understand
+    // const update: UpdateExamParticipants = {participants: [...participants]}
+    //
+    // // @ts-ignore
+    // dispatch(updateExamQuestions(update)).then(x => {
+    //   history.push(`/${testOwnerUuid}/editor/finish`);
+    // });
+  }
 
   return (
     <Container>
@@ -54,29 +76,33 @@ const QuestionsScreen = () => {
         <Button text="Add Question" onClick={() => (setShowPopup(true))} color="primary"/>
 
         <div style={{overflowY: "scroll", height: "500px", width: "600px"}}>
-          {questions.map((question) => (console.log(question),
+          {localQuestions.map((localQuestion, i) =>
             <QuestionComponent
-              question={question}
+              key={i}
+              localQuestion={localQuestion}
               showPoints={true}
               visible={true}
               onValidChange={() => {}}
-              onAnswerChange={() => (console.log(question))}/>))}
+              onAnswerChange={(answer) => handleAnswerChange(localQuestion, answer)}
+            />)
+          }
         </div>
 
         <Popup show={showPopup} setShow={setShowPopup}>
           <div>
             <h3>Add Question</h3>
-            <AddQuestion onAddQuestion={(question) => {
-              setQuestions([...questions, question]);
-              setShowPopup(false)
-            }} onClose={() => setShowPopup(false)}/>
+            <AddQuestion
+              onAddQuestion={(question) => {
+                setLocalQuestions([...localQuestions, question]);
+                setShowPopup(false)
+              }}
+              onClose={() => setShowPopup(false)}
+              questionTypes={questionTypes}/>
 
           </div>
         </Popup>
 
-        <Link to={`/${testOwnerUuid}/editor/finish`} style={{marginRight: 10}}>
-          <Button text="Next (finish)" color="primary"/>
-        </Link>
+        <Button text="Next (finish)" color="primary" onClick={() => onNextButtonClicked()}/>
       </Content>
     </Container>
   );

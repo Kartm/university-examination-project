@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Question, QuestionAnswer, QuestionDraft} from "../../models/exam.model";
+import {LocalQuestion, Question, QuestionAnswer} from "../../models/exam.model";
 import styled from "styled-components";
 
 interface QuestionParams {
-  question: Question;
+  localQuestion: LocalQuestion;
   showPoints: boolean;
   visible: boolean;
   onValidChange: (isValid: boolean) => void;
@@ -32,14 +32,14 @@ const Label = styled.label`
   margin-left: 8px;
 `
 
-const QuestionComponent = ({question, showPoints, visible, onValidChange, onAnswerChange}: QuestionParams) => {
+const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, onAnswerChange}: QuestionParams) => {
   const [selectedCheckboxIds, setSelectedCheckboxIds] = useState<string[]>([])
 
   function onTextChange(e: React.ChangeEvent<HTMLInputElement>) {
       onValidChange(!!e.target.value)
 
       const answer: QuestionAnswer = {
-        question_id: question.id,
+        question_id: localQuestion.id,
         question_choice_ids: [],
         answer_text: e.target.value
       }
@@ -51,7 +51,7 @@ const QuestionComponent = ({question, showPoints, visible, onValidChange, onAnsw
       onValidChange(true)
 
     const answer: QuestionAnswer = {
-        question_id: question.id,
+        question_id: localQuestion.id,
         question_choice_ids: [question_choice_id],
         answer_text: null
       }
@@ -73,7 +73,7 @@ const QuestionComponent = ({question, showPoints, visible, onValidChange, onAnsw
     onValidChange(newSelectedCheckboxIds.length > 0)
 
     const answer: QuestionAnswer = {
-      question_id: question.id,
+      question_id: localQuestion.id,
       question_choice_ids: newSelectedCheckboxIds,
       answer_text: null
     }
@@ -83,26 +83,26 @@ const QuestionComponent = ({question, showPoints, visible, onValidChange, onAnsw
 
   return (
     <Wrapper style={{display: visible ? 'flex':'none'}}>
-      <h2>{question.name} {showPoints && <i style={{fontSize: '10px'}}>({5} points)</i>}</h2>
+      <h2>{localQuestion.name} {showPoints && <i style={{fontSize: '10px'}}>({5} points)</i>}</h2>
 
       <Divider/>
 
       {
-        question.question_type_id === 'OPEN' ?
+        localQuestion.question_type.name === 'OPEN' ?
           <input type="text" required placeholder="Your answer here..." onChange={(e) => onTextChange(e)}/>
           :
-          question.question_choices.map(choice =>
-            <div key={choice.question_choice_id} style={{marginBottom: '8px'}}>
+          localQuestion.question_choices.map((choice, i) =>
+            <div key={i.toString()} style={{marginBottom: '8px'}}>
               <input
-                type={question.question_type_id === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
-                required={question.question_type_id === 'SINGLE_CHOICE'}
-                name={question.id}
-                id={choice.question_choice_id}
+                type={localQuestion.question_type.name === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
+                required={localQuestion.question_type.name === 'SINGLE_CHOICE'}
+                name={localQuestion.id}
+                id={i.toString()}
                 onChange={() => {
-                  question.question_type_id === 'SINGLE_CHOICE' ? onRadioChange(choice.question_choice_id) : onCheckboxChange(choice.question_choice_id)
+                  localQuestion.question_type.name === 'SINGLE_CHOICE' ? onRadioChange(choice.question_choice_id) : onCheckboxChange(choice.question_choice_id)
                 }}
               />
-              <Label htmlFor={choice.question_choice_id}>{choice.text}</Label>
+              <Label htmlFor={i.toString()}>{choice.text}</Label>
             </div>
           )
       }

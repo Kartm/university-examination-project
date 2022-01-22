@@ -12,30 +12,30 @@ export class TestsController
     @Get()
     getAllTests()
     {
-        return this.service.getAllTests();
+        return TestService.getAllTests();
     }
 
     @Get(":id")
     getOneTest(@Param('id') id : string) : TestInterface
     {
-        return this.service.getOneTest(id);
+        return TestService.getOneTest(id);
     }
 
     @Post()
     addTest(@Body() test : TestInterface)
     {
-        return this.service.addTest(test);
+        return TestService.addTest(test);
     }
 
     @Delete(":id")
     removeTest(@Param("id") id : string)
     {
-        return this.service.removeTest(id);
+        return TestService.removeTest(id);
     }
 
     @Patch(":id")
     updateTest(@Param('id') id : string, @Body() test : TestInterface)
     {
-        return this.service.updateTest(id, test);
+        return TestService.updateTest(id, test);
     }
 }

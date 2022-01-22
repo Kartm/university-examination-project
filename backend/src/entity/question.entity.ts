@@ -11,7 +11,7 @@ export class questionEntity implements QuestionInterface {
     test_id: string;
 
     @Column()
-    question_type_id: string;;
+    question_type_id: string;
 
     
 }

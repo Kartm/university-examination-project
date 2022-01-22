@@ -2,7 +2,7 @@
 //
 // const nodemailer = require('nodemailer');
 //
-// function sendMail(adresses: string) {
+function sendMail(adresses: string) {
 //
 //     const transporter = nodemailer.createTransport({
 //         service: 'gmail',
@@ -32,7 +32,7 @@
 //     const adresses = ""
 //     const participants : ParticipantInterface[] = getParticipantsFromDatabase(test_id)
 //      participants.forEach(participant => {
-//             adresses.concat(`, ${participant.email}`)
+      //     adresses.concat(`, ${participant.email}`)
 //      })
 //
 //

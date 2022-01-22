@@ -12,7 +12,11 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
 
   const settings = await settingsRequest.json()
 
-  console.log(exam, settings)
+  const questionsRequest = await get(`/question/?test_id=${exam.data.id}`);
+
+  const questions = await questionsRequest.json()
+
+  console.log(exam, settings, questions)
 
   const examFromBackend: Exam = {
     id: exam.data.id,

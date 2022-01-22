@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Patch, Post, Query} from "@nestjs/common";
 import {QuestionService} from "./question.service";
 import {QuestionInterface} from "./interfaces/question.interface";
 
@@ -11,6 +11,13 @@ export class QuestionController
     getAllQuestion()
     {
         return this.questionService.getAllQuestions();
+    }
+
+    @Get()
+    getQuestionsOfTest(@Query('test_id') test_id)
+    {
+        console.log('getQuestionsOfTest')
+        return this.questionService.getQuestionsOfTest(test_id);
     }
 
     @Get(":id")

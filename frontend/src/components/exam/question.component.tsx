@@ -35,6 +35,10 @@ const Label = styled.label`
 const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, onAnswerChange}: QuestionParams) => {
   const [selectedCheckboxIds, setSelectedCheckboxIds] = useState<string[]>([])
 
+  useEffect(() => {
+    console.log(localQuestion)
+  }, [])
+
   function onTextChange(e: React.ChangeEvent<HTMLInputElement>) {
       onValidChange(!!e.target.value)
 

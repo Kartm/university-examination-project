@@ -8,7 +8,13 @@ import Text from "../../../components/style/text.component";
 import {useDispatch, useSelector} from "react-redux";
 import {updateTitleAction} from "../../../store/slices/ui.slice";
 import Dropdown from "../../../components/forms/dropdown";
-import {createExam, getExamByUuid, UpdateExamSettings, updateExamSettings} from "../../../store/slices/exam.slice";
+import {
+  createExam,
+  getExamByUuid,
+  getQuestionTypes,
+  UpdateExamSettings,
+  updateExamSettings
+} from "../../../store/slices/exam.slice";
 import {Exam} from "../../../models/exam.model";
 import {RootState} from "../../../store/configure.store";
 
@@ -36,8 +42,13 @@ const SettingsScreen = () => {
   });
 
   useEffect(() => {
-    dispatch(getExamByUuid(testOwnerUuid));
+    dispatch(getQuestionTypes());
   }, []);
+
+  useEffect(() => {
+    dispatch(getExamByUuid(testOwnerUuid, examState.questionTypes));
+  }, [examState.questionTypes])
+
 
 
   const settings = [

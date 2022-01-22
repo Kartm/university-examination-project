@@ -10,7 +10,7 @@ import {updateTitleAction} from "../../../store/slices/ui.slice";
 import {RootState} from "../../../store/configure.store";
 import {getExamByUuid, getQuestionTypes, questionToLocalQuestion} from "../../../store/slices/exam.slice";
 import QuestionComponent from "../../../components/exam/question.component";
-import {Question, QuestionAnswer} from "../../../models/exam.model";
+import {LocalQuestion, Question, QuestionAnswer} from "../../../models/exam.model";
 import styled from "styled-components";
 
 interface ParticipateQuestionsParams {
@@ -41,9 +41,12 @@ const ParticipateQuestionsScreen = () => {
   const [questionAnswers, setQuestionAnswers] = useState<QuestionAnswer[]>([]);
 
   useEffect(() => {
-    dispatch(getExamByUuid(testParticipateUuid));
     dispatch(getQuestionTypes());
   }, []);
+
+  useEffect(() => {
+    dispatch(getExamByUuid(testParticipateUuid, examState.questionTypes));
+  }, [examState.questionTypes])
 
   useEffect(() => {
     if (examState?.exam?.questions) {
@@ -56,7 +59,7 @@ const ParticipateQuestionsScreen = () => {
   });
 
 
-  function questionValidChange(question: Question, isValid: boolean) {
+  function questionValidChange(question: LocalQuestion, isValid: boolean) {
     if (isValid) {
       setInvalidQuestionIds([...invalidQuestionIds.filter(id => id !== question.id)]);
     } else {
@@ -104,7 +107,7 @@ const ParticipateQuestionsScreen = () => {
           <QuestionComponent
             key={question.id}
             visible={selectedQuestionIndex === i}
-            localQuestion={questionToLocalQuestion(question, questionTypes)}
+            localQuestion={question}
             showPoints={examState?.exam?.settings.show_points_per_question}
             onValidChange={(isValid) => questionValidChange(question, isValid)}
             onAnswerChange={answerChange}

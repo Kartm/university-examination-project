@@ -9,9 +9,14 @@ import {
   Settings
 } from "../models/exam.model";
 import {patch, put, post, get} from "./utils.service";
-import {UpdateExamParticipants, UpdateExamQuestions, UpdateExamSettings} from "../store/slices/exam.slice";
+import {
+  questionToLocalQuestion,
+  UpdateExamParticipants,
+  UpdateExamQuestions,
+  UpdateExamSettings
+} from "../store/slices/exam.slice";
 
-export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
+export const getExam = async (uuid: string, questionTypes: QuestionType[]): Promise<APIResponse<Exam>> => {
   const examRequest = await get(`/tests/${uuid}/`);
 
   const exam = await examRequest.json()
@@ -24,61 +29,20 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
 
   const questions = await questionsRequest.json()
 
+  const questionsChoicesRequest = await get(`/questionChoice/`);
+
+  const questionChoices = await questionsChoicesRequest.json()
+
   console.log(exam, settings, questions)
 
+  const mergedQuestionsWithChoices: LocalQuestion[] = (questions.data as Question[]).map(q => questionToLocalQuestion(q, questionChoices.data, questionTypes))
+  console.log(mergedQuestionsWithChoices)
   const examFromBackend: Exam = {
     id: exam.data.id,
     name: exam.data.name,
     owner_name: exam.data.owner_name,
     settings: settings.data,
-    // todo
-    questions: [
-      // {
-      //   id: 'eins',
-      //   name: 'What is your favorite food?',
-      //   question_type_id: 'OPEN',
-      //   question_choices: []
-      // },
-      // {
-      //   id: 'zwei',
-      //   name: 'Which pill?',
-      //   question_type_id: 'SINGLE_CHOICE',
-      //   question_choices: [
-      //     {
-      //       question_choice_id: 'asssss',
-      //       is_correct: true,
-      //       text: 'Red'
-      //     },
-      //     {
-      //       question_choice_id: 'bsssss',
-      //       is_correct: false,
-      //       text: 'Blue'
-      //     }
-      //   ]
-      // },
-      // {
-      //   id: 'drei',
-      //   name: 'What does CSS stand for?',
-      //   question_type_id: 'MULTI_CHOICE',
-      //   question_choices: [
-      //     {
-      //       question_choice_id: 'ammmm',
-      //       is_correct: true,
-      //       text: 'Cascading Style Sheet'
-      //     },
-      //     {
-      //       question_choice_id: 'bmmmm',
-      //       is_correct: false,
-      //       text: 'Computing Style Sheet'
-      //     },
-      //     {
-      //       question_choice_id: 'cmmmm',
-      //       is_correct: false,
-      //       text: 'Creative Styling Sheet'
-      //     }
-      //   ]
-      // }
-    ]
+    questions: mergedQuestionsWithChoices
   }
 
   return {
@@ -313,13 +277,7 @@ export const apiUseExamTemplate = async (examTemplate: ExamDraft): Promise<APIRe
       id: '14999764-317c-4692-827a-558adce51bc7',
       ...examTemplate.settings
     },
-    questions: examTemplate.questions.map((q, i) => ({
-      id: `d10e63fd-11ed-4042-8f89-2cb0233bca65------${i}`,
-      name: q.name,
-      question_type_id: q.question_type_id,
-      test_id: '856ad28a-74a4-4f2a-bff7-ca93e9280143',
-      question_choices: [],
-    }))
+    questions: [],
   }
 
   console.log(JSON.parse(JSON.stringify(createdExamFromBackend)))

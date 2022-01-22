@@ -40,13 +40,16 @@ const QuestionsScreen = () => {
   });
 
   useEffect(() => {
-    dispatch(getExamByUuid(testOwnerUuid));
     dispatch(getQuestionTypes());
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    dispatch(getExamByUuid(testOwnerUuid, examState.questionTypes));
+  }, [examState.questionTypes])
 
   useEffect(() => {
     if(examState.exam != null) {
-      setLocalQuestions(examState.exam.questions.map(q => questionToLocalQuestion(q, questionTypes)))
+      setLocalQuestions(examState.exam.questions)
     }
   }, [examState.exam?.questions])
 

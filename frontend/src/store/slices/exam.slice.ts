@@ -4,7 +4,7 @@ import {
   ExamDraft,
   LocalQuestion,
   ParticipantDraft,
-  Question,
+  Question, QuestionChoice,
   QuestionType,
   Settings
 } from "../../models/exam.model";
@@ -38,12 +38,12 @@ export interface UpdateExamQuestions {
   testId: string;
 }
 
-export const questionToLocalQuestion = (q: Question, questionTypes: QuestionType[]): LocalQuestion => (
+export const questionToLocalQuestion = (q: Question, questionChoices: QuestionChoice[], questionTypes: QuestionType[]): LocalQuestion => (
   {
     id: q.id,
     name: q.name,
     question_type: questionTypes.find(qt => qt.id === q.question_type_id)!,
-    question_choices: [], // todo
+    question_choices: questionChoices.filter(qc => qc.question_id === q.id),
   }
 )
 
@@ -77,9 +77,9 @@ export const createExam = () => async (dispatch) => {
     return console.error(e.message);
   }
 };
-export const getExamByUuid = (uuid: string) => async (dispatch) => {
+export const getExamByUuid = (uuid: string, questionTypes: QuestionType[]) => async (dispatch) => {
   try {
-    const exam = await getExam(uuid);
+    const exam = await getExam(uuid, questionTypes);
     return dispatch(setExam(exam.data));
   } catch (e) {
     return console.error(e.message);

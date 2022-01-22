@@ -42,7 +42,7 @@ export interface Exam {
     name: string;
     owner_name: string;
     settings: Settings;
-    questions: Question[];
+    questions: LocalQuestion[];
 }
 
 export interface ExamDraft extends Omit<Omit<Omit<Exam, 'id'>, 'settings'>, 'questions'> {settings: SettingsDraft, questions: Question[]}

@@ -1,9 +1,9 @@
 import {APIResponse} from "../models/api.model";
 import {
   Exam,
-  ExamDraft,
+  ExamDraft, LocalQuestion,
   Participant,
-  ParticipantDraft, Question,
+  ParticipantDraft, Question, QuestionChoice,
   QuestionType,
   QuestionTypeDraft,
   Settings
@@ -174,27 +174,54 @@ export const apiUpdateExamParticipants = async (update: UpdateExamParticipants):
   } as APIResponse<Participant[]>;
 };
 
-export const apiUpdateExamQuestions = async (update: UpdateExamQuestions): Promise<APIResponse<Question[]>> => {
-  console.log(update.questions)
+export const apiUpdateExamQuestions = async (update: UpdateExamQuestions): Promise<APIResponse<{questions: Question[], questionChoices: QuestionChoice[]}>> => {
+  const localQuestionToQuestion = (lc: LocalQuestion): Omit<Question, "id"> => ({
+    name: lc.name,
+    question_type_id: lc.question_type.id,
+    test_id: update.testId,
+  })
 
-  // const participantPromises = update.questions.map(participant => "id" in participant ?
-  //   put(`/participant/${(participant as Participant).id}/`, participant) :
-  //   post(`/participant/`, participant))
-  //
-  // const updatedParticipants: Participant[] = await new Promise((res, rej) => {
-  //   Promise.all(participantPromises).then(values => {
-  //     Promise.all(values.map(response => response.json())).then(jsons => {
-  //       const finalParticipants = jsons.map(j => j.data)
-  //       res(finalParticipants)
-  //     })
-  //   });
-  // });
+  const questionPromises = update.questions.map(localQuestionToQuestion).map(question => "id" in question ?
+    put(`/question/${(question as any).id}/`, question) :
+    post(`/question/`, question))
+
+  const updatedQuestions: Question[] = await new Promise((res, rej) => {
+    Promise.all(questionPromises).then(values => {
+      Promise.all(values.map(response => response.json())).then(jsons => {
+        const finalQuestions = jsons.map(j => j.data)
+        res(finalQuestions)
+      })
+    });
+  });
+
+  let questionChoicesToSave: QuestionChoice[] = [];
+
+  update.questions.forEach(q => {
+    const updatedQuestion = updatedQuestions.find(uq => uq.name === q.name) // i hate it
+
+    q.question_choices.forEach(qc => {
+      questionChoicesToSave.push({...qc, question_id: updatedQuestion.id, id:qc.id})
+    })
+  })
+
+  const questionChoicePromises = questionChoicesToSave.map(qc => "id" in qc && qc.id !== undefined ?
+    put(`/questionChoice/${(qc as any).id}/`, qc) :
+    post(`/questionChoice/`, qc))
+
+  const updatedQuestionChoices: QuestionChoice[] = await new Promise((res, rej) => {
+    Promise.all(questionChoicePromises).then(values => {
+      Promise.all(values.map(response => response.json())).then(jsons => {
+        const finalQuestionChoices = jsons.map(j => j.data)
+        res(finalQuestionChoices)
+      })
+    });
+  });
 
   return {
     statusCode: 200,
     message: [],
-    data: []
-  } as APIResponse<Question[]>;
+    data: {questions: updatedQuestions, questionChoices: updatedQuestionChoices}
+  } as APIResponse<{questions: Question[], questionChoices: QuestionChoice[]}>;
 };
 
 export const apiGetExamTemplates = async (): Promise<APIResponse<ExamDraft[]>> => {

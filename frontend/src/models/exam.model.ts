@@ -8,12 +8,13 @@ export interface Settings {
 export type SettingsDraft = Omit<Settings, 'id'>
 
 export interface QuestionChoice {
-    question_choice_id: string;
+    id: string;
+    question_id: string;
     text: string;
     is_correct: boolean;
 }
 
-export interface QuestionChoiceDraft extends Omit<QuestionChoice, 'question_choice_id'> {question_choice_id?: string}
+export interface QuestionChoiceDraft extends Omit<Omit<QuestionChoice, 'id'>, 'question_id'> {id?: string; question_id?: string}
 
 export interface QuestionType {
     id: string;

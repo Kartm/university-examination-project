@@ -15,7 +15,7 @@ import {
   getExamByUuid,
   getQuestionTypes, questionToLocalQuestion,
   updateExamParticipants,
-  UpdateExamParticipants
+  UpdateExamParticipants, updateExamQuestions, UpdateExamQuestions
 } from "../../../store/slices/exam.slice";
 import {RootState} from "../../../store/configure.store";
 
@@ -55,14 +55,13 @@ const QuestionsScreen = () => {
   }
 
   function onNextButtonClicked() {
-    console.log(localQuestions)
-    // // convert component's state to something backend will understand
-    // const update: UpdateExamParticipants = {participants: [...participants]}
-    //
-    // // @ts-ignore
-    // dispatch(updateExamQuestions(update)).then(x => {
-    //   history.push(`/${testOwnerUuid}/editor/finish`);
-    // });
+    // convert component's state to something backend will understand
+    const update: UpdateExamQuestions = {questions: [...localQuestions], testId: testOwnerUuid}
+
+    // @ts-ignore
+    dispatch(updateExamQuestions(update)).then(x => {
+      history.push(`/${testOwnerUuid}/editor/finish`);
+    });
   }
 
   return (

@@ -35,6 +35,7 @@ export interface UpdateExamParticipants {
 
 export interface UpdateExamQuestions {
   questions: LocalQuestion[];
+  testId: string;
 }
 
 export const questionToLocalQuestion = (q: Question, questionTypes: QuestionType[]): LocalQuestion => (

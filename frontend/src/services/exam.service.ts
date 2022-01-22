@@ -1,5 +1,13 @@
 import {APIResponse} from "../models/api.model";
-import {Exam, ExamDraft, Participant, ParticipantDraft, Settings} from "../models/exam.model";
+import {
+  Exam,
+  ExamDraft,
+  Participant,
+  ParticipantDraft,
+  QuestionType,
+  QuestionTypeDraft,
+  Settings
+} from "../models/exam.model";
 import {patch, put, post, get} from "./utils.service";
 import {UpdateExamParticipants, UpdateExamSettings} from "../store/slices/exam.slice";
 
@@ -28,13 +36,13 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
       {
         question_uuid: 'eins',
         name: 'What is your favorite food?',
-        question_type: 'OPEN',
+        question_type_id: 'OPEN',
         question_choices: []
       },
       {
         question_uuid: 'zwei',
         name: 'Which pill?',
-        question_type: 'SINGLE_CHOICE',
+        question_type_id: 'SINGLE_CHOICE',
         question_choices: [
           {
             question_choice_id: 'asssss',
@@ -51,7 +59,7 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
       {
         question_uuid: 'drei',
         name: 'What does CSS stand for?',
-        question_type: 'MULTI_CHOICE',
+        question_type_id: 'MULTI_CHOICE',
         question_choices: [
           {
             question_choice_id: 'ammmm',
@@ -182,7 +190,7 @@ export const apiGetExamTemplates = async (): Promise<APIResponse<ExamDraft[]>> =
       questions: [
         {
           name: 'Which one?',
-          question_type: 'SINGLE_CHOICE',
+          question_type_id: 'SINGLE_CHOICE',
           question_choices: [
             {
               text: 'A',
@@ -258,7 +266,7 @@ export const apiUseExamTemplate = async (examTemplate: ExamDraft): Promise<APIRe
     questions: examTemplate.questions.map((q, i) => ({
       question_uuid: `d10e63fd-11ed-4042-8f89-2cb0233bca65------${i}`,
       name: q.name,
-      question_type: q.question_type,
+      question_type_id: q.question_type_id,
       question_choices: q.question_choices.map((choice, j) => ({
         question_choice_id: `5e31a0b6-6ca0-4c01-91ba-10abb65d0f0c-----${i}${j}`,
         text: choice.text,
@@ -294,7 +302,7 @@ export const apiPublishExam = async (exam: Exam): Promise<APIResponse<Exam>> => 
       {
         "question_uuid": "d10e63fd-11ed-4042-8f89-2cb0233bca65------0",
         "name": "Which one?",
-        "question_type": "SINGLE_CHOICE",
+        "question_type_id": "SINGLE_CHOICE",
         "question_choices": [
           {
             "question_choice_id": "5e31a0b6-6ca0-4c01-91ba-10abb65d0f0c-----00",
@@ -334,4 +342,38 @@ export const apiPublishExam = async (exam: Exam): Promise<APIResponse<Exam>> => 
     // @ts-ignore
     data: {}
   } as APIResponse<Exam>;
+};
+
+export const apiGetQuestionTypes = async (): Promise<APIResponse<QuestionType[]>> => {
+  const questionTypesRequest = await get(`/questionType/`);
+  const questionTypesResponse = await questionTypesRequest.json();
+
+  let questionTypesFromBackend: QuestionType[] = [];
+
+  if(questionTypesResponse.data.length === 0) {
+    questionTypesFromBackend = await new Promise((res, rej) => {
+      const questionTypesToCreate: QuestionTypeDraft[]  = [
+        {name: 'OPEN',},
+        {name: 'SINGLE_CHOICE',},
+        {name: 'MULTI_CHOICE',},
+      ]
+
+      const creationPromises = questionTypesToCreate.map(qt => post(`/questionType/`, qt))
+
+      Promise.all(creationPromises).then(values => {
+        Promise.all(values.map(response => response.json())).then(jsons => {
+          const createdQuestionTypes = jsons.map(j => j.data)
+          res(createdQuestionTypes)
+        })
+      });
+    });
+  } else {
+    questionTypesFromBackend = questionTypesResponse.data;
+  }
+
+  return {
+    statusCode: 200,
+    message: [],
+    data: questionTypesFromBackend
+  } as APIResponse<QuestionType[]>;
 };

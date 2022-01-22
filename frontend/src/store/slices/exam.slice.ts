@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {Exam, ExamDraft, ParticipantDraft, Settings} from "../../models/exam.model";
+import {Exam, ExamDraft, ParticipantDraft, QuestionType, Settings} from "../../models/exam.model";
 import {
   apiCreateExam,
-  apiGetExamTemplates,
+  apiGetExamTemplates, apiGetQuestionTypes,
   apiPublishExam, apiUpdateExamParticipants, apiUpdateExamSettings,
   apiUseExamTemplate,
   getExam
@@ -11,6 +11,7 @@ import {
 export interface State {
   exam: Exam | null,
   examTemplates: ExamDraft[],
+  questionTypes: QuestionType[];
 }
 
 export interface UpdateExamSettings {
@@ -29,6 +30,7 @@ const slice = createSlice({
   initialState: {
     exam: null,
     examTemplates: [],
+    questionTypes: [],
   } as State,
   reducers: {
     setExam: (state, action) => {
@@ -37,11 +39,14 @@ const slice = createSlice({
     setExamTemplates: (state, action) => {
       state.examTemplates = action.payload;
     },
+    setQuestionTypes: (state, action) => {
+      state.questionTypes = action.payload;
+    },
   },
 });
 export default slice.reducer;
 
-const { setExam, setExamTemplates} = slice.actions;
+const { setExam, setExamTemplates, setQuestionTypes} = slice.actions;
 export const createExam = () => async (dispatch) => {
   try {
     const exam = await apiCreateExam();
@@ -94,6 +99,14 @@ export const updateExamParticipants = (update: UpdateExamParticipants) => async 
   try {
     const participants = await apiUpdateExamParticipants(update);
     return true;
+  } catch (e) {
+    return console.error(e.message);
+  }
+};
+export const getQuestionTypes = () => async (dispatch) => {
+  try {
+    const questionTypes = await apiGetQuestionTypes();
+    return dispatch(setQuestionTypes(questionTypes));
   } catch (e) {
     return console.error(e.message);
   }

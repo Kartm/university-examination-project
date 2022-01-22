@@ -95,7 +95,7 @@ const AddQuestion= (props: AddQuestionParams) => {
             question_uuid: (Math.floor(Math.random() * 10000)).toString(), //stays empty, assigned by backend
             name: questionText,
             question_choices: questionChoices, //TODO: used a random val for id
-            question_type: undefined, //TODO: for now stays as undefined until we figure out how to properly save question type
+            question_type_id: undefined, //TODO: for now stays as undefined until we figure out how to properly save question type
 
             //TODO: there should be something to store points for a question
         }

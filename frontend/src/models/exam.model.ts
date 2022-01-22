@@ -15,10 +15,17 @@ export interface QuestionChoice {
 
 export type QuestionChoiceDraft = Omit<QuestionChoice, 'question_choice_id'>
 
+export interface QuestionType {
+    id: string;
+    name: 'OPEN' | 'SINGLE_CHOICE' | 'MULTI_CHOICE';
+}
+
+export type QuestionTypeDraft = Omit<QuestionType, 'id'>
+
 export interface Question {
     question_uuid: string;
     name: string;
-    question_type: 'OPEN' | 'SINGLE_CHOICE' | 'MULTI_CHOICE';
+    question_type_id: string;
     question_choices: QuestionChoice[];
 }
 

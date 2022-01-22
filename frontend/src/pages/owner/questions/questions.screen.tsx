@@ -11,6 +11,7 @@ import Popup from "../../../components/layout/popup";
 import AddQuestion from "../../../components/layout/add.question";
 import QuestionComponent from "../../../components/exam/question.component";
 import {Question} from "../../../models/exam.model";
+import {getQuestionTypes} from "../../../store/slices/exam.slice";
 
 interface QuestionsParams {
   testOwnerUuid: string;
@@ -28,6 +29,10 @@ const QuestionsScreen = () => {
   useEffect(() => {
     dispatch(updateTitleAction("Pass | Add questions"));
   });
+
+  useEffect(() => {
+    dispatch(getQuestionTypes());
+  }, [])
 
   return (
     <Container>

@@ -22,9 +22,11 @@ const FinishScreen = () => {
   return (
     <Container>
       <Content>
-        <Text h1 style={{ marginBottom: 20 }}>
-          Finish screen
-          {testOwnerUuid}
+        <Text style={{ marginBottom: 20 }}>
+          <b>You</b> will now receive an email with a link to examination results.
+        </Text>
+        <Text style={{ marginBottom: 20 }}>
+          <b>Every student</b> will receive an emails with a link to the examination <b>15 minutes</b> before it starts.
         </Text>
       </Content>
     </Container>

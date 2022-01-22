@@ -1,2 +1,2 @@
-create database myStarterDatabase;
-use myStarterDatabase;
+create database mystarterdatabase;
+use mystarterdatabase;

@@ -8,6 +8,9 @@ import {LinkInterface} from "../link/interface/link.interface";
 import {ParticipantService} from "../participant/participant.service";
 import {ParticipantController} from "../participant/participant.controller";
 import {LinkService} from "../link/link.service";
+import {constants} from "http2";
+import HTTP_STATUS_NOT_ACCEPTABLE = module
+import HTTP_STATUS_METHOD_NOT_ALLOWED = module
 
 @Injectable()
 export class TestService {
@@ -77,9 +80,26 @@ export class TestService {
         });
     }
 
-    static getOneTest(id: string) : TestInterface {
+    static getOneTest(id: string, userId: string) : TestInterface {
         // this.generateLinks(id);
-        return CommonApi.findEntity(id, this.tests)[0];
+        const test =  CommonApi.findEntity(id, this.tests)[0];
+        if(test.owner_id === id)
+        {
+            return test;
+        }
+
+        if(TestService.hasStarted(test))
+        {
+            return test;
+        }
+
+        return new HTTP_STATUS_METHOD_NOT_ALLOWED();
+    }
+
+    private static hasStarted(test)
+    {
+        //TODO implement test start time in Test
+        return true;
     }
 
     static updateTest(id: string, newTest: TestInterface) {

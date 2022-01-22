@@ -15,10 +15,10 @@ export class TestsController
         return TestService.getAllTests();
     }
 
-    @Get(":id")
-    getOneTest(@Param('id') id : string) : TestInterface
+    @Get(":test_id/:user_id")
+    getOneTest(@Param('test_id') testId : string, @Param('user_id') userId : string) : TestInterface
     {
-        return TestService.getOneTest(id);
+        return TestService.getOneTest(testId, userId);
     }
 
     @Post()

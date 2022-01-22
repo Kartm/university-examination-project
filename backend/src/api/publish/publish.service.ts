@@ -11,15 +11,15 @@ export class publishService extends TestService {
 
     publish: PublishInterface[] = [];
 
-    getOneTest(id: string): TestInterface {
-        return super.getOneTest(id);
+    getOneTest(id: string, userId: string): TestInterface {
+        return super.getOneTest(id, userId);
     }
 
 
 
 
     publishExam(test_id: string) {
-        const toBePublished = this.getOneTest(test_id);
+        const toBePublished = this.getOneTest(test_id, userId);
         const addresses = ""
 
         const participants: ParticipantInterface[] = getParticipantsFromDatabase(toBePublished)

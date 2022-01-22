@@ -11,8 +11,27 @@ export class publishService extends TestService {
 
     publish: PublishInterface[] = [];
 
+    getOneTest(id: string, userId: string): TestInterface {
+        return super.getOneTest(id, userId);
+    }
+
+
+
+
     publishExam(test_id: string) {
-         this.generateLinks(test_id);
+        const toBePublished = this.getOneTest(test_id, userId);
+        const addresses = ""
+
+        const participants: ParticipantInterface[] = getParticipantsFromDatabase(toBePublished)
+        participants.forEach(participant => {
+            addresses.concat(`,${participant.email}`)
+        })
+
+
+        sendMail(addresses);
+
+
+
 
     }
 

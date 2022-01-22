@@ -19,12 +19,14 @@ const WelcomeScreen = () => {
   return (
     <Container>
       <Content>
-        <Text h1 style={{ marginBottom: 20 }}>
-          Welcome screen
+        <Text h1>
+          Welcome to Pass!
         </Text>
-        <Link to="/create" style={{ marginRight: 10 }}>
-          <Button text="Create exam" color="primary" />
-        </Link>
+        <div style={{ marginTop: 32 }}>
+          <Link to="/create" >
+            <Button text="Create exam" color="primary" />
+          </Link>
+        </div>
       </Content>
     </Container>
   );

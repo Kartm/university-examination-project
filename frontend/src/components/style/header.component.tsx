@@ -1,8 +1,15 @@
 import React from "react";
 import styled from "styled-components";
+import colors from "../../themes/colors.theme";
+import Text from './text.component';
 
 const Wrapper = styled.div`
-  background-color: green;
+  display: flex;
+  align-items: center;
+  background-color: ${colors.primary};
+  height: 56px;
+  font-weight: bold;
+  padding-left: 32px;
 `;
 
 interface HeaderProps {
@@ -10,5 +17,5 @@ interface HeaderProps {
 }
 
 export const Header = (props: HeaderProps) => {
-  return <Wrapper>{props.title}</Wrapper>;
+  return <Wrapper><Text color={'#FFFFFF'}>{props.title}</Text></Wrapper>;
 };

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {useState} from 'react'
 import Text from "../../components/style/text.component";
 import colors from '../../themes/colors.theme';
-import {Question} from "../../models/exam.model";
+import {Question, QuestionChoice} from "../../models/exam.model";
 
 interface AddQuestionParams {
     onAddQuestion : (question: Question) => void
@@ -79,7 +79,7 @@ const AddQuestion= (props: AddQuestionParams) => {
     const [questionText, setQuestionText] = useState('')
     const [optionText, setOptionText] = useState("")
     const [points, setPoints] = useState(0)
-    const [questionChoices, setQuestionChoices] = useState([])
+    const [questionChoices, setQuestionChoices] = useState<QuestionChoice[]>([])
     const [idForRadio, setIdForRadio] = useState(-1)
 
 
@@ -117,11 +117,11 @@ const AddQuestion= (props: AddQuestionParams) => {
 
     const addChoice = (e:any) => {
         e.preventDefault()
-        const choiceId = Math.floor(Math.random() * 10000)
+        const choiceId = (Math.floor(Math.random() * 10000)).toString()
         setQuestionChoices([...questionChoices,
             {
                 question_choice_id: choiceId,
-                answerText: optionText,
+                text: optionText,
                 is_correct: false
             }])
         setOptionText('')
@@ -167,7 +167,7 @@ const AddQuestion= (props: AddQuestionParams) => {
                             type={questionType === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
                             required={questionType === 'SINGLE_CHOICE'}
                             name="Answer Choice"
-                            value={choice.answerText}
+                            value={choice.text}
                             id={i.toString()}
                             onChange={() => {
                                 questionType === 'SINGLE_CHOICE' ?
@@ -176,7 +176,7 @@ const AddQuestion= (props: AddQuestionParams) => {
                                     ) : handleCheck(i)
                             }}
                         />
-                        <Label>{choice.answerText}</Label>
+                        <Label>{choice.text}</Label>
                         <span style={{color: 'red', cursor: 'pointer'}} onClick={() => removeChoice(i)}>
                             X
                         </span>

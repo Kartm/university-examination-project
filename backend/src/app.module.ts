@@ -15,6 +15,9 @@ import {QuestionTypeModule} from "./api/questionType/questionType.module";
 import {QuestionPresetModule} from "./api/questionPreset/questionPresetModule";
 import {TemplateModule} from "./api/template/template.module";
 import {QuestionChoiceModule} from "./api/questionChoice/questionChoice.module";
+import {QuestionModule} from "./api/question/question.module";
+import {QuestionAnswerModule} from "./api/questionAnswer/questionAnswer.module";
+import {ParticipantModule} from "./api/participant/participant.module";
 import {LinkModule} from "./api/link/link.module";
 
 @Module({
@@ -43,7 +46,11 @@ import {LinkModule} from "./api/link/link.module";
         QuestionPresetModule,
         TemplateModule,
         QuestionChoiceModule,
+        QuestionModule,
+        QuestionAnswerModule,
+        ParticipantModule,
         LinkModule
+
     ],
     controllers: [
         AppController

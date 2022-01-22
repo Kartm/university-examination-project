@@ -14,6 +14,9 @@ interface ParticipateFinishParams {
 }
 
 const ParticipateFinishScreen = () => {
+  const participantPoints = '50'
+  const maxPoints = '100'
+
   const { testParticipateUuid } = useParams<ParticipateFinishParams>();
   const dispatch = useDispatch();
   const examState = useSelector((state: RootState) => state.exam);
@@ -29,10 +32,12 @@ const ParticipateFinishScreen = () => {
   return (
     <Container>
       <Content>
-        <Text h1 style={{ marginBottom: 20 }}>
-          Finish screen
-          <br/> [TODO]
+        <Text h1 style={{ marginBottom: 20, overflow: 'hidden', whiteSpace: 'nowrap', textAlign: 'center'}}>
+          <div>You finished your exam</div>
+          <div>Congratulations!</div>
+          <br/>
         </Text>
+        <h3>Your points: {participantPoints}/{maxPoints}</h3>
       </Content>
     </Container>
   );

@@ -13,7 +13,9 @@ export const Container = styled.button <{ color?: "primary" | "secondary" | "lig
     border: none;
     color: white;
     height: 35px;
-    width: 100%;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 0 16px;
     
     :focus {
         outline: none;
@@ -29,10 +31,11 @@ type ButtonProps = {
     style?: Object;
     onClick?: () => void;
     loading?: boolean;
+    disabled?: boolean;
 };
 
 const Button = (props: ButtonProps) => {
-    return <Container color={props.color} style={props.style} onClick={props.onClick}>
+    return <Container color={props.color} style={props.style} onClick={props.onClick} disabled={props.disabled}>
         {props.loading ?
             <Loader />
             :

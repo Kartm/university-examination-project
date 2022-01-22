@@ -56,10 +56,8 @@ const ParticipantsScreen = () => {
       <Content>
         <Text h1 style={{ marginBottom: 20 }}>
           Participants screen
-          {/*<p>{testOwnerUuid}</p>*/}
         </Text>
-        <Button text="Upload File" color="primary" />
-        <Text>
+        <span>
           {participants.map((participant, i) => (
               <h3 key={participant.email} style={{display: 'flex'}}>
                 {participant.email} {participant.person}
@@ -68,7 +66,7 @@ const ParticipantsScreen = () => {
                 </Text>
               </h3>
           ))}
-        </Text>
+        </span>
         <AddParticipant  onAddParticipant={pushParticipant}/>
         <Link to={`/${testOwnerUuid}/editor/questions`} style={{ marginRight: 10 }}>
           <Button text="Next (add questions)" color="primary" />

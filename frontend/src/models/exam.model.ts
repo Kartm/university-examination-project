@@ -43,3 +43,13 @@ export interface QuestionAnswer {
     tab_focus_lost_count?: number;
     // todo check_status
 }
+
+export interface Participant {
+    id: string;
+    test_id: string,
+  email: string,
+  name: string,
+  score: number,
+}
+
+export interface ParticipantDraft extends Omit<Omit<Participant, 'id'>, 'score'> {};

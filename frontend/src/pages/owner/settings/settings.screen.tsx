@@ -61,8 +61,6 @@ const SettingsScreen = () => {
       }
     }
 
-    console.log(update)
-
     // @ts-ignore
     dispatch(updateExamSettings(update)).then(x => {
       history.push(`/${testOwnerUuid}/editor/participants`);

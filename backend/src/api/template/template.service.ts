@@ -31,8 +31,8 @@ export class TemplateService {
         if (newTemplate.name) {
             template.name = newTemplate.name;
         }
-        if (newTemplate.settings_id) {
-            template.settings_id = newTemplate.settings_id;
+        if (newTemplate.setting) {
+            template.setting = newTemplate.setting;
         }
         this.templates[index] = template;
         return template;

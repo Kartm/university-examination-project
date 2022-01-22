@@ -1,14 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, OneToOne } from 'typeorm';
 import { TemplateInterface } from '../api/template/interfaces/template.interface';
+import { settingsEntity } from './settings.entity';
 
 @Entity("template")
 export class templateEntity implements TemplateInterface {
 
-    @PrimaryGeneratedColumn()
-    template_id: number;
+    @PrimaryGeneratedColumn('uuid')
+    template_id: string;
 
-    @Column()
-    settings_id: string;
+    @OneToOne(() => settingsEntity)
+    @JoinColumn()
+    setting: settingsEntity
 
     @Column({length:45})
     name: string;

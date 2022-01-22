@@ -29,9 +29,9 @@ export class QuestionChoiceService
 
     updateQuestionChoice(id: string, newQuestionChoice: QuestionChoiceInterface) {
         const [questionChoice, index] = CommonApi.findEntity(id, this.questionChoices);
-        if(newQuestionChoice.question_id)
+        if(newQuestionChoice.question)
         {
-            questionChoice.question_id = newQuestionChoice.question_id;
+            questionChoice.question = newQuestionChoice.question;
         }
         if(newQuestionChoice.text)
         {

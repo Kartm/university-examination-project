@@ -29,13 +29,13 @@ export class QuestionService
 
     updateQuestion(id: string, newQuestion: QuestionInterface) {
         const [question, index] = CommonApi.findEntity(id, this.questions);
-        if(newQuestion.test_id)
+        if(newQuestion.test)
         {
-            question.test_id = newQuestion.test_id;
+            question.test = newQuestion.test;
         }
-        if(newQuestion.question_type_id)
+        if(newQuestion.questionType)
         {
-            question.question_type_id = newQuestion.question_type_id;
+            question.questionType = newQuestion.questionType;
         }
         this.questions[index] = question;
         return question;

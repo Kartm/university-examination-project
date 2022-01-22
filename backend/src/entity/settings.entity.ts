@@ -4,11 +4,8 @@ import { SettingsInterface } from '../api/settings/interfaces/settings.interface
 @Entity("settings")
 export class settingsEntity implements SettingsInterface {
 
-    @PrimaryGeneratedColumn()
-    settings_id: number;
-
-    @Column({length: 45})
-    name: string;
+    @PrimaryGeneratedColumn('uuid')
+    settings_id: string;
 
     @Column()
     show_results_overview: boolean;

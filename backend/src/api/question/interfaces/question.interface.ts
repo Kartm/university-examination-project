@@ -1,7 +1,8 @@
-import {IIdHaver} from "../../../APIHelpers/IIdHaver";
+import { questionTypeEntity } from 'src/entity/questionType.entity';
+import { testEntity } from 'src/entity/test.entity';
+import { IIdHaver } from '../../../APIHelpers/IIdHaver';
 
-export interface QuestionInterface extends IIdHaver
-{
-    test_id : string,
-    question_type_id : string
+export interface QuestionInterface extends IIdHaver {
+  test: testEntity;
+  questionType: questionTypeEntity;
 }

@@ -1,48 +1,57 @@
-import {Injectable} from "@nestjs/common";
-import {ownerInterface} from "./interfaces/owner.interface";
-import {CommonApi} from "../../APIHelpers/CommonApi";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { OwnerInterface } from './interfaces/owner.interface';
+import { CommonApi } from '../../APIHelpers/CommonApi';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ownerEntity } from 'src/entity/owner.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
-export class ownerService
-{
-    owners : ownerInterface[] = [];
+export class ownerService {
+  constructor(
+    @InjectRepository(ownerEntity)
+    private testRepository: Repository<ownerEntity>,
+  ) {}
+  owners: OwnerInterface[] = [];
 
+  async getAllowner(): Promise<ownerEntity[]> {
+    return await this.testRepository.find();
+  }
 
-    getAllowner() {
-        return this.owners;
+  async getOneowner(owner: OwnerInterface) {
+    return await this.testRepository.findOne(owner);
+  }
+
+  async addOwner(owner: OwnerInterface) {
+    const newOwner = this.testRepository.create(owner);
+    await this.testRepository.save(newOwner);
+    return newOwner;
+  }
+
+  async removeAllowner() {
+    const allOwners = await this.testRepository.find();
+    allOwners.forEach(e => {
+      this.testRepository.delete(e);
+    });
+  }
+
+  async removeOneowner(owner: ownerEntity) {
+    const deletedUser = await this.testRepository.findOne(owner);
+    if (!deletedUser) {
+      throw new NotFoundException('Owner is not found');
     }
+    await this.testRepository.delete(owner);
+    return {
+      message: `${deletedUser.name} deleted successfully`,
+    };
+  }
 
-    getOneowner(id: string) {
-        return CommonApi.findEntity(id, this.owners)[0];
+  async updateowner(owner: OwnerInterface, editedOwner: OwnerInterface) {
+    const existingOwner = await this.testRepository.findOne(owner);
+    if (!existingOwner) {
+      throw new NotFoundException('Owner is not found');
     }
-
-    addQuestionPresset(owner: ownerInterface) {
-        return CommonApi.addEntity(owner, this.owners);
-    }
-
-    removeAllowner() {
-        return CommonApi.removeAllEntities(this.owners);
-    }
-
-    removeOneowner(id: string) {
-        return CommonApi.removeEntity(id, this.owners);
-    }
-
-    updateowner(id: string, newowner: ownerInterface) {
-        const [owner, index] = CommonApi.findEntity(id, this.owners);
-        if(newowner.template_id)
-        {
-            owner.template_id = newowner.template_id;
-        }
-        if(newowner.question_type_id)
-        {
-            owner.question_type_id = newowner.question_type_id;
-        }
-        if(newowner.question_num)
-        {
-            owner.question_num = newowner.question_num;
-        }
-        this.owners[index] = owner;
-        return owner;
-    }
+    existingOwner.name = editedOwner.name;
+    await this.testRepository.save(existingOwner);
+    return editedOwner;
+  }
 }

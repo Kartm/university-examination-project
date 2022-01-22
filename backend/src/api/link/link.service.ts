@@ -24,7 +24,7 @@ export class LinkService {
         const link = CommonApi.findEntity(id, this.links)[0];
         if(!link) return null;
         if(link.used) return null;
-        const participant : ParticipantInterface = ParticipantService.participants.find(participant => participant.id === link.participant_id);
+        const participant : ParticipantInterface = ParticipantService.participants.find(participant => participant === link.participant);
         link.used = true;
         LinkService.updateLink(id, link);
         return participant;
@@ -34,7 +34,7 @@ export class LinkService {
         const link : LinkInterface = LinkService.getSingleLink(linkFromPath);
         if(!link) return null;
         if(link.used) return null;
-        const participant : ParticipantInterface = ParticipantService.participants.find(participant => participant.id === link.participant_id);
+        const participant : ParticipantInterface = ParticipantService.participants.find(participant => participant === link.participant);
         link.used = true;
         LinkService.updateLink(linkFromPath, link);
         return participant;
@@ -53,9 +53,9 @@ export class LinkService {
     static updateLink(id: string, newLink: LinkInterface) {
         const link_ : LinkInterface = CommonApi.findEntity(id, this.links)[0];
 
-        if(newLink.participant_id)
+        if(newLink.participant)
         {
-            link_.participant_id = newLink.participant_id
+            link_.participant = newLink.participant
         }
         if (newLink.used) {
             link_.used = newLink.used;

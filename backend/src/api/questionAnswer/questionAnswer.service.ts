@@ -29,13 +29,13 @@ export class QuestionAnswerService
 
     updateQuestionAnswer(id: string, newQuestionAnswer: QuestionAnswerInterface) {
         const [questionAnswer, index] = CommonApi.findEntity(id, this.questionAnswers);
-        if(newQuestionAnswer.question_choice_id)
+        if(newQuestionAnswer.questionChoice)
         {
-            questionAnswer.question_choice_id = newQuestionAnswer.question_choice_id;
+            questionAnswer.questionChoice = newQuestionAnswer.questionChoice;
         }
-        if(newQuestionAnswer.participant_id)
+        if(newQuestionAnswer.participant)
         {
-            questionAnswer.participant_id = newQuestionAnswer.participant_id;
+            questionAnswer.participant = newQuestionAnswer.participant;
         }
         if(newQuestionAnswer.answer_text)
         {

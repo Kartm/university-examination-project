@@ -1,6 +1,5 @@
 import {Injectable} from "@nestjs/common";
 import {ParticipantInterface} from "./interfaces/participant.interface";
-import {TestInterface} from "../test/interfaces/test.interface";
 import {CommonApi} from "../../APIHelpers/CommonApi";
 
 
@@ -26,9 +25,9 @@ export class ParticipantService {
 
     static updateParticipant(id: string, newParticipant: ParticipantInterface) {
         const participant : ParticipantInterface = CommonApi.findEntity(id, this.participants)[0];
-        if(newParticipant.test_id)
+        if(newParticipant.test)
         {
-            participant.test_id = newParticipant.test_id;
+            participant.test = newParticipant.test;
         }
         if(newParticipant.score)
         {

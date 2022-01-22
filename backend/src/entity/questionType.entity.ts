@@ -4,8 +4,8 @@ import { QuestionTypeInterface } from '../api/questionType/interfaces/questionTy
 @Entity("questionType")
 export class questionTypeEntity implements QuestionTypeInterface {
 
-    @PrimaryGeneratedColumn()
-    question_type_id: number;
+    @PrimaryGeneratedColumn('uuid')
+    question_type_id: string;
 
     @Column({length: 45})
     name: string;

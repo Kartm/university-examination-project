@@ -25,7 +25,7 @@ const ParticipateScreen = () => {
 
   useEffect(() => {
     dispatch(getExamByUuid(testParticipateUuid));
-  }, [examState]);
+  }, []);
 
   useEffect(() => {
     dispatch(updateTitleAction(`Pass | ${examState.exam?.name || ''}`));
@@ -36,6 +36,10 @@ const ParticipateScreen = () => {
       <Content>
         <Text h1 style={{ marginBottom: 20 }}>
           {examState.exam?.name || ''}
+          <br/>
+        </Text>
+        <Text h2 style={{ marginBottom: 20 }}>
+          Created by: {examState.exam?.owner_name || ''}
           <br/>
         </Text>
         <div style={{color: 'darkgrey'}}>

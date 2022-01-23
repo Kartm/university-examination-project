@@ -1,4 +1,4 @@
-import {Injectable} from "@nestjs/common";
+import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {TestInterface} from "./interfaces/test.interface";
 import {CommonApi} from "../../APIHelpers/CommonApi";
 import * as nodemailer from "nodemailer"
@@ -6,11 +6,7 @@ import {ParticipantInterface} from "../participant/interfaces/participant.interf
 import {v4 as uuidv4} from "uuid";
 import {LinkInterface} from "../link/interface/link.interface";
 import {ParticipantService} from "../participant/participant.service";
-import {ParticipantController} from "../participant/participant.controller";
 import {LinkService} from "../link/link.service";
-import {constants} from "http2";
-import HTTP_STATUS_NOT_ACCEPTABLE = module
-import HTTP_STATUS_METHOD_NOT_ALLOWED = module
 
 @Injectable()
 export class TestService {
@@ -94,7 +90,7 @@ export class TestService {
             return test;
         }
 
-        return new HTTP_STATUS_METHOD_NOT_ALLOWED();
+        throw new HttpException("You cannot access this test",  HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     private static hasStarted(test)

@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { TestInterface } from './interfaces/test.interface';
-import { CommonApi } from '../../APIHelpers/CommonApi';
 import * as nodemailer from 'nodemailer';
 import { ParticipantInterface } from '../participant/interfaces/participant.interface';
 import { v4 as uuidv4 } from 'uuid';
@@ -85,7 +84,7 @@ export class TestService {
   async updateTest(test: testEntity, editedTest: testEntity) {
     const existingTest = await this.testRepository.findOne(test);
     if (!existingTest) {
-      throw new NotFoundException('Owner is not found');
+      throw new NotFoundException('Test is not found');
     }
     existingTest.name = editedTest.name;
     await this.testRepository.save(existingTest);
@@ -95,7 +94,7 @@ export class TestService {
   async removeTest(test: testEntity) {
     const deletedTest = await this.testRepository.findOne(test);
     if (!deletedTest) {
-      throw new NotFoundException('Owner is not found');
+      throw new NotFoundException('Test is not found');
     }
     await this.testRepository.delete(test);
     return {

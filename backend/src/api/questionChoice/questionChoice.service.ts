@@ -5,29 +5,29 @@ import {CommonApi} from "../../APIHelpers/CommonApi";
 @Injectable()
 export class QuestionChoiceService
 {
-    questionChoices : QuestionChoiceInterface[] = [];
+    static questionChoices : QuestionChoiceInterface[] = [];
 
-    getAllQuestionChoice() {
+    static getAllQuestionChoice() {
         return this.questionChoices;
     }
 
-    getOneQuestionChoice(id: string) {
+    static getOneQuestionChoice(id: string) {
         return CommonApi.findEntity(id, this.questionChoices)[0];
     }
 
-    addQuestionChoice(questionChoice: QuestionChoiceInterface) {
+    static addQuestionChoice(questionChoice: QuestionChoiceInterface) {
         return CommonApi.addEntity(questionChoice, this.questionChoices);
     }
 
-    deleteAllQuestionChoices() {
+    static deleteAllQuestionChoices() {
         return CommonApi.removeAllEntities(this.questionChoices)
     }
 
-    deleteOneQuestionChoice(id: string) {
+    static deleteOneQuestionChoice(id: string) {
         return CommonApi.removeEntity(id, this.questionChoices)
     }
 
-    updateQuestionChoice(id: string, newQuestionChoice: QuestionChoiceInterface) {
+    static updateQuestionChoice(id: string, newQuestionChoice: QuestionChoiceInterface) {
         const [questionChoice, index] = CommonApi.findEntity(id, this.questionChoices);
         if(newQuestionChoice.question)
         {

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { Link, useParams } from "react-router-dom";
 
 import Container from "../../../components/style/container.component";
@@ -7,7 +7,7 @@ import Button from "../../../components/forms/button.component";
 import Text from "../../../components/style/text.component";
 import {useDispatch, useSelector} from "react-redux";
 import {updateTitleAction} from "../../../store/slices/ui.slice";
-import {getExamByUuid} from "../../../store/slices/exam.slice";
+import {getExamByUuid, getQuestionTypes} from "../../../store/slices/exam.slice";
 import {RootState} from "../../../store/configure.store";
 
 interface ParticipateParams {
@@ -15,31 +15,52 @@ interface ParticipateParams {
 }
 
 const ParticipateScreen = () => {
+  const hasStartPassed = true
+  const startDate = '21.01.2022'
+  const startTime = '15:00'
+
   const { testParticipateUuid } = useParams<ParticipateParams>();
   const examState = useSelector((state: RootState) => state.exam);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getExamByUuid(testParticipateUuid));
-  }, [examState]);
+    dispatch(getQuestionTypes());
+  }, []);
 
   useEffect(() => {
-    dispatch(updateTitleAction(`Pass | ${examState.exam?.title || ''}`));
+    dispatch(getExamByUuid(testParticipateUuid, examState.questionTypes));
+  }, [examState.questionTypes])
+
+  useEffect(() => {
+    dispatch(updateTitleAction(`Pass | ${examState.exam?.name || ''}`));
   });
 
   return (
     <Container>
       <Content>
         <Text h1 style={{ marginBottom: 20 }}>
-          Participate screen
-          <br/>[TODO]
+          {examState.exam?.name || ''}
+          <br/>
         </Text>
-        <Link
-          to={`/${testParticipateUuid}/questions`}
-          style={{ marginRight: 10 }}
+        <Text h2 style={{ marginBottom: 20 }}>
+          Created by: {examState.exam?.owner_name || ''}
+          <br/>
+        </Text>
+        <div style={{color: 'darkgrey'}}>
+          <h3> Start Date: {startDate}</h3>
+          <h3> Start Time: {startTime}</h3>
+        </div>
+        <br/>
+        {hasStartPassed ? <Link
+            to={`/${testParticipateUuid}/questions`}
+            style={{marginRight: 10}}
         >
-          <Button text="Next (questions)" color="primary" />
+          <Button text="START EXAM" color="primary"/>
         </Link>
+        :
+        <div style={{color: 'darkgrey'}}>
+          <h2>Looks like it's not yet time for the exam</h2>
+        </div>}
       </Content>
     </Container>
   );

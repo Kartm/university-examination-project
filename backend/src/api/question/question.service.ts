@@ -5,29 +5,33 @@ import {CommonApi} from "../../APIHelpers/CommonApi";
 @Injectable()
 export class QuestionService
 {
-    questions: QuestionInterface[] = [];
+    static questions: QuestionInterface[] = [];
 
-    getAllQuestions() {
+    static getAllQuestions() {
         return this.questions;
     }
 
-    getOneQuestion(id: string) {
-        return CommonApi.findEntity(id, this.questions)[0];
+    static getQuestionsOfTest(test_id: string) {
+        return this.questions.filter(q => q.test_id === test_id)
     }
 
-    addQuestion(question: QuestionInterface) {
+    static getOneQuestion(id: string) {
+        return CommonApi.findEntity(id, QuestionService.questions)[0];
+    }
+
+    static addQuestion(question: QuestionInterface) {
         return CommonApi.addEntity(question, this.questions);
     }
 
-    removeAllQuestions() {
+    static removeAllQuestions() {
         return CommonApi.removeAllEntities(this.questions);
     }
 
-    removeOneQuestion(id: string) {
+    static removeOneQuestion(id: string) {
         return CommonApi.removeEntity(id, this.questions)
     }
 
-    updateQuestion(id: string, newQuestion: QuestionInterface) {
+    static updateQuestion(id: string, newQuestion: QuestionInterface) {
         const [question, index] = CommonApi.findEntity(id, this.questions);
         if(newQuestion.test)
         {

@@ -8,7 +8,7 @@ import {LinkInterface} from "./interface/link.interface";
 @Controller("link")
 export class LinkController {
 
-    constructor(private service: LinkService) {
+    constructor(private linkService: LinkService) {
 
 
     }
@@ -17,33 +17,33 @@ export class LinkController {
 
     @Get()
     getAllLinks() {
-    return LinkService.getAllLinks();
+    return this.linkService.getAllLinks();
 }
 
     @Get(":link_id")
     getSingleLink(@Param('link_id') id: string) : LinkInterface {
 
-        return LinkService.getSingleLink(id);
+        return this.linkService.getSingleLink(id);
     }
 
     @Post()
     addLink(@Body() link : LinkInterface) {
 
-        return LinkService.addLink(link);
+        return this.linkService.addLink(link);
 
     }
 
     @Delete("link_id")
     deleteLink(@Param('link_id') link_id: string) {
 
-        return LinkService.deleteLink(link_id);
+        return this.linkService.deleteLink(link_id);
 
     }
 
     @Patch("link_id" )
     updateLink(@Param('link_id') id : string, @Body() test : LinkInterface)
     {
-        return LinkService.updateLink(id, test);
+        return this.linkService.updateLink(id, test);
     }
 }
 

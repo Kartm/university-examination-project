@@ -1,37 +1,51 @@
 export interface Settings {
-    settings_uuid: string;
+    id: string;
     show_results_overview: boolean;
     allow_going_back: boolean;
     show_points_per_question: boolean;
 }
 
-export type SettingsDraft = Omit<Settings, 'settings_uuid'>
+export type SettingsDraft = Omit<Settings, 'id'>
 
 export interface QuestionChoice {
-    question_choice_id: string;
+    id: string;
+    question_id: string;
     text: string;
     is_correct: boolean;
 }
 
-export type QuestionChoiceDraft = Omit<QuestionChoice, 'question_choice_id'>
+export interface QuestionChoiceDraft extends Omit<Omit<QuestionChoice, 'id'>, 'question_id'> {id?: string; question_id?: string}
+
+export interface QuestionType {
+    id: string;
+    name: 'OPEN' | 'SINGLE_CHOICE' | 'MULTI_CHOICE';
+}
+
+export type QuestionTypeDraft = Omit<QuestionType, 'id'>
+
+export interface LocalQuestion {
+    id?: string;
+    name: string;
+    question_type: QuestionType;
+    question_choices: QuestionChoiceDraft[];
+}
 
 export interface Question {
-    question_uuid: string;
+    id: string;
     name: string;
-    question_type: 'OPEN' | 'SINGLE_CHOICE' | 'MULTI_CHOICE';
-    question_choices: QuestionChoice[];
+    test_id : string;
+    question_type_id : string;
 }
-
-export interface QuestionDraft extends Omit<Omit<Question, 'question_uuid'>, 'question_choices'> {question_choices: QuestionChoiceDraft[]}
 
 export interface Exam {
-    exam_uuid: string;
-    title: string;
+    id: string;
+    name: string;
+    owner_name: string;
     settings: Settings;
-    questions: Question[];
+    questions: LocalQuestion[];
 }
 
-export interface ExamDraft extends Omit<Omit<Omit<Exam, 'exam_uuid'>, 'settings'>, 'questions'> {settings: SettingsDraft, questions: QuestionDraft[]}
+export interface ExamDraft extends Omit<Omit<Omit<Exam, 'id'>, 'settings'>, 'questions'> {settings: SettingsDraft, questions: Question[]}
 
 export interface QuestionAnswer {
     question_answer_id?: string;
@@ -42,3 +56,13 @@ export interface QuestionAnswer {
     tab_focus_lost_count?: number;
     // todo check_status
 }
+
+export interface Participant {
+    id: string;
+    test_id: string,
+  email: string,
+  name: string,
+  score: number,
+}
+
+export interface ParticipantDraft extends Omit<Omit<Participant, 'id'>, 'score'> {};

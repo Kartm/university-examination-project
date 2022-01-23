@@ -5,29 +5,29 @@ import {QuestionAnswerInterface} from "./interfaces/questionAnswer.interface";
 @Injectable()
 export class QuestionAnswerService
 {
-    questionAnswers: QuestionAnswerInterface[] = [];
+    static questionAnswers: QuestionAnswerInterface[] = [];
 
-    getAllQuestions() {
+    static getAllQuestions() {
         return this.questionAnswers;
     }
 
-    getOneQuestionAnswer(id: string) {
+    static getOneQuestionAnswer(id: string) {
         return CommonApi.findEntity(id, this.questionAnswers)[0];
     }
 
-    addQuestionAnswer(questionAnswer: QuestionAnswerInterface) {
+    static addQuestionAnswer(questionAnswer: QuestionAnswerInterface) {
         return CommonApi.addEntity(questionAnswer, this.questionAnswers);
     }
 
-    removeAllQuestionAnswer() {
+    static removeAllQuestionAnswer() {
         return CommonApi.removeAllEntities(this.questionAnswers);
     }
 
-    removeOneQuestionAnswer(id: string) {
+    static removeOneQuestionAnswer(id: string) {
         return CommonApi.removeEntity(id, this.questionAnswers)
     }
 
-    updateQuestionAnswer(id: string, newQuestionAnswer: QuestionAnswerInterface) {
+    static updateQuestionAnswer(id: string, newQuestionAnswer: QuestionAnswerInterface) {
         const [questionAnswer, index] = CommonApi.findEntity(id, this.questionAnswers);
         if(newQuestionAnswer.questionChoice)
         {

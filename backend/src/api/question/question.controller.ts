@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post} from "@nestjs/common";
+import {Body, Controller, Delete, Get, Param, Patch, Post, Query} from "@nestjs/common";
 import {QuestionService} from "./question.service";
 import {QuestionInterface} from "./interfaces/question.interface";
 
@@ -7,39 +7,48 @@ export class QuestionController
 {
     constructor(private questionService : QuestionService) {
     }
+
+    @Get()
+    getQuestionsOfTest(@Query('test_id') test_id)
+    {
+        console.log('getQuestionsOfTest')
+        return this.questionService.getQuestionsOfTest(test_id);
+    }
+
     @Get()
     getAllQuestion()
     {
-        return this.questionService.getAllQuestions();
+        return QuestionService.getAllQuestions();
     }
+
 
     @Get(":id")
     getOneQuestion(@Param("id") id : string)
     {
-        return this.questionService.getOneQuestion(id);
+        return QuestionService.getOneQuestion(id);
     }
 
     @Post()
     addQuestion(@Body() question : QuestionInterface)
     {
-        return this.questionService.addQuestion(question)
+        return QuestionService.addQuestion(question)
     }
 
     @Delete()
     removeAllQuestions()
     {
-        return this.questionService.removeAllQuestions()
+        return QuestionService.removeAllQuestions()
     }
 
     @Delete(":id")
     removeOneQuestion(@Param("id") id : string)
     {
-        return this.questionService.removeOneQuestion(id);
+        return QuestionService.removeOneQuestion(id);
     }
 
     @Patch(":id")
     updateQuestion(@Param("id") id : string, @Body() question : QuestionInterface)
     {
-        return this.questionService.updateQuestion(id, question)
+        return QuestionService.updateQuestion(id, question)
     }
 }

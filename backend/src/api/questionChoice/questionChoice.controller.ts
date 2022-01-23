@@ -11,38 +11,38 @@ export class QuestionChoiceController
     @Get()
     getALlQuestionChoice()
     {
-        return this.questionChoiceService.getAllQuestionChoice()
+        return QuestionChoiceService.getAllQuestionChoice()
     }
 
 
     @Get(":id")
     getOneQuestionChoice(@Param("id") id : string)
     {
-        return this.questionChoiceService.getOneQuestionChoice(id);
+        return QuestionChoiceService.getOneQuestionChoice(id);
     }
 
     @Post()
     addQuestionChoice(@Body() questionChoice : QuestionChoiceInterface)
     {
-        return this.questionChoiceService.addQuestionChoice(questionChoice)
+        return QuestionChoiceService.addQuestionChoice(questionChoice)
     }
 
     @Delete()
     deleteAllQuestionChoices()
     {
-        return this.questionChoiceService.deleteAllQuestionChoices()
+        return QuestionChoiceService.deleteAllQuestionChoices()
     }
 
     @Delete(":id")
     deleteOneQuestionChoice(@Param("id") id : string)
     {
-        return this.questionChoiceService.deleteOneQuestionChoice(id)
+        return QuestionChoiceService.deleteOneQuestionChoice(id)
     }
 
     @Patch(":id")
     updateQuestionChoice(@Param("id") id : string, @Body() questionChoice : QuestionChoiceInterface)
     {
-        return this.questionChoiceService.updateQuestionChoice(id, questionChoice);
+        return QuestionChoiceService.updateQuestionChoice(id, questionChoice);
     }
 
 }

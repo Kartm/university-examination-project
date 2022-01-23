@@ -1,10 +1,12 @@
-import {QuestionPresetService} from "./questionPreset.service";
-import {QuestionPresetController} from "./questionPreset.controller";
-import {Module} from "@nestjs/common";
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ownerEntity } from 'src/entity/owner.entity';
+import { OwnerController } from './owner.controller';
+import { ownerService } from './owner.service';
 
 @Module({
-    controllers: [QuestionPresetController],
-    providers: [QuestionPresetService]
+  imports: [TypeOrmModule.forFeature([ownerEntity])],
+  controllers: [OwnerController],
+  providers: [ownerService],
 })
-export class QuestionPresetModule {
-}
+export class OwnerModule {}

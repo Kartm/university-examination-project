@@ -1,47 +1,48 @@
-import {Body, Controller, Delete, Get, Param, Patch, Post} from "@nestjs/common";
-import {QuestionPresetService} from "./questionPreset.service";
-import {QuestionPresetInterface} from "./interfaces/questionPreset.interface";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { ownerEntity } from 'src/entity/owner.entity';
+import { OwnerInterface } from './interfaces/owner.interface';
+import { ownerService } from './owner.service';
 
-@Controller("questionPreset")
-export class QuestionPresetController
-{
-    constructor(private questionPresetService : QuestionPresetService) {
-    }
+@Controller('owner')
+export class OwnerController {
+  constructor(private ownerService: ownerService) {}
 
-    @Get()
-    getAllQuestionPreset()
-    {
-        return this.questionPresetService.getAllQuestionPreset()
-    }
+  @Get()
+  getAllOwners() {
+    return this.ownerService.getAllowner();
+  }
 
-    @Get(":id")
-    getOneQuestionPreset(@Param("id") id : string)
-    {
-        return this.questionPresetService.getOneQuestionPreset(id)
-    }
+  @Get(':id')
+  getOneOwner(@Param('id') owner: ownerEntity) {
+    return this.ownerService.getOneowner(owner);
+  }
 
-    @Post()
-    addQuestionPreset(@Body() questionPreset : QuestionPresetInterface)
-    {
-        return this.questionPresetService.addQuestionPresset(questionPreset);
-    }
+  @Post()
+  addOwner(@Body() owner: OwnerInterface) {
+    return this.ownerService.addOwner(owner);
+  }
 
-    @Delete()
-    removeAllQuestionPreset()
-    {
-        return this.questionPresetService.removeAllQuestionPreset();
-    }
+  @Delete()
+  removeAllOwner() {
+    return this.ownerService.removeAllowner();
+  }
 
-    @Delete(":id")
-    removeOneQuestionPreset(@Param("id") id : string)
-    {
-        return this.questionPresetService.removeOneQuestionPreset(id);
-    }
+  @Delete(':id')
+  removeOneOwner(@Param('id') owner: ownerEntity) {
+    return this.ownerService.removeOneowner(owner);
+  }
 
-    @Patch(":id")
-    updateQuestionPreset(@Param("id") id : string, @Body() questionPreset : QuestionPresetInterface)
-    {
-        return this.questionPresetService.updateQuestionPreset(id, questionPreset);
-    }
-
+  @Patch(':id')
+  updateOwner(@Param('id') owner: OwnerInterface, @Body() newOwner: OwnerInterface) {
+    return this.ownerService.updateowner(owner, newOwner);
+  }
 }

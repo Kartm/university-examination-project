@@ -30,13 +30,13 @@ export class QuestionPresetService
 
     updateQuestionPreset(id: string, newQuestionPreset: QuestionPresetInterface) {
         const [questionPreset, index] = CommonApi.findEntity(id, this.questionPresets);
-        if(newQuestionPreset.template_id)
+        if(newQuestionPreset.template)
         {
-            questionPreset.template_id = newQuestionPreset.template_id;
+            questionPreset.template = newQuestionPreset.template;
         }
-        if(newQuestionPreset.question_type_id)
+        if(newQuestionPreset.questionType)
         {
-            questionPreset.question_type_id = newQuestionPreset.question_type_id;
+            questionPreset.questionType = newQuestionPreset.questionType;
         }
         if(newQuestionPreset.question_num)
         {

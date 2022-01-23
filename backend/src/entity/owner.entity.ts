@@ -4,8 +4,8 @@ import { OwnerInterface } from '../api/owner/interfaces/owner.interface';
 @Entity("owner")
 export class ownerEntity implements OwnerInterface {
 
-    @PrimaryGeneratedColumn()
-    owner_id: number;
+    @PrimaryGeneratedColumn('uuid')
+    owner_id: string;
 
     @Column({length: 45})
     name: string;

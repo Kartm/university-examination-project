@@ -10,36 +10,36 @@ export class QuestionAnswerController
     @Get()
     getAllQuestion()
     {
-        return this.questionAnswerService.getAllQuestions();
+        return QuestionAnswerService.getAllQuestions();
     }
 
     @Get(":id")
     getOneQuestionAnswer(@Param("id") id : string)
     {
-        return this.questionAnswerService.getOneQuestionAnswer(id);
+        return QuestionAnswerService.getOneQuestionAnswer(id);
     }
 
     @Post()
     addQuestionAnswer(@Body() questionAnswer : QuestionAnswerInterface)
     {
-        return this.questionAnswerService.addQuestionAnswer(questionAnswer)
+        return QuestionAnswerService.addQuestionAnswer(questionAnswer)
     }
 
     @Delete()
     removeAllQuestionAnswer()
     {
-        return this.questionAnswerService.removeAllQuestionAnswer()
+        return QuestionAnswerService.removeAllQuestionAnswer()
     }
 
     @Delete(":id")
     removeOneQuestionAnswer(@Param("id") id : string)
     {
-        return this.questionAnswerService.removeOneQuestionAnswer(id);
+        return QuestionAnswerService.removeOneQuestionAnswer(id);
     }
 
     @Patch(":id")
     updateQuestionAnswer(@Param("id") id : string, @Body() questionAnswer : QuestionAnswerInterface)
     {
-        return this.questionAnswerService.updateQuestionAnswer(id, questionAnswer)
+        return QuestionAnswerService.updateQuestionAnswer(id, questionAnswer)
     }
 }

@@ -1,8 +1,10 @@
-import {IIdHaver} from "../../../APIHelpers/IIdHaver";
+import { ParticipantInterface } from 'src/api/participant/interfaces/participant.interface';
+import { participantEntity } from 'src/entity/participant.entity';
+import { IIdHaver } from '../../../APIHelpers/IIdHaver';
 
 export interface LinkInterface extends IIdHaver {
-    participant_id?: string;
-    used?: boolean;
-    sent_at?: string;
-    link?: string;
+  participant?: ParticipantInterface;
+  used?: boolean;
+  sent_at?: string;
+  link?: string;
 }

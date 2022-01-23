@@ -1,20 +1,24 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne, OneToMany, ManyToOne } from 'typeorm';
 import { QuestionAnswerInterface } from '../api/questionAnswer/interfaces/questionAnswer.interface';
+import { participantEntity } from './participant.entity';
+import { questionChoiceEntity } from './questionChoice.entity';
 
 @Entity("questionAnswer")
 export class questionAnswerEntity implements QuestionAnswerInterface {
 
-    @PrimaryGeneratedColumn()
-    questionAnswer_id: number;
+    @PrimaryGeneratedColumn('uuid')
+    questionAnswer_id: string;
 
     @Column()
     name: string;
 
-    @Column()
-    question_choice_id: string;
+    @OneToOne(() => questionChoiceEntity)
+    @JoinColumn()
+    questionChoice: questionChoiceEntity;
 
-    @Column()
-    participant_id: string;
+    @ManyToOne(() => participantEntity, participant => participant.participant_id )
+    @JoinColumn()
+    participant: participantEntity
 
     @Column()
     answer_text: string;

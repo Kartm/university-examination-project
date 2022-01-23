@@ -1,48 +1,58 @@
-import {Injectable} from "@nestjs/common";
-import {CommonApi} from "../../APIHelpers/CommonApi";
-import {SettingsInterface} from "./interfaces/settings.interface";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { settingsEntity } from 'src/entity/settings.entity';
+import { Repository } from 'typeorm';
+import { SettingsInterface } from './interfaces/settings.interface';
 
 @Injectable()
-export class SettingsService
-{
-    settings : SettingsInterface[] = [];
+export class SettingsService {
+  constructor(
+    @InjectRepository(settingsEntity)
+    private testRepository: Repository<settingsEntity>,
+  ) {}
+  settings: SettingsInterface[] = [];
 
+  async getAllSettings(): Promise<settingsEntity[]> {
+    return await this.testRepository.find();
+  }
 
-    getAllSettings() {
-        return this.settings;
+  async getOneSettings(setting: settingsEntity) {
+    return await this.testRepository.findOne(setting);
+  }
+
+  async addSettings(settings: SettingsInterface) {
+    const newSettings = this.testRepository.create(settings);
+    await this.testRepository.save(newSettings);
+    return newSettings;
+  }
+
+  async removeOneSetting(setting: settingsEntity) {
+    const deletedSetting = await this.testRepository.findOne(setting);
+    if (!deletedSetting) {
+      throw new NotFoundException('Setting is not found');
     }
+    await this.testRepository.delete(setting);
+    return {
+      message: `${deletedSetting.settings_id} deleted successfully`,
+    };
+  }
 
-    getOneSettings(id: string) {
-        return CommonApi.findEntity(id, this.settings)[0];
-    }
+  async deleteAllSettings() {
+    const allSettings = await this.testRepository.find();
+    allSettings.forEach(e => {
+      this.testRepository.delete(e);
+    });
+  }
 
-    addSettings(settings: SettingsInterface) {
-        return CommonApi.addEntity(settings, this.settings);
+  async updateSettings(settings: string, newSettings: SettingsInterface) {
+    const existingSettings = await this.testRepository.findOne(settings);
+    if (!existingSettings) {
+      throw new NotFoundException('Setting is not found');
     }
-
-    removeOneSetting(id: string) {
-        return CommonApi.removeEntity(id, this.settings);
-    }
-
-    deleteAllSettings() {
-        return CommonApi.removeAllEntities(this.settings);
-    }
-
-    updateSettings(id: string, newSettings: SettingsInterface) {
-        const [settings, index] = CommonApi.findEntity(id, this.settings);
-        if(newSettings.show_results_overview !== undefined)
-        {
-            settings.show_results_overview = !!newSettings.show_results_overview;
-        }
-        if(newSettings.allow_going_back !== undefined)
-        {
-            settings.allow_going_back = !!newSettings.allow_going_back;
-        }
-        if(newSettings.show_points_per_question !== undefined)
-        {
-            settings.show_points_per_question = !!newSettings.show_points_per_question;
-        }
-        this.settings[index] = settings;
-        return settings;
-    }
+    existingSettings.show_points_per_question = newSettings.show_points_per_question;
+    existingSettings.show_results_overview = newSettings.show_results_overview;
+    existingSettings.allow_going_back = newSettings.allow_going_back;
+    await this.testRepository.save(existingSettings);
+    return newSettings;
+  }
 }

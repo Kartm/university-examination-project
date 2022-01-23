@@ -1,17 +1,21 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 import { QuestionPresetInterface } from '../api/questionPreset/interfaces/questionPreset.interface';
+import { questionTypeEntity } from './questionType.entity';
+import { templateEntity } from './template.entity';
 
 @Entity("questionPreset")
 export class questionPresetEntity implements QuestionPresetInterface {
 
-    @PrimaryGeneratedColumn()
-    questionPreset_id: number;
+    @PrimaryGeneratedColumn('uuid')
+    questionPreset_id: string;
 
-    @Column()
-    template_id: string;
+    @OneToOne(() => templateEntity)
+    @JoinColumn()
+    template: templateEntity
 
-    @Column()
-    question_type_id: string;
+    @OneToOne(() => questionTypeEntity)
+    @JoinColumn()
+    questionType: questionTypeEntity
 
     @Column()
     question_num: number;

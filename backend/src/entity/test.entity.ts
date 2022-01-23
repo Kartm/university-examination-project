@@ -1,23 +1,30 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { TestInterface } from '../api/test/interfaces/test.interface';
+import { ownerEntity } from './owner.entity';
+import { settingsEntity } from './settings.entity';
 
-@Entity("test")
+@Entity('test')
 export class testEntity implements TestInterface {
+  @PrimaryGeneratedColumn('uuid')
+  test_id: string;
 
-    @PrimaryGeneratedColumn()
-    test_id: number;
+  @OneToOne(() => settingsEntity, { eager: true })
+  @JoinColumn()
+  setting: settingsEntity;
 
-    @Column()
-    settings_id?: string;
-    
-    @Column()
-    owner_id?: string;
+  @OneToOne(() => ownerEntity, { eager: true })
+  @JoinColumn()
+  owner: ownerEntity;
 
-    @Column({length: 45})
-    owner_link?: string;
+  @Column({ length: 45 })
+  owner_link?: string;
 
-    @Column({length: 45})
-    name: string;
-
-    
+  @Column({ length: 45 })
+  name: string;
 }

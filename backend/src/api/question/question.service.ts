@@ -5,41 +5,41 @@ import {CommonApi} from "../../APIHelpers/CommonApi";
 @Injectable()
 export class QuestionService
 {
-    questions: QuestionInterface[] = [];
+    static questions: QuestionInterface[] = [];
 
-    getAllQuestions() {
+    static getAllQuestions() {
         return this.questions;
     }
 
-    getQuestionsOfTest(test_id: string) {
+    static getQuestionsOfTest(test_id: string) {
         return this.questions.filter(q => q.test_id === test_id)
     }
 
-    getOneQuestion(id: string) {
-        return CommonApi.findEntity(id, this.questions)[0];
+    static getOneQuestion(id: string) {
+        return CommonApi.findEntity(id, QuestionService.questions)[0];
     }
 
-    addQuestion(question: QuestionInterface) {
+    static addQuestion(question: QuestionInterface) {
         return CommonApi.addEntity(question, this.questions);
     }
 
-    removeAllQuestions() {
+    static removeAllQuestions() {
         return CommonApi.removeAllEntities(this.questions);
     }
 
-    removeOneQuestion(id: string) {
+    static removeOneQuestion(id: string) {
         return CommonApi.removeEntity(id, this.questions)
     }
 
-    updateQuestion(id: string, newQuestion: QuestionInterface) {
+    static updateQuestion(id: string, newQuestion: QuestionInterface) {
         const [question, index] = CommonApi.findEntity(id, this.questions);
-        if(newQuestion.test_id)
+        if(newQuestion.test)
         {
-            question.test_id = newQuestion.test_id;
+            question.test = newQuestion.test;
         }
-        if(newQuestion.question_type_id)
+        if(newQuestion.questionType)
         {
-            question.question_type_id = newQuestion.question_type_id;
+            question.questionType = newQuestion.questionType;
         }
         this.questions[index] = question;
         return question;

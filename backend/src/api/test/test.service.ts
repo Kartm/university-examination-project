@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { TestInterface } from './interfaces/test.interface';
 import { CommonApi } from '../../APIHelpers/CommonApi';
 import * as nodemailer from 'nodemailer';
@@ -13,15 +13,20 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TestService {
-  constructor(@InjectRepository(testEntity) private testRepository: Repository<testEntity>,) {}
+  constructor(
+    @InjectRepository(testEntity)
+    private testRepository: Repository<testEntity>,
+  ) {}
   tests: TestInterface[] = [];
 
   async getAllTests(): Promise<testEntity[]> {
     return await this.testRepository.find();
   }
 
-  addTest(test: TestInterface) {
-    return CommonApi.addEntity(test, this.tests);
+  async addTest(test: TestInterface) {
+    const newTest = this.testRepository.create(test);
+    await this.testRepository.save(newTest);
+    return newTest;
   }
 
   private generateLinks(test: testEntity) {
@@ -73,15 +78,29 @@ export class TestService {
     });
   }
 
-  getOneTest(test: testEntity): TestInterface {
-    this.generateLinks(test);
-    return CommonApi.findEntity(test.test_id, this.tests)[0];
+  async getOneTest(test: testEntity) {
+    return await this.testRepository.findOne(test);
   }
 
-  updateTest(id: string, newTest: TestInterface) {}
+  async updateTest(test: testEntity, editedTest: testEntity) {
+    const existingTest = await this.testRepository.findOne(test);
+    if (!existingTest) {
+      throw new NotFoundException('Owner is not found');
+    }
+    existingTest.name = editedTest.name;
+    await this.testRepository.save(existingTest);
+    return editedTest;
+  }
 
-  removeTest(id: string) {
-    CommonApi.removeEntity(id, this.tests);
+  async removeTest(test: testEntity) {
+    const deletedTest = await this.testRepository.findOne(test);
+    if (!deletedTest) {
+      throw new NotFoundException('Owner is not found');
+    }
+    await this.testRepository.delete(test);
+    return {
+      message: `${deletedTest.name} deleted successfully`,
+    };
   }
 
   private saveLinkInDatabase(link: LinkInterface) {

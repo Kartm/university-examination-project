@@ -28,9 +28,9 @@ export class testEntity implements TestInterface {
   @Column({ length: 45 })
   name: string;
 
-  @Column()
+  @Column({default : '1970-01-01 00:00:00'})
   time_end: Date;
 
-  @Column()
+  @Column({default : '1970-01-01 00:00:00'})
   time_start: Date;
 }

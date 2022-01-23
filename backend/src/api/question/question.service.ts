@@ -12,7 +12,7 @@ export class QuestionService
     }
 
     static getQuestionsOfTest(test_id: string) {
-        return this.questions.filter(q => q.test_id === test_id)
+        return this.questions.filter(q => q.test.test_id === test_id)
     }
 
     static getOneQuestion(id: string) {

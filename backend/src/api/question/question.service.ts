@@ -11,8 +11,12 @@ export class QuestionService
         return this.questions;
     }
 
-    static getOneQuestion(id: string) {
-        return CommonApi.findEntity(id, this.questions)[0];
+    static getQuestionsOfTest(test_id: string) {
+        return this.questions.filter(q => q.test_id === test_id)
+    }
+
+    getOneQuestion(id: string) {
+        return CommonApi.findEntity(id, QuestionService.questions)[0];
     }
 
     static addQuestion(question: QuestionInterface) {

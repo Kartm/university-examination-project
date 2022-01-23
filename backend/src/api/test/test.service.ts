@@ -109,6 +109,10 @@ export class TestService {
         {
             test.settings_id = newTest.settings_id
         }
+        if(newTest.owner_id)
+        {
+            test.owner_id = newTest.owner_id
+        }
         if (newTest.name) {
             test.name = newTest.name;
         }
@@ -116,7 +120,11 @@ export class TestService {
         {
             test.owner_link = newTest.owner_link;
         }
-        this.tests[id] = test;
+
+        const testToChangeIndex = this.tests.findIndex((t => t.id === test.id));
+
+        this.tests[testToChangeIndex] = test
+
         return test;
     }
 

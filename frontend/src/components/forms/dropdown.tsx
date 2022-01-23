@@ -52,7 +52,11 @@ const Dropdown= (props: DropdownParams) => {
     const [selectedOptions, setSelectedOptions] = useState<string[]>([])
 
     const removeOption = (id) => {
-        setSelectedOptions(selectedOptions.filter((option) => selectedOptions.indexOf(option) !== id))
+      const newSelectedOptions = selectedOptions.filter((option) => selectedOptions.indexOf(option) !== id);
+
+      setSelectedOptions(newSelectedOptions)
+
+      props.onChange(newSelectedOptions)
     }
 
     return (
@@ -62,7 +66,7 @@ const Dropdown= (props: DropdownParams) => {
                 e.preventDefault()
             }}>
                 {selectedOptions.map((option, i) => (
-                    <Text>
+                    <Text key={i}>
                         {option}
                         <span style={{color: 'red', cursor: 'pointer'}} onClick={() => removeOption(i)}>
                             X
@@ -73,7 +77,10 @@ const Dropdown= (props: DropdownParams) => {
             {openOptions && <DropdownContent>
                 {props.options.filter(option => !selectedOptions.includes(option))
                     .map((value, i) =>
-                        <a style={{cursor:'pointer'}} key={i} onClick={() => setSelectedOptions([...selectedOptions, value])}>{value}</a>)}
+                        <a style={{cursor:'pointer'}} key={i} onClick={() => {
+                          setSelectedOptions([...selectedOptions, value]);
+                          props.onChange([...selectedOptions, value])
+                        }}>{value}</a>)}
             </DropdownContent>}
         </DropdownWrapper>
     );

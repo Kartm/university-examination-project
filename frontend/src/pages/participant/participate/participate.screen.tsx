@@ -7,7 +7,7 @@ import Button from "../../../components/forms/button.component";
 import Text from "../../../components/style/text.component";
 import {useDispatch, useSelector} from "react-redux";
 import {updateTitleAction} from "../../../store/slices/ui.slice";
-import {getExamByUuid} from "../../../store/slices/exam.slice";
+import {getExamByUuid, getQuestionTypes} from "../../../store/slices/exam.slice";
 import {RootState} from "../../../store/configure.store";
 
 interface ParticipateParams {
@@ -24,18 +24,26 @@ const ParticipateScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getExamByUuid(testParticipateUuid));
-  }, [examState]);
+    dispatch(getQuestionTypes());
+  }, []);
 
   useEffect(() => {
-    dispatch(updateTitleAction(`Pass | ${examState.exam?.title || ''}`));
+    dispatch(getExamByUuid(testParticipateUuid, examState.questionTypes));
+  }, [examState.questionTypes])
+
+  useEffect(() => {
+    dispatch(updateTitleAction(`Pass | ${examState.exam?.name || ''}`));
   });
 
   return (
     <Container>
       <Content>
         <Text h1 style={{ marginBottom: 20 }}>
-          {examState.exam?.title || ''}
+          {examState.exam?.name || ''}
+          <br/>
+        </Text>
+        <Text h2 style={{ marginBottom: 20 }}>
+          Created by: {examState.exam?.owner_name || ''}
           <br/>
         </Text>
         <div style={{color: 'darkgrey'}}>

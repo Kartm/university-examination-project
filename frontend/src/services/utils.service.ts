@@ -49,3 +49,11 @@ export const post = async (route: string, object: any) => {
         body: JSON.stringify(object)
     });
 };
+
+export const patch = async (route: string, object: any) => {
+    return await fetch(environment.apiUrl + route, {
+        method: "PATCH",
+        headers: headers(),
+        body: JSON.stringify(object)
+    });
+};

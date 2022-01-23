@@ -1,15 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
 import {useState} from 'react'
-import Text from "../../components/style/text.component";
 import colors from '../../themes/colors.theme';
-import {Question, QuestionChoice} from "../../models/exam.model";
-
-interface AddQuestionParams {
-    onAddQuestion : (question: Question) => void
-    onClose : () => void
-}
-
+import {LocalQuestion, Question, QuestionChoice, QuestionChoiceDraft, QuestionType} from "../../models/exam.model";
 
 const DropdownButton = styled.button`
   background-color: ${colors["primary"]};
@@ -73,34 +66,33 @@ const Label = styled.label`
   margin-left: 8px;
 `
 
+interface AddQuestionParams {
+    onAddQuestion : (localQuestion: LocalQuestion) => void
+    onClose : () => void
+    questionTypes: QuestionType[];
+}
+
 const AddQuestion= (props: AddQuestionParams) => {
     const [openSelection, setOpenSelection] = useState(false)
-    const [questionType, setQuestionType] = useState('')
+    const [questionType, setQuestionType] = useState<QuestionType | null>(null)
     const [questionText, setQuestionText] = useState('')
     const [optionText, setOptionText] = useState("")
     const [points, setPoints] = useState(0)
-    const [questionChoices, setQuestionChoices] = useState<QuestionChoice[]>([])
+    const [questionChoices, setQuestionChoices] = useState<QuestionChoiceDraft[]>([])
     const [idForRadio, setIdForRadio] = useState(-1)
 
-
-    function handleQuestionTypeChange(type: string) {
-        setQuestionType(type)
+    function handleQuestionTypeChange(questionType: QuestionType) {
+        setQuestionType(questionType)
         setOpenSelection(false)
     }
 
     function handleQuestionSave() {
-        console.log(questionType)
-        const question: Question = {
-            // @ts-ignore
-            question_uuid: (Math.floor(Math.random() * 10000)).toString(), //stays empty, assigned by backend
+        const question: LocalQuestion = {
             name: questionText,
-            question_choices: questionChoices, //TODO: used a random val for id
-            question_type: undefined, //TODO: for now stays as undefined until we figure out how to properly save question type
-
-            //TODO: there should be something to store points for a question
+            question_choices: questionChoices,
+            question_type: questionType,
         }
 
-        console.log(questionChoices)
         props.onAddQuestion(question)
         setIdForRadio(-1)
         console.log(question)
@@ -117,10 +109,8 @@ const AddQuestion= (props: AddQuestionParams) => {
 
     const addChoice = (e:any) => {
         e.preventDefault()
-        const choiceId = (Math.floor(Math.random() * 10000)).toString()
         setQuestionChoices([...questionChoices,
             {
-                question_choice_id: choiceId,
                 text: optionText,
                 is_correct: false
             }])
@@ -131,6 +121,13 @@ const AddQuestion= (props: AddQuestionParams) => {
         setQuestionChoices(questionChoices.filter((choice) => questionChoices.indexOf(choice) !== id))
     }
 
+    const questionTypeToString = {
+        '': "Choose question type",
+        'OPEN': 'Open Answer',
+        'SINGLE_CHOICE': 'Single Choice Answer',
+        'MULTI_CHOICE': 'Multiple Choice Answer',
+    }
+
     return(
         <Wrapper>
             <PopupInput type="text" required placeholder="Please write your question here" onChange={(e) => setQuestionText(e.target.value)}/>
@@ -138,39 +135,37 @@ const AddQuestion= (props: AddQuestionParams) => {
                 <DropdownButton onClick={(e) => {setOpenSelection(!openSelection)
                     e.preventDefault()
                 }}>
-                    {questionType === '' ? 'Choose question type' :
-                        questionType === 'OPEN' ? 'Open Answer' :
-                        questionType === 'SINGLE_CHOICE' ? 'Single Choice Answer' : 'Multiple Choice Answer'}
-
+                    {questionType === null ? 'Select question type' : questionTypeToString[questionType.name]}
                 </DropdownButton>
 
                 {openSelection && <DropdownContent>
-                    <a style={{cursor:'pointer'}} onClick={() => {
-                        handleQuestionTypeChange('OPEN')
-                    }}>Open Answer</a>
-                    <a style={{cursor:'pointer'}} onClick={() => {
-                        handleQuestionTypeChange('SINGLE_CHOICE')
-                    }}>Single Choice Answer</a>
-                    <a style={{cursor:'pointer'}} onClick={() => {
-                        handleQuestionTypeChange('MULTI_CHOICE')
-                    }}>Multiple Choice Answer</a>
+                    {props.questionTypes.map(qt =>
+                      <a
+                        key={qt.id}
+                        style={{cursor:'pointer'}}
+                        onClick={() => {
+                            handleQuestionTypeChange(qt)
+                        }}>
+                          {questionTypeToString[qt.name]}
+                      </a>
+                    )}
                 </DropdownContent>}
             </DropdownWrapper>
             <input type="number" onChange={(e) => setPoints(Number(e.target.value))} required placeholder="Please write the number of points for this exercise" />
             <Divider/>
             {/*question options go here*/}
 
-            {questionChoices.length > 0 &&
+            {questionType !== null && questionChoices.length > 0 &&
                     questionChoices.map((choice, i) =>
                     <div key={i}>
                         <input
-                            type={questionType === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
-                            required={questionType === 'SINGLE_CHOICE'}
+                            type={questionType.name === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
+                            required={questionType.name === 'SINGLE_CHOICE'}
                             name="Answer Choice"
                             value={choice.text}
                             id={i.toString()}
                             onChange={() => {
-                                questionType === 'SINGLE_CHOICE' ?
+                                questionType.name === 'SINGLE_CHOICE' ?
                                     setQuestionChoices(
                                         questionChoices.map((qc, j) =>  ({...qc, is_correct: j === i}))
                                     ) : handleCheck(i)
@@ -183,13 +178,16 @@ const AddQuestion= (props: AddQuestionParams) => {
                     </div>
                     )
             }
-            {questionType !== '' && <>
+
+            {questionType !== null && <>
                 <input type="text" placeholder="Please write here a question answer" value={optionText} onChange={(e) => setOptionText(e.target.value)}/>
+
                 <div style={{cursor:'pointer'}} onClick={addChoice}>
                     + add an option
                 </div>
-
             </>}
+
+
 
         <button onClick={
             () => handleQuestionSave()

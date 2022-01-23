@@ -13,6 +13,7 @@ import { settingsEntity } from 'src/entity/settings.entity';
 
 @Controller('settings')
 export class SettingsController {
+
   constructor(private settingsService: SettingsService) {}
 
   @Get()
@@ -26,7 +27,7 @@ export class SettingsController {
   }
 
   @Post()
-  addSettings(@Body() settings: SettingsInterface) {
+  addSettings(@Body() settings: settingsEntity) {
     return this.settingsService.addSettings(settings);
   }
 

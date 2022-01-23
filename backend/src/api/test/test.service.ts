@@ -28,7 +28,7 @@ export class TestService {
     return newTest;
   }
 
-  private generateLinks(test: testEntity) {
+  public generateLinks(test: testEntity) {
     const participants: ParticipantInterface[] = this.getParticipantsFromDatabase(
       test,
     );
@@ -102,7 +102,7 @@ export class TestService {
     };
   }
 
-  private saveLinkInDatabase(link: LinkInterface) {
+  protected saveLinkInDatabase(link: LinkInterface) {
     LinkService.links.push(link);
   }
 }

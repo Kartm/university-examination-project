@@ -17,6 +17,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {testEntity} from "../../entity/test.entity";
 import {Repository} from "typeorm";
 import {questionChoiceEntity} from "../../entity/questionChoice.entity";
+import {participantEntity} from "../../entity/participant.entity";
 
 
 @Injectable()
@@ -27,12 +28,14 @@ export class ResultsService {
         private testRepository: Repository<testEntity>,
         @InjectRepository(questionChoiceEntity)
         private questionChoiceRepository: Repository<questionChoiceEntity>,
+        @InjectRepository(participantEntity)
+        private participantRepository: Repository<participantEntity>,
     ) {
     }
 
     async getResults(testId: string) {
         const test = await this.testRepository.findOne(testId);
-        const participants: ParticipantInterface[] = this.getParticipantsFromTest(test);
+        const participants = await this.participantRepository.find(test);
 
         const testResult: TestResultsInterface = {test: test, results: []};
 
@@ -122,11 +125,6 @@ export class ResultsService {
         };
     }
 
-
-    private getParticipantsFromTest(test: TestInterface): ParticipantInterface[] {
-        const participants = ParticipantService.getAllParticipants();
-        return participants.filter(participant => participant.test === test)
-    }
 
     private getQuestionsAnswersWithParticipantId(participant: ParticipantInterface): QuestionAnswerInterface[] {
         const allQuestionAnswers = QuestionAnswerService.getAllQuestions();

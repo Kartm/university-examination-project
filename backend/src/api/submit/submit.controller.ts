@@ -7,10 +7,10 @@ export class SubmitController {
     constructor(private submitService: SubmitService) {
     }
 
-  @Put(":question_id")
-  submitAnswer()
-      return this.submitService.
-}
+//   @Put(":question_id")
+//   submitAnswer()
+//       return this.submitService.
+// }
 
 
 

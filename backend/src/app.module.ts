@@ -21,6 +21,7 @@ import {ParticipantModule} from "./api/participant/participant.module";
 import {LinkModule} from "./api/link/link.module";
 
 @Module({
+<<<<<<< Updated upstream
     imports: [
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
@@ -62,6 +63,56 @@ import {LinkModule} from "./api/link/link.module";
             useClass: AuthGuard,
         }
     ],
+=======
+  imports: [
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        // type: 'mysql',
+        // host: configService.environment.database.host,
+        // port: configService.environment.database.port,
+        // username: configService.environment.database.username,
+        // password: configService.environment.database.password,
+        // database: configService.environment.database.database,
+        // entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        // synchronize: configService.environment.database.synchronize,
+        // charset: 'utf8mb4'
+        type: 'mysql',
+        host: 'localhost',
+        port: 3306,
+        username: 'root',
+        password: 'root',
+        database: 'mystarterdatabase',
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        dropSchema: true,
+        synchronize: true,
+      }),
+      inject: [ConfigService],
+    }),
+    UsersModule,
+    AuthModule,
+    ConfigModule,
+    TestModule,
+    SettingsModule,
+    OwnerModule,
+    QuestionTypeModule,
+    QuestionPresetModule,
+    TemplateModule,
+    QuestionChoiceModule,
+    QuestionModule,
+    QuestionAnswerModule,
+    ParticipantModule,
+    LinkModule,
+  ],
+  controllers: [AppController],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    }
+  ],
+>>>>>>> Stashed changes
 })
 export class AppModule {
 }

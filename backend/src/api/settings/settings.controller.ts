@@ -4,6 +4,7 @@ import {SettingsInterface} from "./interfaces/settings.interface";
 
 @Controller("settings")
 export class SettingsController {
+<<<<<<< Updated upstream
     constructor(private settingsService: SettingsService) {
     }
 
@@ -40,4 +41,37 @@ export class SettingsController {
         return this.settingsService.updateSettings(id, settings);
     }
 
+=======
+  constructor(private settingsService: SettingsService) {}
+
+  @Get()
+  getAllSettings() {
+    return this.settingsService.getAllSettings();
+  }
+
+  @Get(':id')
+  getOneSettings(@Param('id') setting: settingsEntity) {
+    return this.settingsService.getOneSettings(setting);
+  }
+
+  @Post()
+  addSettings(@Body() settings: settingsEntity) {
+    return this.settingsService.addSettings(settings);
+  }
+
+  @Delete(':id')
+  deleteOneSettings(@Param('id') setting: settingsEntity) {
+    return this.settingsService.removeOneSetting(setting);
+  }
+
+  @Delete()
+  deleteAllSettings() {
+    return this.settingsService.deleteAllSettings();
+  }
+
+  @Patch(':id')
+  updateSettings(@Param('id') id: string, @Body() settings: SettingsInterface) {
+    return this.settingsService.updateSettings(id, settings);
+  }
+>>>>>>> Stashed changes
 }

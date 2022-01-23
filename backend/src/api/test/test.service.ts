@@ -22,7 +22,7 @@ export class TestService {
     return await this.testRepository.find();
   }
 
-  async addTest(test: TestInterface) {
+  async addTest(test: testEntity) {
     const newTest = this.testRepository.create(test);
     await this.testRepository.save(newTest);
     return newTest;

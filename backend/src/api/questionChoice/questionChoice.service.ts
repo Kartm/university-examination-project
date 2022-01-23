@@ -1,47 +1,40 @@
 import {QuestionChoiceInterface} from "./interfaces/questionChoice.interface";
 import {Injectable} from "@nestjs/common";
 import {CommonApi} from "../../APIHelpers/CommonApi";
+import {InjectRepository} from "@nestjs/typeorm";
+import {testEntity} from "../../entity/test.entity";
+import {Repository} from "typeorm";
+import {questionChoiceEntity} from "../../entity/questionChoice.entity";
 
 @Injectable()
 export class QuestionChoiceService
 {
-    static questionChoices : QuestionChoiceInterface[] = [];
+    constructor(
+        @InjectRepository(questionChoiceEntity)
+        private repository: Repository<questionChoiceEntity>,
+    ) {}
 
-    static getAllQuestionChoice() {
-        return this.questionChoices;
+    getAllQuestionChoice() {
+        return this.repository.find();
     }
 
-    static getOneQuestionChoice(id: string) {
-        return CommonApi.findEntity(id, this.questionChoices)[0];
+    getOneQuestionChoice(id: string) {
+        return this.repository.findOne(id)
     }
 
-    static addQuestionChoice(questionChoice: QuestionChoiceInterface) {
-        return CommonApi.addEntity(questionChoice, this.questionChoices);
+    addQuestionChoice(questionChoice: QuestionChoiceInterface) {
+        return this.repository.save(questionChoice)
     }
 
-    static deleteAllQuestionChoices() {
-        return CommonApi.removeAllEntities(this.questionChoices)
+    deleteAllQuestionChoices() {
+        this.repository.find().then(questionChoice => this.repository.remove(questionChoice))
     }
 
-    static deleteOneQuestionChoice(id: string) {
-        return CommonApi.removeEntity(id, this.questionChoices)
+    deleteOneQuestionChoice(id: string) {
+        return this.repository.delete(id);
     }
 
-    static updateQuestionChoice(id: string, newQuestionChoice: QuestionChoiceInterface) {
-        const [questionChoice, index] = CommonApi.findEntity(id, this.questionChoices);
-        if(newQuestionChoice.question)
-        {
-            questionChoice.question = newQuestionChoice.question;
-        }
-        if(newQuestionChoice.text)
-        {
-            questionChoice.text = newQuestionChoice.text;
-        }
-        if(newQuestionChoice.is_correct)
-        {
-            questionChoice.is_correct = newQuestionChoice.is_correct;
-        }
-        this.questionChoices[index] = questionChoice;
-        return questionChoice;
+    updateQuestionChoice(id: string, newQuestionChoice: QuestionChoiceInterface) {
+       return this.repository.update(id, newQuestionChoice)
     }
 }

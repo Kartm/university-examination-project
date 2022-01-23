@@ -116,7 +116,7 @@ export class ResultsService {
 
 
     private getTestFromDatabase(testId: string): TestInterface {
-        return TestService.getOneTest(testId, userId);
+        return TestService.getOneTestWithoutIs(testId);
     }
 
     private getParticipantsFromTest(testId: string): ParticipantInterface[] {

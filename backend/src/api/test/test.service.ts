@@ -77,9 +77,15 @@ export class TestService {
         });
     }
 
+
+    static getOneTestWithoutIs(id : string)
+    {
+        return CommonApi.findEntity(id, this.tests)[0];
+    }
+
     static getOneTest(id: string, userId: string) : TestInterface {
         // this.generateLinks(id);
-        const test =  CommonApi.findEntity(id, this.tests)[0];
+        const test = this.getOneTestWithoutIs(id)
         if(test.owner_id === id)
         {
             return test;

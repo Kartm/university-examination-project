@@ -15,7 +15,7 @@ export class QuestionService
         return this.questions.filter(q => q.test_id === test_id)
     }
 
-    getOneQuestion(id: string) {
+    static getOneQuestion(id: string) {
         return CommonApi.findEntity(id, QuestionService.questions)[0];
     }
 

@@ -1,5 +1,8 @@
-import {Controller, Get, Param, Post, Put} from "@nestjs/common";
+import {Body, Controller, Get, Param, Post, Put} from "@nestjs/common";
 import {SubmitService} from "./submit.service";
+import {testEntity} from "../../entity/test.entity";
+import {QuestionAnswerService} from "../questionAnswer/questionAnswer.service";
+import {questionAnswerEntity} from "../../entity/questionAnswer.entity";
 
 @Controller()
 export class SubmitController {
@@ -7,9 +10,9 @@ export class SubmitController {
     constructor(private submitService: SubmitService) {
     }
 
- @Get(":question_id")
-   submitAnswer(@Param("question_id") id: string){
-      return this.submitService.submitAnswer();
+ @Post()
+   submitAnswer(@Body() test: testEntity, @Body() answers: questionAnswerEntity[]){
+      return this.submitService.submitAnswer(test,answers);
     }
 
 

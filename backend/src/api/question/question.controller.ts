@@ -8,11 +8,10 @@ export class QuestionController
     constructor(private questionService : QuestionService) {
     }
 
-    @Get()
-    getQuestionsOfTest(@Query('test_id') test_id)
+    @Get(":test_id")
+    getQuestionsOfTest(@Query('test_id') test_id : string)
     {
-        console.log('getQuestionsOfTest')
-        return this.questionService.getQuestionsOfTest(test_id);
+        return QuestionService.getQuestionsOfTest(test_id);
     }
 
     @Get()

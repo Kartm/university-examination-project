@@ -27,4 +27,10 @@ export class testEntity implements TestInterface {
 
   @Column({ length: 45 })
   name: string;
+
+  @Column()
+  time_end: Date;
+
+  @Column()
+  time_start: Date;
 }

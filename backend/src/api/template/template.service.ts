@@ -1,40 +1,56 @@
-import {Injectable} from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {TemplateInterface} from "./interfaces/template.interface";
 import {CommonApi} from "../../APIHelpers/CommonApi";
+import {InjectRepository} from "@nestjs/typeorm";
+import {templateEntity} from "../../entity/template.entity";
+import {Repository} from "typeorm";
 
 @Injectable()
 export class TemplateService {
+
+
+    constructor(@InjectRepository(templateEntity) private templateRepository: Repository<templateEntity>) {
+    }
+
     templates: TemplateInterface[] = [];
 
-    getAllTemplate() {
-        return this.templates;
+    async getAllTemplate(): Promise<templateEntity[]> {
+        return await this.templateRepository.find();
     }
 
-    getOneTemplate(id: string) {
-        return CommonApi.findEntity(id, this.templates)[0];
+    async getOneTemplate(template: templateEntity) {
+        return await this.templateRepository.findOne(template);
     }
 
-    addTemplate(template: TemplateInterface) {
-        return CommonApi.addEntity(template, this.templates);
+    async addTemplate(template: TemplateInterface) {
+        const newTemplate = this.templateRepository.create(template);
+        await this.templateRepository.save(newTemplate)
+        return newTemplate;
     }
 
-    deleteAllTemplate() {
-        return CommonApi.removeAllEntities(this.templates)
+    async deleteAllTemplate() {
+        this.templateRepository.find().then(template=> this.templateRepository.remove(template))
     }
 
-    deleteOneTemplate(id: string) {
-        return CommonApi.removeEntity(id, this.templates);
-    }
-
-    updateTemplate(id: string, newTemplate: TemplateInterface) {
-        const [template, index] = CommonApi.findEntity(id, this.templates);
-        if (newTemplate.name) {
-            template.name = newTemplate.name;
+    async deleteOneTemplate(template: templateEntity) {
+        const deletedTemplate = await this.templateRepository.findOne(template);
+        if (!deletedTemplate) {
+            throw new NotFoundException('Template is not found');
         }
-        if (newTemplate.setting) {
-            template.setting = newTemplate.setting;
+        await this.templateRepository.delete(template);
+        return {
+            message: `${deletedTemplate.name}  deleted successfully`,
+        };
+
+    }
+
+    async updateTemplate(template: templateEntity, editedTemplate: TemplateInterface) {
+        const existingTemplate = await this.templateRepository.findOne(template);
+        if (!existingTemplate) {
+            throw new NotFoundException('Test is not found');
         }
-        this.templates[index] = template;
-        return template;
+        existingTemplate.name = editedTemplate.name;
+        await this.templateRepository.save(existingTemplate);
+        return editedTemplate;
     }
 }

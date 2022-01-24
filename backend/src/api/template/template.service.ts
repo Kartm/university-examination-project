@@ -18,7 +18,7 @@ export class TemplateService {
         return await this.templateRepository.find();
     }
 
-    async getOneTemplate(template: templateEntity) {
+    async getOneTemplate(template: string) {
         return await this.templateRepository.findOne(template);
     }
 
@@ -44,7 +44,7 @@ export class TemplateService {
 
     }
 
-    async updateTemplate(template: templateEntity, editedTemplate: TemplateInterface) {
+    async updateTemplate(template: string, editedTemplate: templateEntity) {
         const existingTemplate = await this.templateRepository.findOne(template);
         if (!existingTemplate) {
             throw new NotFoundException('Test is not found');

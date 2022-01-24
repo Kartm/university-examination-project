@@ -1,6 +1,7 @@
 import {TemplateService} from "./template.service";
 import {Body, Controller, Delete, Get, Param, Patch, Post} from "@nestjs/common";
 import {TemplateInterface} from "./interfaces/template.interface";
+import {templateEntity} from "../../entity/template.entity";
 
 @Controller("template")
 export class TemplateController
@@ -33,15 +34,14 @@ export class TemplateController
     }
 
     @Delete(":id")
-    deleteOneTemplate(@Param("id") id : string)
+    deleteOneTemplate(@Param("id") template: templateEntity)
     {
-        return this.templateService.deleteOneTemplate(id);
+        return this.templateService.deleteOneTemplate(template);
     }
 
     @Patch(":id")
-    updateTemplate(@Param("id") id : string, @Body() template : TemplateInterface)
-    {
-        return this.templateService.updateTemplate(id, template)
+    updateTemplate(@Param("id") template: string, @Body() templateE : templateEntity){
+        return this.templateService.updateTemplate(template, templateE)
     }
 
 }

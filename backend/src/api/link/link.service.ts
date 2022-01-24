@@ -7,6 +7,8 @@ import { linkEntity } from "src/entity/link.entity";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import {testEntity} from "../../entity/test.entity";
+import {v4 as uuidv4} from "uuid";
+import {participantEntity} from "../../entity/participant.entity";
 
 
 @Injectable()
@@ -14,6 +16,8 @@ export class LinkService {
     constructor(
         @InjectRepository(linkEntity)
         private linkRepository: Repository<linkEntity>,
+        @InjectRepository(participantEntity)
+        private participantRepository: Repository<participantEntity>,
     ) {}
     links: LinkInterface[] = [];
 
@@ -28,19 +32,18 @@ export class LinkService {
     }
 
     async getSingleLink(link: string) {
-        return await this.linkRepository.findOne(link);
+        return this.checkLink(link)
     }
 
-    // static checkLink (linkFromPath : string)
-    // {
-    //     const link : LinkInterface = LinkService.getSingleLink(linkFromPath);
-    //     if(!link) return null;
-    //     if(link.used) return null;
-    //     const participant : ParticipantInterface = ParticipantService.participants.find(participant => participant === link.participant);
-    //     link.used = true;
-    //     LinkService.updateLink(linkFromPath, link);
-    //     return participant;
-    // }
+    async checkLink(linkFromPath: string) {
+        const link = await this.linkRepository.findOne(linkFromPath)
+        if (!link) return null;
+        if (link.used) return null;
+        const participant = link.participant
+        link.used = true;
+        await this.linkRepository.update(link.link_id, link)
+        return participant;
+    }
 
     async deleteLink(link: linkEntity) {
         const deletedLink = await this.linkRepository.findOne(link);
@@ -66,4 +69,14 @@ export class LinkService {
         return editedLink;
     }
 
+    getOwnerLink() {
+        return this.generateNewLink();
+    }
+
+    private generateNewLink()
+    {
+        const uuid = uuidv4();
+        const path = `http://localhost:3000/${uuid}/results`
+        return path;
+    }
 }

@@ -1,6 +1,5 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post} from "@nestjs/common";
 import {LinkService} from "./link.service";
-import {LinkInterface} from "./interface/link.interface";
 import { linkEntity } from "src/entity/link.entity";
 
 
@@ -11,9 +10,15 @@ export class LinkController {
 
     constructor(private linkService: LinkService) {}
 
+    // @Get()
+    // getAllLinks() {
+    //     return this.linkService.getAllLinks();
+    // }
+
     @Get()
-    getAllLinks() {
-        return this.linkService.getAllLinks();
+    getOwnerLink()
+    {
+        return this.linkService.getOwnerLink();
     }
 
     @Get(":link_id")

@@ -28,7 +28,7 @@ export class TestService {
     return newTest;
   }
 
-  public generateLinks(test: testEntity) {
+  public generateLinks(test: string) {
     const participants: ParticipantInterface[] = this.getParticipantsFromDatabase(
       test,
     );
@@ -46,9 +46,9 @@ export class TestService {
     });
   }
 
-  private getParticipantsFromDatabase(test: testEntity) {
+  private getParticipantsFromDatabase(test: string) {
     return ParticipantService.participants.filter(
-      participant => participant.test === test,
+      participant => participant.test.test_id === test,
     );
   }
 

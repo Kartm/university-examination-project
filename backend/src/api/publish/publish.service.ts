@@ -5,6 +5,7 @@ import {TestService} from "../test/test.service";
 import {PublishInterface} from "./interface/publish.interface";
 import {LinkService} from "../link/link.service";
 import {LinkInterface} from "../link/interface/link.interface";
+import {testEntity} from "../../entity/test.entity";
 
 @Injectable()
 export class publishService extends TestService {
@@ -13,7 +14,6 @@ export class publishService extends TestService {
 
     publishExam(test_id: string) {
         this.generateLinks(test_id);
-
     }
 
 

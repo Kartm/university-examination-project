@@ -1,7 +1,7 @@
 import {APIResponse} from "../models/api.model";
 import {
   Exam,
-  ExamDraft, LocalQuestion,
+  LocalQuestion,
   Participant,
   ParticipantDraft, Question, QuestionChoice,
   QuestionType,
@@ -38,7 +38,7 @@ export const getExam = async (uuid: string, questionTypes: QuestionType[]): Prom
   const mergedQuestionsWithChoices: LocalQuestion[] = (questions.data as Question[]).map(q => questionToLocalQuestion(q, questionChoices.data, questionTypes))
   console.log(mergedQuestionsWithChoices)
   const examFromBackend: Exam = {
-    id: exam.data.id,
+    test_id: exam.data.id,
     name: exam.data.name,
     owner_name: exam.data.owner_name,
     settings: settings.data,
@@ -70,7 +70,7 @@ export const apiCreateExam = async (): Promise<APIResponse<Exam>> => {
   const exam = await examRequest.json()
 
   const examFromBackend: Exam = {
-    id: exam.data.id,
+    test_id: exam.data.id,
     name: exam.data.name,
     owner_name: exam.data.owner_name,
     settings: settings.data,
@@ -103,7 +103,7 @@ export const apiUpdateExamSettings = async (update: UpdateExamSettings): Promise
   const exam = await examRequest.json()
 
   const examFromBackend: Exam = {
-    id: exam.data.id,
+    test_id: exam.data.id,
     name: exam.data.name,
     owner_name: exam.data.owner_name,
     settings: settings.data,
@@ -186,111 +186,6 @@ export const apiUpdateExamQuestions = async (update: UpdateExamQuestions): Promi
     message: [],
     data: {questions: updatedQuestions, questionChoices: updatedQuestionChoices}
   } as APIResponse<{questions: Question[], questionChoices: QuestionChoice[]}>;
-};
-
-export const apiGetExamTemplates = async (): Promise<APIResponse<ExamDraft[]>> => {
-  // const res = await get(`/users/me`);
-  // return await res.json();
-
-  const examTemplatesFromBackend: ExamDraft[] = [
-    {
-      name: 'Simple ABC',
-      owner_name: 'jan kowalski',
-      settings: {
-        show_results_overview: false,
-        show_points_per_question: true,
-        allow_going_back: true,
-      },
-      questions: [
-        // {
-        //   name: 'Which one?',
-        //   question_type_id: 'SINGLE_CHOICE',
-        //   // question_choices: [
-        //   //   {
-        //   //     text: 'A',
-        //   //     is_correct: true,
-        //   //   },
-        //   //   {
-        //   //     text: 'B',
-        //   //     is_correct: false,
-        //   //   },
-        //   //   {
-        //   //     text: 'C',
-        //   //     is_correct: false,
-        //   //   }
-        //   // ]
-        // }
-      ],
-    },
-    {
-      name: 'Medical exam',
-      owner_name: 'jan kowalski',
-      settings: {
-        show_results_overview: false,
-        show_points_per_question: true,
-        allow_going_back: true,
-      },
-      questions: [],
-    },
-    {
-      name: 'Test exam',
-      owner_name: 'jan kowalski',
-      settings: {
-        show_results_overview: false,
-        show_points_per_question: true,
-        allow_going_back: true,
-      },
-      questions: [],
-    },
-    {
-      name: 'CSS basic exam',
-      owner_name: 'jan kowalski',
-      settings: {
-        show_results_overview: false,
-        show_points_per_question: true,
-        allow_going_back: true,
-      },
-      questions: [],
-    }
-  ]
-
-  const mockData = await new Promise((res, rej) => {
-    res(examTemplatesFromBackend)
-  });
-
-  return {
-    statusCode: 200,
-    message: [],
-    data: mockData
-  } as APIResponse<ExamDraft[]>;
-};
-
-export const apiUseExamTemplate = async (examTemplate: ExamDraft): Promise<APIResponse<Exam>> => {
-  // const res = await get(`/users/me`);
-  // return await res.json();
-
-  const createdExamFromBackend: Exam = {
-    id: '856ad28a-74a4-4f2a-bff7-ca93e9280143',
-    name: '',
-    owner_name: 'jan kowalski',
-    settings: {
-      id: '14999764-317c-4692-827a-558adce51bc7',
-      ...examTemplate.settings
-    },
-    questions: [],
-  }
-
-  console.log(JSON.parse(JSON.stringify(createdExamFromBackend)))
-
-  const mockData = await new Promise((res, rej) => {
-    res(createdExamFromBackend)
-  });
-
-  return {
-    statusCode: 200,
-    message: [],
-    data: mockData
-  } as APIResponse<Exam>;
 };
 
 export const apiPublishExam = async (exam: Exam): Promise<APIResponse<Exam>> => {

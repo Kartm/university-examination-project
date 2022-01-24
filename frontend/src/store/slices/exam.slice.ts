@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   Exam,
-  ExamDraft,
   LocalQuestion,
   ParticipantDraft,
   Question, QuestionChoice,
@@ -10,15 +9,13 @@ import {
 } from "../../models/exam.model";
 import {
   apiCreateExam,
-  apiGetExamTemplates, apiGetQuestionTypes,
+  apiGetQuestionTypes,
   apiPublishExam, apiUpdateExamParticipants, apiUpdateExamQuestions, apiUpdateExamSettings,
-  apiUseExamTemplate,
   getExam
 } from "../../services/exam.service";
 
 export interface State {
   exam: Exam | null,
-  examTemplates: ExamDraft[],
   questionTypes: QuestionType[];
 }
 
@@ -51,15 +48,11 @@ const slice = createSlice({
   name: "exam",
   initialState: {
     exam: null,
-    examTemplates: [],
     questionTypes: [],
   } as State,
   reducers: {
     setExam: (state, action) => {
       state.exam = action.payload;
-    },
-    setExamTemplates: (state, action) => {
-      state.examTemplates = action.payload;
     },
     setQuestionTypes: (state, action) => {
       state.questionTypes = action.payload;
@@ -68,7 +61,7 @@ const slice = createSlice({
 });
 export default slice.reducer;
 
-const { setExam, setExamTemplates, setQuestionTypes} = slice.actions;
+const { setExam, setQuestionTypes} = slice.actions;
 export const createExam = () => async (dispatch) => {
   try {
     const exam = await apiCreateExam();
@@ -80,22 +73,6 @@ export const createExam = () => async (dispatch) => {
 export const getExamByUuid = (uuid: string, questionTypes: QuestionType[]) => async (dispatch) => {
   try {
     const exam = await getExam(uuid, questionTypes);
-    return dispatch(setExam(exam.data));
-  } catch (e) {
-    return console.error(e.message);
-  }
-};
-export const getExamTemplates = () => async (dispatch) => {
-  try {
-    const exam = await apiGetExamTemplates();
-    return dispatch(setExamTemplates(exam.data));
-  } catch (e) {
-    return console.error(e.message);
-  }
-};
-export const useExamTemplate = (examTemplate: ExamDraft) => async (dispatch) => {
-  try {
-    const exam = await apiUseExamTemplate(examTemplate);
     return dispatch(setExam(exam.data));
   } catch (e) {
     return console.error(e.message);

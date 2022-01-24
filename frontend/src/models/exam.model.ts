@@ -38,14 +38,12 @@ export interface Question {
 }
 
 export interface Exam {
-    id: string;
+    test_id: string;
     name: string;
     owner_name: string;
     settings: Settings;
     questions: LocalQuestion[];
 }
-
-export interface ExamDraft extends Omit<Omit<Omit<Exam, 'id'>, 'settings'>, 'questions'> {settings: SettingsDraft, questions: Question[]}
 
 export interface QuestionAnswer {
     question_answer_id?: string;

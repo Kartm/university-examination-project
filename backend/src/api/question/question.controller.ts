@@ -1,53 +1,49 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post, Query} from "@nestjs/common";
 import {QuestionService} from "./question.service";
 import {QuestionInterface} from "./interfaces/question.interface";
+import { questionEntity } from "src/entity/question.entity";
+import { threadId } from "worker_threads";
 
 @Controller("question")
 export class QuestionController
 {
-    constructor(private questionService : QuestionService) {
-    }
+    constructor(private questionService : QuestionService) {}
 
-    @Get(":test_id")
-    getQuestionsOfTest(@Query('test_id') test_id : string)
-    {
-        return QuestionService.getQuestionsOfTest(test_id);
-    }
 
     @Get()
     getAllQuestion()
     {
-        return QuestionService.getAllQuestions();
+        return this.questionService.getAllQuestions();
     }
 
 
     @Get(":id")
-    getOneQuestion(@Param("id") id : string)
+    getOneQuestion(@Param("id") question : string)
     {
-        return QuestionService.getOneQuestion(id);
+        return this.questionService.getOneQuestion(question);
     }
 
     @Post()
-    addQuestion(@Body() question : QuestionInterface)
+    addQuestion(@Body() question : questionEntity)
     {
-        return QuestionService.addQuestion(question)
+        return this.questionService.addQuestion(question);
     }
 
     @Delete()
     removeAllQuestions()
     {
-        return QuestionService.removeAllQuestions()
+        return this.questionService.removeAllQuestions();
     }
 
     @Delete(":id")
-    removeOneQuestion(@Param("id") id : string)
+    removeOneQuestion(@Param("id") question : string)
     {
-        return QuestionService.removeOneQuestion(id);
+        return this.questionService.removeOneQuestion(question);
     }
 
     @Patch(":id")
-    updateQuestion(@Param("id") id : string, @Body() question : QuestionInterface)
+    updateQuestion(@Param("id") question : string, @Body() newQuesiton : questionEntity)
     {
-        return QuestionService.updateQuestion(id, question)
+        return this.questionService.updateQuestion(question, newQuesiton)
     }
 }

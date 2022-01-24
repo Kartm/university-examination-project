@@ -13,7 +13,7 @@ export class linkEntity implements LinkInterface {
     participant?: participantEntity;
 
     @Column()
-    user: boolean;
+    used: boolean;
 
     @Column()
     sent_at: string;

@@ -12,7 +12,7 @@ import { ConfigService } from './shared/config/config.service';
 import { TestModule } from './api/test/test.module';
 import { SettingsModule } from './api/settings/settings.module';
 import { QuestionTypeModule } from './api/questionType/questionType.module';
-import { QuestionPresetModule } from './api/questionPreset/questionPresetModule';
+import { QuestionPresetModule } from './api/questionPreset/questionPreset.module';
 import { TemplateModule } from './api/template/template.module';
 import { QuestionChoiceModule } from './api/questionChoice/questionChoice.module';
 import { QuestionModule } from './api/question/question.module';

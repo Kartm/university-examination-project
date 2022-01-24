@@ -1,6 +1,8 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post} from "@nestjs/common";
 import {QuestionPresetService} from "./questionPreset.service";
 import {QuestionPresetInterface} from "./interfaces/questionPreset.interface";
+import { questionAnswerEntity } from "src/entity/questionAnswer.entity";
+import { questionPresetEntity } from "src/entity/quesitonPreset.entity";
 
 @Controller("questionPreset")
 export class QuestionPresetController
@@ -15,13 +17,13 @@ export class QuestionPresetController
     }
 
     @Get(":id")
-    getOneQuestionPreset(@Param("id") id : string)
+    getOneQuestionPreset(@Param("id") questionPreset : questionPresetEntity)
     {
-        return this.questionPresetService.getOneQuestionPreset(id)
+        return this.questionPresetService.getOneQuestionPreset(questionPreset)
     }
 
     @Post()
-    addQuestionPreset(@Body() questionPreset : QuestionPresetInterface)
+    addQuestionPreset(@Body() questionPreset : questionPresetEntity)
     {
         return this.questionPresetService.addQuestionPresset(questionPreset);
     }
@@ -33,15 +35,15 @@ export class QuestionPresetController
     }
 
     @Delete(":id")
-    removeOneQuestionPreset(@Param("id") id : string)
+    removeOneQuestionPreset(@Param("id") questionPreset : questionPresetEntity)
     {
-        return this.questionPresetService.removeOneQuestionPreset(id);
+        return this.questionPresetService.removeOneQuestionPreset(questionPreset);
     }
 
     @Patch(":id")
-    updateQuestionPreset(@Param("id") id : string, @Body() questionPreset : QuestionPresetInterface)
+    updateQuestionPreset(@Param("id") questionPreset : questionPresetEntity, @Body() newQuestionPreset : questionPresetEntity)
     {
-        return this.questionPresetService.updateQuestionPreset(id, questionPreset);
+        return this.questionPresetService.updateQuestionPreset(questionPreset, newQuestionPreset);
     }
 
 }

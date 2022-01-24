@@ -67,7 +67,7 @@ export class TestService {
     const mailOptions = {
       from: 'berkaymertkocak99@gmail.com',
       to: test.owner_email,
-      subject: 'Please participate to exam',
+      subject: 'Your exam results available here',
       text: link,
     };
 
@@ -97,7 +97,7 @@ export class TestService {
      to: `${email}` ,
      // to: `${mail_list}`,
       subject: 'Please participate to exam',
-      text: `http://localhost:3000/api/link/${link}`,
+      text: `http://localhost:8080/${link}/`,
     };
 
     transporter.sendMail(mailOptions, function(error, info) {

@@ -9,7 +9,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { TestService } from './test.service';
-import { TestInterface } from './interfaces/test.interface';
 import { testEntity } from 'src/entity/test.entity';
 
 @Controller('tests')

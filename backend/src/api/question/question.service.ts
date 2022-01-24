@@ -1,47 +1,54 @@
-import {Injectable} from "@nestjs/common";
-import {QuestionInterface} from "./interfaces/question.interface";
-import {CommonApi} from "../../APIHelpers/CommonApi";
+import {Injectable, NotFoundException} from "@nestjs/common";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { questionEntity } from "src/entity/question.entity";
 
 @Injectable()
 export class QuestionService
 {
-    static questions: QuestionInterface[] = [];
+    constructor(
+        @InjectRepository(questionEntity)
+        private questionRepository: Repository<questionEntity>,
+    ) {}
 
-    static getAllQuestions() {
-        return this.questions;
+    async getAllQuestions() {
+        return await this.questionRepository.find();
     }
 
-    static getQuestionsOfTest(test_id: string) {
-        return this.questions.filter(q => q.test.test_id === test_id)
+    async getOneQuestion(question: string) {
+        return await this.questionRepository.findOne(question);
     }
 
-    static getOneQuestion(id: string) {
-        return CommonApi.findEntity(id, QuestionService.questions)[0];
+    async addQuestion(question: questionEntity) {
+        const newQuestion = this.questionRepository.create(question);
+        await this.questionRepository.save(newQuestion);
+        return newQuestion;
     }
 
-    static addQuestion(question: QuestionInterface) {
-        return CommonApi.addEntity(question, this.questions);
+    async removeAllQuestions() {
+        const getAllQuestion = await this.questionRepository.find();
+        getAllQuestion.forEach(e => {
+            this.questionRepository.delete(e);
+        });
     }
 
-    static removeAllQuestions() {
-        return CommonApi.removeAllEntities(this.questions);
-    }
-
-    static removeOneQuestion(id: string) {
-        return CommonApi.removeEntity(id, this.questions)
-    }
-
-    static updateQuestion(id: string, newQuestion: QuestionInterface) {
-        const [question, index] = CommonApi.findEntity(id, this.questions);
-        if(newQuestion.test)
-        {
-            question.test = newQuestion.test;
+    async removeOneQuestion(question: string) {
+        const deletedQuestion = await this.questionRepository.findOne(question);
+        if (!deletedQuestion) {
+            throw new NotFoundException('Owner is not found');
         }
-        if(newQuestion.questionType)
-        {
-            question.questionType = newQuestion.questionType;
+        await this.questionRepository.delete(question);
+        return {
+            message: `Question deleted successfully`,
+        };
+    }
+
+    async updateQuestion(question: string, editedQuestion: questionEntity) {
+        const existingQuestion = await this.questionRepository.findOne(question);
+        if (!existingQuestion) {
+            throw new NotFoundException('Question is not found');
         }
-        this.questions[index] = question;
-        return question;
+        await this.questionRepository.save(existingQuestion);
+        return editedQuestion;
     }
 }

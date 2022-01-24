@@ -1,25 +1,14 @@
 import {Injectable} from "@nestjs/common";
-import {TestInterface} from "../test/interfaces/test.interface";
-import {ParticipantInterface} from "../participant/interfaces/participant.interface";
-import {QuestionAnswerInterface} from "../questionAnswer/interfaces/questionAnswer.interface";
-import {ResultInterface} from "./interfaces/result.interface";
-import {TestResultsInterface} from "./interfaces/testResults.interface";
-import {QuestionResultInterface} from "./interfaces/questionResult.interface";
-import {QuestionAndQuestionAnswersInterface} from "./interfaces/questionAndQuestionAnswersInterface";
-import {QuestionInterface} from "../question/interfaces/question.interface";
-import {QuestionChoiceInterface} from "../questionChoice/interfaces/questionChoice.interface";
-import {TestService} from "../test/test.service";
-import {ParticipantService} from "../participant/participant.service";
-import {QuestionAnswerService} from "../questionAnswer/questionAnswer.service";
-import {QuestionService} from "../question/question.service";
-import {QuestionChoiceService} from "../questionChoice/questionChoice.service";
 import {InjectRepository} from "@nestjs/typeorm";
 import {testEntity} from "../../entity/test.entity";
 import {Repository} from "typeorm";
 import {questionChoiceEntity} from "../../entity/questionChoice.entity";
 import {participantEntity} from "../../entity/participant.entity";
-import {questionEntity} from "../../entity/question.entity";
 import {questionAnswerEntity} from "../../entity/questionAnswer.entity";
+import {ResultInterface} from "./interfaces/result.interface";
+import {QuestionAndQuestionAnswersInterface} from "./interfaces/questionAndQuestionAnswersInterface";
+import {questionEntity} from "../../entity/question.entity";
+import {TestResultsInterface} from "./interfaces/testResults.interface";
 
 
 @Injectable()
@@ -51,7 +40,7 @@ export class ResultsService {
         return testResult;
     }
 
-    private async createResult(participant: ParticipantInterface) {
+    private async createResult(participant: participantEntity) {
         const questionAnswers = await this.getQuestionsAnswersWithParticipantId(participant)
 
 
@@ -130,12 +119,12 @@ export class ResultsService {
     }
 
 
-    private async getQuestionsAnswersWithParticipantId(participant: ParticipantInterface) {
+    private async getQuestionsAnswersWithParticipantId(participant: participantEntity) {
         return this.questionAnswerRepository.find( {where : {participant : participant}});
     }
 
 
-    private async getQuestionChoicesFromDatabase(question: QuestionInterface) {
+    private async getQuestionChoicesFromDatabase(question: questionEntity) {
         return await this.questionChoiceRepository.find({where: {question: question, is_correct: true}});
     }
 }

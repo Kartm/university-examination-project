@@ -1,8 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {CommonApi} from "../../APIHelpers/CommonApi";
-import {QuestionAnswerInterface} from "./interfaces/questionAnswer.interface";
 import {InjectRepository} from "@nestjs/typeorm";
-import {testEntity} from "../../entity/test.entity";
 import {Repository} from "typeorm";
 import {questionAnswerEntity} from "../../entity/questionAnswer.entity";
 

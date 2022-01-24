@@ -1,22 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { TestInterface } from './interfaces/test.interface';
 import * as nodemailer from 'nodemailer';
-import { ParticipantInterface } from '../participant/interfaces/participant.interface';
 import { v4 as uuidv4 } from 'uuid';
-import { LinkInterface } from '../link/interface/link.interface';
-import { ParticipantService } from '../participant/participant.service';
-import { LinkService } from '../link/link.service';
 import { testEntity } from 'src/entity/test.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import {linkEntity} from "../../entity/link.entity";
+import {participantEntity} from "../../entity/participant.entity";
 
 @Injectable()
 export class TestService {
   constructor(
     @InjectRepository(testEntity)
     private testRepository: Repository<testEntity>,
+    @InjectRepository(linkEntity)
+    private linkRepository: Repository<linkEntity>,
+    @InjectRepository(participantEntity)
+    private participantRepository: Repository<participantEntity>,
   ) {}
-  tests: TestInterface[] = [];
 
   async getAllTests(): Promise<testEntity[]> {
     return await this.testRepository.find();
@@ -28,29 +28,54 @@ export class TestService {
     return newTest;
   }
 
-  public generateLinks(test: string) {
-    const participants: ParticipantInterface[] = this.getParticipantsFromDatabase(
+  async generateLinks(test: string) {
+    const participants = await this.getParticipantsFromDatabase(
       test,
     );
     participants.forEach(participant => {
       const linkGuid = uuidv4();
-      const link: LinkInterface = {
-        id: linkGuid,
+      const link: linkEntity = {
+        link_id: linkGuid,
         participant: participant,
         used: false,
-        sent_at: Date.now().toString(),
-        link: linkGuid,
       };
-      this.saveLinkInDatabase(link);
-      this.sendMail(link.link, participant.email);
+      this.saveLinkInDatabase(link)
+          .then(newLink => {
+      this.sendMail(newLink.link_id, participant.email);})
     });
   }
 
   private getParticipantsFromDatabase(test: string) {
-    return ParticipantService.participants.filter(
-      participant => participant.test.test_id === test,
-    );
+    return this.participantRepository.find({where : {test : test}})
   }
+
+
+  async sendOwnerMail(owner_link, owner_email) {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'berkaymertkocak99@gmail.com',
+        pass: 'okclkwhxjnojpmhn',
+      },
+    });
+    const mailOptions = {
+      from: 'berkaymertkocak99@gmail.com',
+      to: `${owner_email}` ,
+      subject: 'Please participate to exam',
+      text: `${owner_link}`,
+    };
+
+    transporter.sendMail(mailOptions, function(error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+  }
+
+
+
 
   private sendMail(link: string, email: string) {
     const transporter = nodemailer.createTransport({
@@ -60,11 +85,12 @@ export class TestService {
         pass: 'okclkwhxjnojpmhn',
       },
     });
-
+   //const mail_list =`${email},${owner_email}`
     const mailOptions = {
       from: 'berkaymertkocak99@gmail.com',
-      to: `${email}`,
-      subject: 'Sending Email using Node.js',
+     to: `${email}` ,
+     // to: `${mail_list}`,
+      subject: 'Please participate to exam',
       text: `http://localhost:3000/api/link/${link}`,
     };
 
@@ -102,7 +128,7 @@ export class TestService {
     };
   }
 
-  protected saveLinkInDatabase(link: LinkInterface) {
-    LinkService.links.push(link);
+  protected saveLinkInDatabase(link: linkEntity) {
+    return this.linkRepository.save(link);
   }
 }

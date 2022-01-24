@@ -1,44 +1,39 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post} from "@nestjs/common";
 import {ParticipantService} from "./participant.service";
-import {ParticipantInterface} from "./interfaces/participant.interface";
-
-
+import { participantEntity } from "src/entity/participant.entity";
 
 @Controller("participant")
 export class ParticipantController {
-
-    constructor(private service: ParticipantService) {
-    }
-
+    constructor(private service: ParticipantService) {}
 
     @Get()
     getAllParticipants()
     {
-        return ParticipantService.getAllParticipants();
+        return this.service.getAllParticipants();
     }
 
     @Get(":id")
-    getOneParticipant(@Param('id') id : string) :ParticipantInterface
+    getOneParticipant(@Param('id') participant : string)
     {
-        return ParticipantService.getOneParticipant(id);
+        return this.service.getOneParticipant(participant);
     }
 
     @Post()
-    addParticipant(@Body() participant : ParticipantInterface)
+    addParticipant(@Body() participant : participantEntity)
     {
-        return ParticipantService.addParticipant(participant);
+        return this.service.addParticipant(participant);
     }
 
     @Delete(":id")
-    removeParticipant(@Param("id") id : string)
+    removeParticipant(@Param("id") participant : participantEntity)
     {
-        return ParticipantService.removeParticipant(id);
+        return this.service.removeParticipant(participant);
     }
 
     @Patch(":id")
-    updateParticipant(@Param('id') id : string, @Body() participant: ParticipantInterface)
+    updateParticipant(@Param('id') participant :string, @Body() editedParticipant: participantEntity)
     {
-        return ParticipantService.updateParticipant(id, participant);
+        return this.service.updateParticipant(participant, editedParticipant);
     }
 
 }

@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { settingsEntity } from 'src/entity/settings.entity';
 import { Repository } from 'typeorm';
-import { SettingsInterface } from './interfaces/settings.interface';
 
 @Injectable()
 export class SettingsService {
@@ -10,7 +9,6 @@ export class SettingsService {
     @InjectRepository(settingsEntity)
     private testRepository: Repository<settingsEntity>,
   ) {}
-  settings: SettingsInterface[] = [];
 
   async getAllSettings(): Promise<settingsEntity[]> {
     return await this.testRepository.find();
@@ -20,7 +18,7 @@ export class SettingsService {
     return await this.testRepository.findOne(setting);
   }
 
-  async addSettings(settings: SettingsInterface) {
+  async addSettings(settings: settingsEntity) {
     const newSettings = this.testRepository.create(settings);
     await this.testRepository.save(newSettings);
     return newSettings;
@@ -44,7 +42,7 @@ export class SettingsService {
     });
   }
 
-  async updateSettings(settings: string, newSettings: SettingsInterface) {
+  async updateSettings(settings: string, newSettings: settingsEntity) {
     const existingSettings = await this.testRepository.findOne(settings);
     if (!existingSettings) {
       throw new NotFoundException('Setting is not found');

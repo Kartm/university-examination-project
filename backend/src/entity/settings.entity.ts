@@ -1,8 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { SettingsInterface } from '../api/settings/interfaces/settings.interface';
 
 @Entity("settings")
-export class settingsEntity implements SettingsInterface {
+export class settingsEntity{
 
     @PrimaryGeneratedColumn('uuid')
     settings_id: string;

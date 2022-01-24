@@ -1,51 +1,54 @@
-import {Injectable} from "@nestjs/common";
-import {ParticipantInterface} from "./interfaces/participant.interface";
-import {CommonApi} from "../../APIHelpers/CommonApi";
+import {Injectable, NotFoundException} from "@nestjs/common";
+import { participantEntity } from "src/entity/participant.entity";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
 
 @Injectable()
 export class ParticipantService {
+    constructor(
+        @InjectRepository(participantEntity)
+        private participantRepository: Repository<participantEntity>,
+    ) {}
 
-    static participants: ParticipantInterface[] = [];
-
-
-
-    static getAllParticipants() {
-        return this.participants;
+    async getAllParticipants(): Promise<participantEntity[]> {
+        return await this.participantRepository.find();
     }
 
-    static addParticipant(participant: ParticipantInterface) {
-
-        return CommonApi.addEntity(participant, this.participants)
+    async addParticipant(participant: participantEntity) {
+        const newParticipant = this.participantRepository.create(participant);
+        await this.participantRepository.save(newParticipant);
+        return newParticipant;
     }
 
-    static getOneParticipant(id: string) : ParticipantInterface {
-        return CommonApi.findEntity(id, this.participants)[0];
+    async getOneParticipant(participant: string) {
+        return await this.participantRepository.findOne(participant);
     }
 
-    static updateParticipant(id: string, newParticipant: ParticipantInterface) {
-        const participant : ParticipantInterface = CommonApi.findEntity(id, this.participants)[0];
-        if(newParticipant.test)
-        {
-            participant.test = newParticipant.test;
+    async updateParticipant(participant: string, editedParticipant: participantEntity) {
+        const existingParticipant = await this.participantRepository.findOne(participant);
+        if (!existingParticipant) {
+            throw new NotFoundException('Participant is not found');
         }
-        if(newParticipant.score)
-        {
-            participant.score = newParticipant.score;
-        }
-        if (newParticipant.email) {
-            participant.email = newParticipant.email;
-        }
-        if(newParticipant.name)
-        {
-            participant.name = newParticipant.name;
-        }
-        this.participants[id] = participant;
-        return test;
+        existingParticipant.name = editedParticipant.name;
+        existingParticipant.email = editedParticipant.email;
+        existingParticipant.score = editedParticipant.score;
+
+        await this.participantRepository.save(existingParticipant);
+        return editedParticipant;
     }
 
-    static removeParticipant(id: string) {
-        CommonApi.removeEntity(id, this.participants)
+    async removeParticipant(participant: participantEntity) {
+        const deletedParticipant = await this.participantRepository.findOne(participant);
+        if (!deletedParticipant) {
+            throw new NotFoundException('Participant is not found');
+        }
+        await this.participantRepository.delete(participant);
+        return {
+            message: `${deletedParticipant.name} deleted successfully`,
+        };
     }
 
 }
+
+

@@ -1,8 +1,5 @@
-import {QuestionChoiceInterface} from "./interfaces/questionChoice.interface";
 import {Injectable} from "@nestjs/common";
-import {CommonApi} from "../../APIHelpers/CommonApi";
 import {InjectRepository} from "@nestjs/typeorm";
-import {testEntity} from "../../entity/test.entity";
 import {Repository} from "typeorm";
 import {questionChoiceEntity} from "../../entity/questionChoice.entity";
 
@@ -22,7 +19,7 @@ export class QuestionChoiceService
         return this.repository.findOne(id)
     }
 
-    addQuestionChoice(questionChoice: QuestionChoiceInterface) {
+    addQuestionChoice(questionChoice: questionChoiceEntity) {
         return this.repository.save(questionChoice)
     }
 
@@ -34,7 +31,7 @@ export class QuestionChoiceService
         return this.repository.delete(id);
     }
 
-    updateQuestionChoice(id: string, newQuestionChoice: QuestionChoiceInterface) {
+    updateQuestionChoice(id: string, newQuestionChoice: questionChoiceEntity) {
        return this.repository.update(id, newQuestionChoice)
     }
 }

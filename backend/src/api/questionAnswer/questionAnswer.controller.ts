@@ -1,6 +1,5 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post} from "@nestjs/common";
 import {QuestionAnswerService} from "./questionAnswer.service";
-import {QuestionAnswerInterface} from "./interfaces/questionAnswer.interface";
 import {questionAnswerEntity} from "../../entity/questionAnswer.entity";
 
 @Controller("questionAnswer")

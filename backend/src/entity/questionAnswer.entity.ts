@@ -1,10 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne, OneToMany, ManyToOne } from 'typeorm';
-import { QuestionAnswerInterface } from '../api/questionAnswer/interfaces/questionAnswer.interface';
 import { participantEntity } from './participant.entity';
 import { questionChoiceEntity } from './questionChoice.entity';
 
 @Entity("questionAnswer")
-export class questionAnswerEntity implements QuestionAnswerInterface {
+export class questionAnswerEntity{
 
     @PrimaryGeneratedColumn('uuid')
     questionAnswer_id: string;

@@ -38,8 +38,6 @@ export class TestService {
         link_id: linkGuid,
         participant: participant,
         used: false,
-        sent_at: Date.now().toString(),
-        link: linkGuid,
       };
       this.saveLinkInDatabase(link)
           .then(newLink => {

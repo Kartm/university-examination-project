@@ -1,7 +1,7 @@
-import {ParticipantInterface} from "../../participant/interfaces/participant.interface";
 import {QuestionResultInterface} from "./questionResult.interface";
+import {participantEntity} from "../../../entity/participant.entity";
 
 export interface ResultInterface {
-    participant: ParticipantInterface,
+    participant: participantEntity,
     questionResults: QuestionResultInterface[],
 }

@@ -1,12 +1,7 @@
 import {Injectable, NotFoundException} from "@nestjs/common";
-import {LinkInterface} from "./interface/link.interface";
-import {CommonApi} from "../../APIHelpers/CommonApi";
-import {ParticipantInterface} from "../participant/interfaces/participant.interface";
-import {ParticipantService} from "../participant/participant.service";
 import { linkEntity } from "src/entity/link.entity";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import {testEntity} from "../../entity/test.entity";
 import {v4 as uuidv4} from "uuid";
 import {participantEntity} from "../../entity/participant.entity";
 
@@ -19,13 +14,12 @@ export class LinkService {
         @InjectRepository(participantEntity)
         private participantRepository: Repository<participantEntity>,
     ) {}
-    links: LinkInterface[] = [];
 
     async getAllLinks(): Promise<linkEntity[]> {
         return await this.linkRepository.find();
     }
 
-    async addLink(link: LinkInterface) {
+    async addLink(link: linkEntity) {
         const newLink = this.linkRepository.create(link);
         await this.linkRepository.save(newLink);
         return newLink;
@@ -62,8 +56,6 @@ export class LinkService {
             throw new NotFoundException('Link is not found');
         }
         existingLink.used = editedLink.used;
-        existingLink.name = editedLink.name;
-        existingLink.sent_at = editedLink.sent_at;
 
         await this.linkRepository.save(existingLink);
         return editedLink;

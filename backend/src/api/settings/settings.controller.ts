@@ -8,7 +8,6 @@ import {
   Post,
 } from '@nestjs/common';
 import { SettingsService } from './settings.service';
-import { SettingsInterface } from './interfaces/settings.interface';
 import { settingsEntity } from 'src/entity/settings.entity';
 
 @Controller('settings')
@@ -42,7 +41,7 @@ export class SettingsController {
   }
 
   @Patch(':id')
-  updateSettings(@Param('id') id: string, @Body() settings: SettingsInterface) {
+  updateSettings(@Param('id') id: string, @Body() settings: settingsEntity) {
     return this.settingsService.updateSettings(id, settings);
   }
 }

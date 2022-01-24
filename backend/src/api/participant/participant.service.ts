@@ -1,6 +1,4 @@
 import {Injectable, NotFoundException} from "@nestjs/common";
-import {ParticipantInterface} from "./interfaces/participant.interface";
-import {CommonApi} from "../../APIHelpers/CommonApi";
 import { participantEntity } from "src/entity/participant.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -12,13 +10,12 @@ export class ParticipantService {
         @InjectRepository(participantEntity)
         private participantRepository: Repository<participantEntity>,
     ) {}
-    participant: ParticipantInterface[] = [];
 
     async getAllParticipants(): Promise<participantEntity[]> {
         return await this.participantRepository.find();
     }
 
-    async addParticipant(participant: ParticipantInterface) {
+    async addParticipant(participant: participantEntity) {
         const newParticipant = this.participantRepository.create(participant);
         await this.participantRepository.save(newParticipant);
         return newParticipant;

@@ -1,6 +1,5 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post} from "@nestjs/common";
 import {ParticipantService} from "./participant.service";
-import {ParticipantInterface} from "./interfaces/participant.interface";
 import { participantEntity } from "src/entity/participant.entity";
 
 @Controller("participant")
@@ -20,7 +19,7 @@ export class ParticipantController {
     }
 
     @Post()
-    addParticipant(@Body() participant : ParticipantInterface)
+    addParticipant(@Body() participant : participantEntity)
     {
         return this.service.addParticipant(participant);
     }

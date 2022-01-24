@@ -1,11 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { TestInterface } from './interfaces/test.interface';
 import * as nodemailer from 'nodemailer';
-import { ParticipantInterface } from '../participant/interfaces/participant.interface';
 import { v4 as uuidv4 } from 'uuid';
-import { LinkInterface } from '../link/interface/link.interface';
-import { ParticipantService } from '../participant/participant.service';
-import { LinkService } from '../link/link.service';
 import { testEntity } from 'src/entity/test.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -22,7 +17,6 @@ export class TestService {
     @InjectRepository(participantEntity)
     private participantRepository: Repository<participantEntity>,
   ) {}
-  tests: TestInterface[] = [];
 
   async getAllTests(): Promise<testEntity[]> {
     return await this.testRepository.find();
@@ -40,15 +34,13 @@ export class TestService {
     );
     participants.forEach(participant => {
       const linkGuid = uuidv4();
-      const link: LinkInterface = {
-        id: linkGuid,
+      const link: linkEntity = {
+        link_id: linkGuid,
         participant: participant,
-        used: false,
-        sent_at: Date.now().toString(),
-        link: linkGuid,
       };
-      this.saveLinkInDatabase(link);
-      this.sendMail(link.link, participant.email);
+      this.saveLinkInDatabase(link)
+          .then(newLink => {
+      this.sendMail(newLink.link_id, participant.email);})
     });
   }
 
@@ -106,7 +98,7 @@ export class TestService {
     };
   }
 
-  protected saveLinkInDatabase(link: LinkInterface) {
-    this.linkRepository.save(link);
+  protected saveLinkInDatabase(link: linkEntity) {
+    return this.linkRepository.save(link);
   }
 }

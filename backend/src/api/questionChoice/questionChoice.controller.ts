@@ -1,6 +1,6 @@
 import {QuestionChoiceService} from "./questionChoice.service";
 import {Body, Controller, Delete, Get, Param, Patch, Post} from "@nestjs/common";
-import {QuestionChoiceInterface} from "./interfaces/questionChoice.interface";
+import {questionChoiceEntity} from "../../entity/questionChoice.entity";
 
 @Controller("questionChoice")
 export class QuestionChoiceController
@@ -22,7 +22,7 @@ export class QuestionChoiceController
     }
 
     @Post()
-    addQuestionChoice(@Body() questionChoice : QuestionChoiceInterface)
+    addQuestionChoice(@Body() questionChoice : questionChoiceEntity)
     {
         return this.questionChoiceService.addQuestionChoice(questionChoice)
     }
@@ -40,7 +40,7 @@ export class QuestionChoiceController
     }
 
     @Patch(":id")
-    updateQuestionChoice(@Param("id") id : string, @Body() questionChoice : QuestionChoiceInterface)
+    updateQuestionChoice(@Param("id") id : string, @Body() questionChoice : questionChoiceEntity)
     {
         return this.questionChoiceService.updateQuestionChoice(id, questionChoice);
     }

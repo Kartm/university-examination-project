@@ -5,12 +5,11 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { TestInterface } from '../api/test/interfaces/test.interface';
 import { ownerEntity } from './owner.entity';
 import { settingsEntity } from './settings.entity';
 
 @Entity('test')
-export class testEntity implements TestInterface {
+export class testEntity{
   @PrimaryGeneratedColumn('uuid')
   test_id: string;
 

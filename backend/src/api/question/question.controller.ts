@@ -1,8 +1,6 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post, Query} from "@nestjs/common";
 import {QuestionService} from "./question.service";
-import {QuestionInterface} from "./interfaces/question.interface";
 import { questionEntity } from "src/entity/question.entity";
-import { threadId } from "worker_threads";
 
 @Controller("question")
 export class QuestionController

@@ -1,6 +1,4 @@
 import {Injectable, NotFoundException} from "@nestjs/common";
-import {QuestionInterface} from "./interfaces/question.interface";
-import {CommonApi} from "../../APIHelpers/CommonApi";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { questionEntity } from "src/entity/question.entity";
@@ -12,7 +10,6 @@ export class QuestionService
         @InjectRepository(questionEntity)
         private questionRepository: Repository<questionEntity>,
     ) {}
-    static questions: QuestionInterface[] = [];
 
     async getAllQuestions() {
         return await this.questionRepository.find();

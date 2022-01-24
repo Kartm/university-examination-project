@@ -23,9 +23,10 @@ export class TestService {
   }
 
   async addTest(test: testEntity) {
-    const newTest = this.testRepository.create(test);
-    await this.testRepository.save(newTest);
-    return newTest;
+    return this.testRepository.save(test)
+    // const newTest = this.testRepository.create(test);
+    // await this.testRepository.save(newTest);
+    // return newTest;
   }
 
   async generateLinks(test: string) {

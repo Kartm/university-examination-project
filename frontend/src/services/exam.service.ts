@@ -62,8 +62,9 @@ export const apiCreateExam = async (): Promise<APIResponse<LocalExam>> => {
   const settings = await settingsRequest.json()
 
   const examRequest = await post(`/tests/`, {
-    name: 'some exam',
-    owner_name: 'jan kowalski',
+    name: '',
+    owner_name: '',
+    owner_email: '',
     settings_id: settings.data.settings_id,
   });
 

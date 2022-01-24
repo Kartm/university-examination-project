@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  Exam,
+  Exam, LocalExam,
   LocalQuestion,
   ParticipantDraft,
   Question, QuestionChoice,
@@ -13,13 +13,16 @@ import {
 } from "../../services/exam.service";
 
 export interface State {
-  exam: Exam | null,
+  exam: LocalExam | null,
 }
 
 export interface UpdateExamSettings {
-  id: string;
+  test_id: string;
   name: string;
   owner_name: string;
+  owner_email: string;
+  time_start: string;
+  time_end: string;
   settings: Settings;
 }
 

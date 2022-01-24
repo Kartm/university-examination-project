@@ -1,11 +1,9 @@
 export interface Settings {
-    id: string;
+    settings_id?: string;
     show_results_overview: boolean;
     allow_going_back: boolean;
     show_points_per_question: boolean;
 }
-
-export type SettingsDraft = Omit<Settings, 'id'>
 
 export interface QuestionChoice {
     id: string;
@@ -38,8 +36,15 @@ export interface Question {
 
 export interface Exam {
     test_id: string;
-    name: string;
+    owner_email: string;
     owner_name: string;
+    name: string;
+    settings_id: string;
+    time_end: string;
+    time_start: string;
+}
+
+export interface LocalExam extends Exam {
     settings: Settings;
     questions: LocalQuestion[];
 }

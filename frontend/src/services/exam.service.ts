@@ -1,6 +1,6 @@
 import {APIResponse} from "../models/api.model";
 import {
-  Exam,
+  Exam, LocalExam,
   LocalQuestion,
   Participant,
   ParticipantDraft, Question, QuestionChoice,
@@ -15,16 +15,16 @@ import {
   UpdateExamSettings
 } from "../store/slices/exam.slice";
 
-export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
+export const getExam = async (uuid: string): Promise<APIResponse<LocalExam>> => {
   const examRequest = await get(`/tests/${uuid}/`);
 
-  const exam = await examRequest.json()
+  const examFromBackend = (await examRequest.json()).data as Exam
 
-  const settingsRequest = await get(`/settings/${exam.data.settings_id}/`);
+  const settingsRequest = await get(`/settings/${examFromBackend.settings_id}/`);
 
-  const settings = await settingsRequest.json()
+  const settings = (await settingsRequest.json()).data as Settings
 
-  const questionsRequest = await get(`/question/?test_id=${exam.data.id}`);
+  const questionsRequest = await get(`/question/?test_id=${examFromBackend.test_id}`);
 
   const questions = await questionsRequest.json()
 
@@ -32,26 +32,27 @@ export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
 
   const questionChoices = await questionsChoicesRequest.json()
 
-  console.log(exam, settings, questions)
+  console.log(examFromBackend, settings, questions)
 
-  const mergedQuestionsWithChoices: LocalQuestion[] = (questions.data as Question[]).map(q => questionToLocalQuestion(q, questionChoices.data))
-  console.log(mergedQuestionsWithChoices)
-  const examFromBackend: Exam = {
-    test_id: exam.data.id,
-    name: exam.data.name,
-    owner_name: exam.data.owner_name,
-    settings: settings.data,
-    questions: mergedQuestionsWithChoices
+  // const mergedQuestionsWithChoices: LocalQuestion[] = (questions.data as Question[]).map(q => questionToLocalQuestion(q, questionChoices.data))
+  // console.log(mergedQuestionsWithChoices)
+  const localExam = {
+    test_id: examFromBackend.test_id,
+    name: examFromBackend.name,
+    owner_name: examFromBackend.owner_name,
+    owner_email: examFromBackend.owner_email,
+    settings: settings,
+    questions: []
   }
 
   return {
     statusCode: 200,
     message: [],
-    data: examFromBackend
-  } as APIResponse<Exam>;
+    data: localExam
+  } as APIResponse<LocalExam>;
 };
 
-export const apiCreateExam = async (): Promise<APIResponse<Exam>> => {
+export const apiCreateExam = async (): Promise<APIResponse<LocalExam>> => {
   const settingsRequest = await post(`/settings/`, {
     show_results_overview: true,
     allow_going_back: true,
@@ -63,15 +64,16 @@ export const apiCreateExam = async (): Promise<APIResponse<Exam>> => {
   const examRequest = await post(`/tests/`, {
     name: 'some exam',
     owner_name: 'jan kowalski',
-    settings_id: settings.data.id,
+    settings_id: settings.data.settings_id,
   });
 
-  const exam = await examRequest.json()
+  const examFromBackend = (await examRequest.json()).data as Exam;
 
-  const examFromBackend: Exam = {
-    test_id: exam.data.id,
-    name: exam.data.name,
-    owner_name: exam.data.owner_name,
+  const localExam = {
+    test_id: examFromBackend.test_id,
+    name: examFromBackend.name,
+    owner_name: examFromBackend.owner_name,
+    owner_email: examFromBackend.owner_email,
     settings: settings.data,
     questions: []
   }
@@ -79,41 +81,46 @@ export const apiCreateExam = async (): Promise<APIResponse<Exam>> => {
   return {
     statusCode: 200,
     message: [],
-    data: examFromBackend
-  } as APIResponse<Exam>;
+    data: localExam
+  } as APIResponse<LocalExam>;
 };
 
-export const apiUpdateExamSettings = async (update: UpdateExamSettings): Promise<APIResponse<Exam>> => {
+export const apiUpdateExamSettings = async (update: UpdateExamSettings): Promise<APIResponse<LocalExam>> => {
 
-  const settingsRequest = await patch(`/settings/${update.settings.id}/`, {
+  const settingsRequest = await patch(`/settings/${update.settings.settings_id}/`, {
     show_results_overview: update.settings.show_results_overview,
     allow_going_back: update.settings.allow_going_back,
     show_points_per_question: update.settings.show_points_per_question,
   });
 
-  const settings = await settingsRequest.json()
+  const settings = (await settingsRequest.json()).data as Settings
 
-  const examRequest = await patch(`/tests/${update.id}/`, {
+  const examRequest = await patch(`/tests/${update.test_id}/`, {
+    test_id: update.test_id,
     name: update.name,
     owner_name: update.owner_name,
-    settings_id: settings.data.id,
-  });
+    owner_email: update.owner_email,
+    settings_id: settings.settings_id,
+    time_start: update.time_start,
+    time_end: update.time_end,
+  } as Exam);
 
-  const exam = await examRequest.json()
+  const examFromBackend = (await examRequest.json()).data as Exam;
 
-  const examFromBackend: Exam = {
-    test_id: exam.data.id,
-    name: exam.data.name,
-    owner_name: exam.data.owner_name,
-    settings: settings.data,
+  const localExam = {
+    test_id: examFromBackend.test_id,
+    name: examFromBackend.name,
+    owner_name: examFromBackend.owner_name,
+    owner_email: examFromBackend.owner_email,
+    settings: settings,
     questions: []
   }
 
   return {
     statusCode: 200,
     message: [],
-    data: examFromBackend
-  } as APIResponse<Exam>;
+    data: localExam
+  } as APIResponse<LocalExam>;
 };
 
 export const apiUpdateExamParticipants = async (update: UpdateExamParticipants): Promise<APIResponse<Participant[]>> => {

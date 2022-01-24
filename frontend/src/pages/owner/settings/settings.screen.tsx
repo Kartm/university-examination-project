@@ -25,7 +25,6 @@ const SettingsScreen = () => {
   const [testName, setTestName] = useState('')
   const [ownerEmail, setOwnerEmail] = useState('')
   const [ownerName, setOwnerName] = useState('')
-  const [startDate, setStartDate] = useState('')
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
@@ -56,11 +55,14 @@ const SettingsScreen = () => {
     // convert component's state to something backend will understand
 
     const update: UpdateExamSettings = {
-      id: testOwnerUuid,
+      test_id: testOwnerUuid,
       name: testName,
       owner_name: ownerName,
+      owner_email: ownerEmail,
+      time_start: startTime,
+      time_end: endTime,
       settings: {
-        id: examState.exam.settings.id,
+        settings_id: examState.exam.settings.settings_id,
         show_points_per_question: selectedOptions.includes('Display points per question'),
         show_results_overview: selectedOptions.includes('Show results overview'),
         allow_going_back: selectedOptions.includes('Allow going back to previous question')
@@ -97,10 +99,6 @@ const SettingsScreen = () => {
                 </div>
 
                 <div>
-                  Start Date
-                </div>
-
-                <div>
                   Test Duration
                 </div>
 
@@ -123,16 +121,6 @@ const SettingsScreen = () => {
                        placeholder='Write your name'
                        value={ownerName}
                        onChange={(e) => setOwnerName(e.target.value)}/>
-                <input type='text'
-                       onFocus={
-                         (e)=> {
-                           e.currentTarget.type = "date";
-                           e.currentTarget.focus();
-                         }
-                       }
-                       placeholder='Start Date'
-                       value={startDate}
-                       onChange={(e) => setStartDate(e.target.value)}/>
 
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                   <input type='text'

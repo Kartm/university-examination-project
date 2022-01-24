@@ -13,16 +13,18 @@ export class testEntity{
   @PrimaryGeneratedColumn('uuid')
   test_id: string;
 
+  @Column({ type: "int", nullable: true })
+  settings_id: number;
+
   @OneToOne(() => settingsEntity, { eager: true })
-  @JoinColumn()
+  @JoinColumn({ name: "settings_id" })
   setting: settingsEntity;
 
-  @OneToOne(() => ownerEntity, { eager: true })
-  @JoinColumn()
-  owner: ownerEntity;
+  @Column({ length: 45, default: '' })
+  owner_email: string;
 
   @Column({ length: 45, default: '' })
-  owner_email?: string;
+  owner_name: string;
 
   @Column({ length: 45, default: '' })
   name: string;

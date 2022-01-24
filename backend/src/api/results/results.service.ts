@@ -18,6 +18,8 @@ import {testEntity} from "../../entity/test.entity";
 import {Repository} from "typeorm";
 import {questionChoiceEntity} from "../../entity/questionChoice.entity";
 import {participantEntity} from "../../entity/participant.entity";
+import {questionEntity} from "../../entity/question.entity";
+import {questionAnswerEntity} from "../../entity/questionAnswer.entity";
 
 
 @Injectable()
@@ -30,6 +32,8 @@ export class ResultsService {
         private questionChoiceRepository: Repository<questionChoiceEntity>,
         @InjectRepository(participantEntity)
         private participantRepository: Repository<participantEntity>,
+        @InjectRepository(questionAnswerEntity)
+        private questionAnswerRepository: Repository<questionAnswerEntity>,
     ) {
     }
 
@@ -39,16 +43,16 @@ export class ResultsService {
 
         const testResult: TestResultsInterface = {test: test, results: []};
 
-        participants.forEach(participant => {
-            const result = this.createResult(participant);
-            testResult.results.push(result);
-        })
+        for (const participant of participants) {
+            this.createResult(participant)
+                .then(result => testResult.results.push(result));
+        }
 
         return testResult;
     }
 
-    private createResult(participant: ParticipantInterface) {
-        const questionAnswers: QuestionAnswerInterface[] = this.getQuestionsAnswersWithParticipantId(participant)
+    private async createResult(participant: ParticipantInterface) {
+        const questionAnswers = await this.getQuestionsAnswersWithParticipantId(participant)
 
 
         const result: ResultInterface = {participant: participant, questionResults: []};
@@ -126,9 +130,8 @@ export class ResultsService {
     }
 
 
-    private getQuestionsAnswersWithParticipantId(participant: ParticipantInterface): QuestionAnswerInterface[] {
-        const allQuestionAnswers = QuestionAnswerService.getAllQuestions();
-        return allQuestionAnswers.filter(questionAnswer => questionAnswer.participant === participant);
+    private async getQuestionsAnswersWithParticipantId(participant: ParticipantInterface) {
+        return this.questionAnswerRepository.find( {where : {participant : participant}});
     }
 
 

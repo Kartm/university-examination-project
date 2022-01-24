@@ -1,6 +1,7 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post} from "@nestjs/common";
 import {QuestionAnswerService} from "./questionAnswer.service";
 import {QuestionAnswerInterface} from "./interfaces/questionAnswer.interface";
+import {questionAnswerEntity} from "../../entity/questionAnswer.entity";
 
 @Controller("questionAnswer")
 export class QuestionAnswerController
@@ -10,36 +11,36 @@ export class QuestionAnswerController
     @Get()
     getAllQuestion()
     {
-        return QuestionAnswerService.getAllQuestions();
+        return this.questionAnswerService.getAllQuestions();
     }
 
     @Get(":id")
     getOneQuestionAnswer(@Param("id") id : string)
     {
-        return QuestionAnswerService.getOneQuestionAnswer(id);
+        return this.questionAnswerService.getOneQuestionAnswer(id);
     }
 
     @Post()
-    addQuestionAnswer(@Body() questionAnswer : QuestionAnswerInterface)
+    addQuestionAnswer(@Body() questionAnswer : questionAnswerEntity)
     {
-        return QuestionAnswerService.addQuestionAnswer(questionAnswer)
+        return this.questionAnswerService.addQuestionAnswer(questionAnswer)
     }
 
     @Delete()
     removeAllQuestionAnswer()
     {
-        return QuestionAnswerService.removeAllQuestionAnswer()
+        return this.questionAnswerService.removeAllQuestionAnswer()
     }
 
     @Delete(":id")
     removeOneQuestionAnswer(@Param("id") id : string)
     {
-        return QuestionAnswerService.removeOneQuestionAnswer(id);
+        return this.questionAnswerService.removeOneQuestionAnswer(id);
     }
 
     @Patch(":id")
-    updateQuestionAnswer(@Param("id") id : string, @Body() questionAnswer : QuestionAnswerInterface)
+    updateQuestionAnswer(@Param("id") id : string, @Body() questionAnswer : questionAnswerEntity)
     {
-        return QuestionAnswerService.updateQuestionAnswer(id, questionAnswer)
+        return this.questionAnswerService.updateQuestionAnswer(id, questionAnswer)
     }
 }

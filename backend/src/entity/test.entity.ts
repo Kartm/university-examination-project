@@ -22,11 +22,7 @@ export class testEntity{
   owner: ownerEntity;
 
   @Column({ length: 45 })
-  owner_link?: string;
-
-  @Column({ length: 45 })
   owner_email?: string;
-
 
   @Column({ length: 45 })
   name: string;

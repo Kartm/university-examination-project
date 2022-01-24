@@ -2,10 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import {useState} from 'react'
 import Text from "../../components/style/text.component";
+import colors from "../../themes/colors.theme";
 
 
 const DropdownButton = styled.button`
-  background-color: #04AA6D;
+  background-color: ${colors["primary"]};
   color: white;
   padding: 16px;
   font-size: 16px;
@@ -37,7 +38,7 @@ const DropdownWrapper = styled.div`
     display: block;
   }
   &:hover ${DropdownButton} {
-    background-color: #3e8e41;
+    background-color: ${colors["info"]};
   }`
 
 interface DropdownParams {
@@ -66,12 +67,12 @@ const Dropdown= (props: DropdownParams) => {
                 e.preventDefault()
             }}>
                 {selectedOptions.map((option, i) => (
-                    <Text key={i}>
+                    <div key={i}>
                         {option}
                         <span style={{color: 'red', cursor: 'pointer'}} onClick={() => removeOption(i)}>
                             X
                         </span>
-                    </Text>
+                    </div>
                 ))}
             </DropdownButton>
             {openOptions && <DropdownContent>

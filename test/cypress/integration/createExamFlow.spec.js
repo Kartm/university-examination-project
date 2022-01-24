@@ -10,7 +10,7 @@ it('Navigates to create', () => {
 })
 
 it('Chooses a template', () => {
-    cy.get('select').select(1)
+    cy.get('button').click()
 })
 
 it('Chooses a template', () => {

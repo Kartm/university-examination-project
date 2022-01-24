@@ -21,10 +21,10 @@ export class testEntity{
   @JoinColumn()
   owner: ownerEntity;
 
-  @Column({ length: 45 })
+  @Column({ length: 45, default: '' })
   owner_email?: string;
 
-  @Column({ length: 45 })
+  @Column({ length: 45, default: '' })
   name: string;
 
   @Column({default : '1970-01-01 00:00:00'})

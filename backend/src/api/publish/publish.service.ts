@@ -5,9 +5,10 @@ import {TestService} from "../test/test.service";
 export class publishService extends TestService {
 
 
-    publishExam(test_id: string, owner_link:string, owner_email){
-        this.generateLinks(test_id);
-        this.sendOwnerMail(owner_link, owner_email);
+    publishExam(test_id: string){
+        console.log(test_id)
+        // this.generateLinks(test_id);
+        // this.sendOwnerMail(test_id, test_id);
     }
 
 

@@ -24,9 +24,7 @@ const FinishScreen = () => {
   });
 
   function onPublish() {
-    console.log('publish')
-    console.log(examState.exam)
-    dispatch(publishExam(examState.exam))
+    dispatch(publishExam(testOwnerUuid))
   }
 
   return (

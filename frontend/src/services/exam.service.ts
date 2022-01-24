@@ -194,13 +194,14 @@ export const apiUpdateExamQuestions = async (update: UpdateExamQuestions): Promi
   } as APIResponse<{questions: Question[], questionChoices: QuestionChoice[]}>;
 };
 
-export const apiPublishExam = async (exam: Exam): Promise<APIResponse<Exam>> => {
-  // todo
+export const apiPublishExam = async (test_id: string): Promise<APIResponse<any>> => {
+  const req = await get(`/publish/${test_id}/`);
+
+  const response = (await req.json()).data
 
   return {
     statusCode: 200,
     message: [],
-    // @ts-ignore
-    data: {}
-  } as APIResponse<Exam>;
+    data: response
+  } as APIResponse<any>;
 };

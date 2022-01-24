@@ -91,8 +91,9 @@ const QuestionsScreen = () => {
         </div>
 
         <Popup show={showPopup} setShow={setShowPopup}>
-          <div>
+          <>
             <h3>Add Question</h3>
+            <div style={{backgroundColor: "#ccc", width: "100%", height: "0.5px", margin: "16px 0"}}/>
             <AddQuestion
               onAddQuestion={(question) => {
                 setLocalQuestions([...localQuestions, question]);
@@ -101,7 +102,7 @@ const QuestionsScreen = () => {
               onClose={() => setShowPopup(false)}
               questionTypes={questionTypes}/>
 
-          </div>
+          </>
         </Popup>
 
         <Button text="Next (finish)" color="primary" onClick={() => onNextButtonClicked()}/>

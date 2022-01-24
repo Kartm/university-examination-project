@@ -20,5 +20,7 @@ export class participantEntity implements ParticipantInterface {
 
     @Column({length: 45})
     name: string;
+
+
     
 }

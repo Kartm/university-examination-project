@@ -26,6 +26,10 @@ export class testEntity implements TestInterface {
   owner_link?: string;
 
   @Column({ length: 45 })
+  owner_email?: string;
+
+
+  @Column({ length: 45 })
   name: string;
 
   @Column({default : '1970-01-01 00:00:00'})

@@ -7,7 +7,9 @@ export interface TestInterface extends IIdHaver{
     owner: ownerEntity
     name?: string;
     owner_link?: string;
+    owner_email?: string;
     time_start: Date;
     time_end: Date;
+
 }
 

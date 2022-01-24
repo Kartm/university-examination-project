@@ -10,5 +10,7 @@ export class ownerEntity implements OwnerInterface {
     @Column({length: 45})
     name: string;
 
-    
+    @Column({length: 45})
+    email: string;
+
 }

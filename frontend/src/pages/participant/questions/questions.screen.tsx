@@ -8,7 +8,7 @@ import Text from "../../../components/style/text.component";
 import {useDispatch, useSelector} from "react-redux";
 import {updateTitleAction} from "../../../store/slices/ui.slice";
 import {RootState} from "../../../store/configure.store";
-import {getExamByUuid, getQuestionTypes, questionToLocalQuestion} from "../../../store/slices/exam.slice";
+import {getExamByUuid} from "../../../store/slices/exam.slice";
 import QuestionComponent from "../../../components/exam/question.component";
 import {LocalQuestion, Question, QuestionAnswer} from "../../../models/exam.model";
 import styled from "styled-components";
@@ -34,19 +34,14 @@ const ParticipateQuestionsScreen = () => {
   const dispatch = useDispatch();
   const examState = useSelector((state: RootState) => state.exam);
   const history = useHistory();
-  const questionTypes = useSelector((state: RootState) => state.exam.questionTypes);
 
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(0);
   const [invalidQuestionIds, setInvalidQuestionIds] = useState<string[]>([]);
   const [questionAnswers, setQuestionAnswers] = useState<QuestionAnswer[]>([]);
 
   useEffect(() => {
-    dispatch(getQuestionTypes());
-  }, []);
-
-  useEffect(() => {
-    dispatch(getExamByUuid(testParticipateUuid, examState.questionTypes));
-  }, [examState.questionTypes])
+    dispatch(getExamByUuid(testParticipateUuid));
+  }, [])
 
   useEffect(() => {
     if (examState?.exam?.questions) {

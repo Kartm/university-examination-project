@@ -11,7 +11,6 @@ import Dropdown from "../../../components/forms/dropdown";
 import {
   createExam,
   getExamByUuid,
-  getQuestionTypes,
   UpdateExamSettings,
   updateExamSettings
 } from "../../../store/slices/exam.slice";
@@ -42,12 +41,8 @@ const SettingsScreen = () => {
   });
 
   useEffect(() => {
-    dispatch(getQuestionTypes());
-  }, []);
-
-  useEffect(() => {
-    dispatch(getExamByUuid(testOwnerUuid, examState.questionTypes));
-  }, [examState.questionTypes])
+    dispatch(getExamByUuid(testOwnerUuid));
+  }, [])
 
 
 

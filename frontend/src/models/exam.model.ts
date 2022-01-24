@@ -16,17 +16,16 @@ export interface QuestionChoice {
 
 export interface QuestionChoiceDraft extends Omit<Omit<QuestionChoice, 'id'>, 'question_id'> {id?: string; question_id?: string}
 
-export interface QuestionType {
-    id: string;
-    name: 'OPEN' | 'SINGLE_CHOICE' | 'MULTI_CHOICE';
+export enum QuestionTypeEnum {
+    OPEN = "OPEN",
+    SINGLE_CHOICE = "SINGLE_CHOICE",
+    MULTI_CHOICE = "MULTI_CHOICE"
 }
-
-export type QuestionTypeDraft = Omit<QuestionType, 'id'>
 
 export interface LocalQuestion {
     id?: string;
     name: string;
-    question_type: QuestionType;
+    question_type: QuestionTypeEnum;
     question_choices: QuestionChoiceDraft[];
 }
 
@@ -34,7 +33,7 @@ export interface Question {
     id: string;
     name: string;
     test_id : string;
-    question_type_id : string;
+    question_type : QuestionTypeEnum;
 }
 
 export interface Exam {

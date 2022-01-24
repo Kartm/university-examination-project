@@ -4,19 +4,16 @@ import {
   LocalQuestion,
   ParticipantDraft,
   Question, QuestionChoice,
-  QuestionType,
   Settings
 } from "../../models/exam.model";
 import {
   apiCreateExam,
-  apiGetQuestionTypes,
   apiPublishExam, apiUpdateExamParticipants, apiUpdateExamQuestions, apiUpdateExamSettings,
   getExam
 } from "../../services/exam.service";
 
 export interface State {
   exam: Exam | null,
-  questionTypes: QuestionType[];
 }
 
 export interface UpdateExamSettings {
@@ -35,11 +32,11 @@ export interface UpdateExamQuestions {
   testId: string;
 }
 
-export const questionToLocalQuestion = (q: Question, questionChoices: QuestionChoice[], questionTypes: QuestionType[]): LocalQuestion => (
+export const questionToLocalQuestion = (q: Question, questionChoices: QuestionChoice[]): LocalQuestion => (
   {
     id: q.id,
     name: q.name,
-    question_type: questionTypes.find(qt => qt.id === q.question_type_id)!,
+    question_type: q.question_type,
     question_choices: questionChoices.filter(qc => qc.question_id === q.id),
   }
 )
@@ -48,20 +45,16 @@ const slice = createSlice({
   name: "exam",
   initialState: {
     exam: null,
-    questionTypes: [],
   } as State,
   reducers: {
     setExam: (state, action) => {
       state.exam = action.payload;
     },
-    setQuestionTypes: (state, action) => {
-      state.questionTypes = action.payload;
-    },
   },
 });
 export default slice.reducer;
 
-const { setExam, setQuestionTypes} = slice.actions;
+const { setExam } = slice.actions;
 export const createExam = () => async (dispatch) => {
   try {
     const exam = await apiCreateExam();
@@ -70,9 +63,9 @@ export const createExam = () => async (dispatch) => {
     return console.error(e.message);
   }
 };
-export const getExamByUuid = (uuid: string, questionTypes: QuestionType[]) => async (dispatch) => {
+export const getExamByUuid = (uuid: string) => async (dispatch) => {
   try {
-    const exam = await getExam(uuid, questionTypes);
+    const exam = await getExam(uuid);
     return dispatch(setExam(exam.data));
   } catch (e) {
     return console.error(e.message);
@@ -106,14 +99,6 @@ export const updateExamQuestions = (update: UpdateExamQuestions) => async (dispa
   try {
     await apiUpdateExamQuestions(update);
     return true;
-  } catch (e) {
-    return console.error(e.message);
-  }
-};
-export const getQuestionTypes = () => async (dispatch) => {
-  try {
-    const questionTypes = await apiGetQuestionTypes();
-    return dispatch(setQuestionTypes(questionTypes.data));
   } catch (e) {
     return console.error(e.message);
   }

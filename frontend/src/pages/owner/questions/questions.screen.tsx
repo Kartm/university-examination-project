@@ -13,7 +13,7 @@ import QuestionComponent from "../../../components/exam/question.component";
 import {LocalQuestion, Question, QuestionAnswer} from "../../../models/exam.model";
 import {
   getExamByUuid,
-  getQuestionTypes, questionToLocalQuestion,
+  questionToLocalQuestion,
   updateExamParticipants,
   UpdateExamParticipants, updateExamQuestions, UpdateExamQuestions
 } from "../../../store/slices/exam.slice";
@@ -31,7 +31,6 @@ const QuestionsScreen = () => {
   const {testOwnerUuid} = useParams<QuestionsParams>();
   const dispatch = useDispatch();
   const examState = useSelector((state: RootState) => state.exam);
-  const questionTypes = useSelector((state: RootState) => state.exam.questionTypes);
   const history = useHistory();
 
 
@@ -40,12 +39,8 @@ const QuestionsScreen = () => {
   });
 
   useEffect(() => {
-    dispatch(getQuestionTypes());
-  }, []);
-
-  useEffect(() => {
-    dispatch(getExamByUuid(testOwnerUuid, examState.questionTypes));
-  }, [examState.questionTypes])
+    dispatch(getExamByUuid(testOwnerUuid));
+  }, [])
 
   useEffect(() => {
     if(examState.exam != null) {
@@ -100,7 +95,7 @@ const QuestionsScreen = () => {
                 setShowPopup(false)
               }}
               onClose={() => setShowPopup(false)}
-              questionTypes={questionTypes}/>
+              />
 
           </>
         </Popup>

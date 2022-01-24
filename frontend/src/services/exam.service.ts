@@ -4,8 +4,7 @@ import {
   LocalQuestion,
   Participant,
   ParticipantDraft, Question, QuestionChoice,
-  QuestionType,
-  QuestionTypeDraft,
+  QuestionTypeEnum,
   Settings
 } from "../models/exam.model";
 import {patch, put, post, get} from "./utils.service";
@@ -16,7 +15,7 @@ import {
   UpdateExamSettings
 } from "../store/slices/exam.slice";
 
-export const getExam = async (uuid: string, questionTypes: QuestionType[]): Promise<APIResponse<Exam>> => {
+export const getExam = async (uuid: string): Promise<APIResponse<Exam>> => {
   const examRequest = await get(`/tests/${uuid}/`);
 
   const exam = await examRequest.json()
@@ -35,7 +34,7 @@ export const getExam = async (uuid: string, questionTypes: QuestionType[]): Prom
 
   console.log(exam, settings, questions)
 
-  const mergedQuestionsWithChoices: LocalQuestion[] = (questions.data as Question[]).map(q => questionToLocalQuestion(q, questionChoices.data, questionTypes))
+  const mergedQuestionsWithChoices: LocalQuestion[] = (questions.data as Question[]).map(q => questionToLocalQuestion(q, questionChoices.data))
   console.log(mergedQuestionsWithChoices)
   const examFromBackend: Exam = {
     test_id: exam.data.id,
@@ -141,7 +140,7 @@ export const apiUpdateExamParticipants = async (update: UpdateExamParticipants):
 export const apiUpdateExamQuestions = async (update: UpdateExamQuestions): Promise<APIResponse<{questions: Question[], questionChoices: QuestionChoice[]}>> => {
   const localQuestionToQuestion = (lc: LocalQuestion): Omit<Question, "id"> => ({
     name: lc.name,
-    question_type_id: lc.question_type.id,
+    question_type: lc.question_type,
     test_id: update.testId,
   })
 
@@ -189,52 +188,7 @@ export const apiUpdateExamQuestions = async (update: UpdateExamQuestions): Promi
 };
 
 export const apiPublishExam = async (exam: Exam): Promise<APIResponse<Exam>> => {
-  const exampleExam = {
-    "exam_uuid": "856ad28a-74a4-4f2a-bff7-ca93e9280143",
-    "title": "new exam",
-    "settings": {
-      "id": "14999764-317c-4692-827a-558adce51bc7",
-      "show_results_overview": false,
-      "show_points_per_question": true,
-      "allow_going_back": true
-    },
-    "questions": [
-      {
-        "id": "d10e63fd-11ed-4042-8f89-2cb0233bca65------0",
-        "name": "Which one?",
-        "question_type_id": "SINGLE_CHOICE",
-        "question_choices": [
-          {
-            "question_choice_id": "5e31a0b6-6ca0-4c01-91ba-10abb65d0f0c-----00",
-            "text": "A",
-            "is_correct": true
-          },
-          {
-            "question_choice_id": "5e31a0b6-6ca0-4c01-91ba-10abb65d0f0c-----01",
-            "text": "B",
-            "is_correct": false
-          },
-          {
-            "question_choice_id": "5e31a0b6-6ca0-4c01-91ba-10abb65d0f0c-----02",
-            "text": "C",
-            "is_correct": false
-          }
-        ]
-      }
-    ]
-  }
-
-  const settingsToCreate = {...exampleExam.settings, id: undefined}
-
-  const settingsResponse = await (await post(`/settings`, settingsToCreate)).json();
-  console.log(`created settings with id ${settingsResponse.data.id}`)
-
-  const questionsToCreate = exampleExam.questions.map(q => ({...q, id: undefined}))
-
-  // todo not now, there's missing endpoint
-  const questionResponse = await (await post(`/question`, {})).json();
-
-  const questionChoiceResponse = await (await post(`/question`, {})).json();
+  // todo
 
   return {
     statusCode: 200,
@@ -242,38 +196,4 @@ export const apiPublishExam = async (exam: Exam): Promise<APIResponse<Exam>> => 
     // @ts-ignore
     data: {}
   } as APIResponse<Exam>;
-};
-
-export const apiGetQuestionTypes = async (): Promise<APIResponse<QuestionType[]>> => {
-  const questionTypesRequest = await get(`/questionType/`);
-  const questionTypesResponse = await questionTypesRequest.json();
-
-  let questionTypesFromBackend: QuestionType[] = [];
-
-  if(questionTypesResponse.data.length === 0) {
-    questionTypesFromBackend = await new Promise((res, rej) => {
-      const questionTypesToCreate: QuestionTypeDraft[]  = [
-        {name: 'OPEN',},
-        {name: 'SINGLE_CHOICE',},
-        {name: 'MULTI_CHOICE',},
-      ]
-
-      const creationPromises = questionTypesToCreate.map(qt => post(`/questionType/`, qt))
-
-      Promise.all(creationPromises).then(values => {
-        Promise.all(values.map(response => response.json())).then(jsons => {
-          const createdQuestionTypes = jsons.map(j => j.data)
-          res(createdQuestionTypes)
-        })
-      });
-    });
-  } else {
-    questionTypesFromBackend = questionTypesResponse.data;
-  }
-
-  return {
-    statusCode: 200,
-    message: [],
-    data: questionTypesFromBackend
-  } as APIResponse<QuestionType[]>;
 };

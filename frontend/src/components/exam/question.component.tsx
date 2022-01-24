@@ -92,18 +92,18 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
       <Divider/>
 
       {
-        localQuestion.question_type.name === 'OPEN' ?
+        localQuestion.question_type === 'OPEN' ?
           <input type="text" required placeholder="Your answer here..." onChange={(e) => onTextChange(e)}/>
           :
           localQuestion.question_choices.map((choice, i) =>
             <div key={i.toString()} style={{marginBottom: '8px'}}>
               <input
-                type={localQuestion.question_type.name === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
-                required={localQuestion.question_type.name === 'SINGLE_CHOICE'}
+                type={localQuestion.question_type === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
+                required={localQuestion.question_type === 'SINGLE_CHOICE'}
                 name={localQuestion.id}
                 id={i.toString()}
                 onChange={() => {
-                  localQuestion.question_type.name === 'SINGLE_CHOICE' ? onRadioChange(choice.id) : onCheckboxChange(choice.id)
+                  localQuestion.question_type === 'SINGLE_CHOICE' ? onRadioChange(choice.id) : onCheckboxChange(choice.id)
                 }}
               />
               <Label htmlFor={i.toString()}>{choice.text}</Label>

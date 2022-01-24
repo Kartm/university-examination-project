@@ -41,23 +41,17 @@ const DropdownWrapper = styled.div`
   }`
 
 const Wrapper = styled.div`
-  background-color: ${colors["secondary"]};
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 450px;
+  height: 80%;
   border-radius: 8px;
-  padding: 16px;
-  box-sizing: border-box;`
-
-const Divider = styled.div`
-    background-color: #ccc;
-    width: 100%;
-    height: 0.5px;
-    margin: 16px 0;`
+  padding: 16px 0 16px 10%;
+  box-sizing: border-box;
+  margin: 0;`
 
 const PopupInput = styled.input`
-  width: 100%; 
   height: 20px;
   padding: 16px;
   font-size: 16px;`
@@ -65,6 +59,17 @@ const PopupInput = styled.input`
 const Label = styled.label`
   margin-left: 8px;
 `
+
+const SaveButton = styled.button`
+  background-color: ${colors["primary"]};
+  color: ${colors["secondary"]};
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  width: 15vh;
+  position: absolute;
+  margin-top: 62.3vh;
+  margin-left: 27vh`
 
 interface AddQuestionParams {
     onAddQuestion : (localQuestion: LocalQuestion) => void
@@ -151,11 +156,15 @@ const AddQuestion= (props: AddQuestionParams) => {
                     )}
                 </DropdownContent>}
             </DropdownWrapper>
+            <br/>
             <input type="number" onChange={(e) => setPoints(Number(e.target.value))} required placeholder="Please write the number of points for this exercise" />
-            <Divider/>
+
             {/*question options go here*/}
 
+            <h3 style={{marginBottom: "0"}}>Answer Options</h3>
+            <p style={{color: "lightgrey", marginTop: "5px"}}>When you add question options please mark the correct ones by selecting them</p>
             {questionType !== null && questionChoices.length > 0 &&
+
                     questionChoices.map((choice, i) =>
                     <div key={i}>
                         <input
@@ -189,9 +198,9 @@ const AddQuestion= (props: AddQuestionParams) => {
 
 
 
-        <button onClick={
+        <SaveButton onClick={
             () => handleQuestionSave()
-        }>Save</button>
+        }>Save</SaveButton>
         </Wrapper>
     )
 }

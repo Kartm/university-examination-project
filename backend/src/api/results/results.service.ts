@@ -28,7 +28,7 @@ export class ResultsService {
 
     async getResults(testId: string) {
         const test = await this.testRepository.findOne(testId);
-        const participants = await this.participantRepository.find(test);
+        const participants = await this.participantRepository.find({where : {test : test}});
 
         const testResult: TestResultsInterface = {test: test, results: []};
 

@@ -54,17 +54,13 @@ export interface QuestionAnswer {
     question_id: string;
     question_choice_ids: string[];
     answer_text: string | null;
-    seconds_spent?: number;
-    tab_focus_lost_count?: number;
-    // todo check_status
 }
 
 export interface Participant {
-    id: string;
+    participant_id: string;
     test_id: string,
-  email: string,
-  name: string,
-  score: number,
+    email: string,
+    name: string,
 }
 
-export interface ParticipantDraft extends Omit<Omit<Participant, 'id'>, 'score'> {};
+export interface ParticipantDraft extends Omit<Participant, 'participant_id'> {};

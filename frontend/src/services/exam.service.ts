@@ -124,8 +124,8 @@ export const apiUpdateExamSettings = async (update: UpdateExamSettings): Promise
 };
 
 export const apiUpdateExamParticipants = async (update: UpdateExamParticipants): Promise<APIResponse<Participant[]>> => {
-  const participantPromises = update.participants.map(participant => "id" in participant ?
-    put(`/participant/${(participant as Participant).id}/`, participant) :
+  const participantPromises = update.participants.map(participant => "participant_id" in participant ?
+    put(`/participant/${(participant as Participant).participant_id}/`, participant) :
     post(`/participant/`, participant))
 
   const updatedParticipants: Participant[] = await new Promise((res, rej) => {

@@ -13,7 +13,7 @@ export class testEntity{
   @PrimaryGeneratedColumn('uuid')
   test_id: string;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ nullable: true })
   settings_id: number;
 
   @OneToOne(() => settingsEntity, { eager: true })

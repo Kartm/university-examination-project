@@ -9,5 +9,7 @@ export class ownerEntity{
     @Column({length: 45})
     name: string;
 
-    
+    @Column({length: 45})
+    email: string;
+
 }

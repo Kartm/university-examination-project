@@ -19,5 +19,7 @@ export class participantEntity{
 
     @Column({length: 45})
     name: string;
+
+
     
 }

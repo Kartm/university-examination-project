@@ -37,6 +37,9 @@ export class TestService {
       const link: linkEntity = {
         link_id: linkGuid,
         participant: participant,
+        used: false,
+        sent_at: Date.now().toString(),
+        link: linkGuid,
       };
       this.saveLinkInDatabase(link)
           .then(newLink => {
@@ -48,6 +51,34 @@ export class TestService {
     return this.participantRepository.find({where : {test : test}})
   }
 
+
+  async sendOwnerMail(owner_link, owner_email) {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'berkaymertkocak99@gmail.com',
+        pass: 'okclkwhxjnojpmhn',
+      },
+    });
+    const mailOptions = {
+      from: 'berkaymertkocak99@gmail.com',
+      to: `${owner_email}` ,
+      subject: 'Please participate to exam',
+      text: `${owner_link}`,
+    };
+
+    transporter.sendMail(mailOptions, function(error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+  }
+
+
+
+
   private sendMail(link: string, email: string) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -56,11 +87,12 @@ export class TestService {
         pass: 'okclkwhxjnojpmhn',
       },
     });
-
+   //const mail_list =`${email},${owner_email}`
     const mailOptions = {
       from: 'berkaymertkocak99@gmail.com',
-      to: `${email}`,
-      subject: 'Sending Email using Node.js',
+     to: `${email}` ,
+     // to: `${mail_list}`,
+      subject: 'Please participate to exam',
       text: `http://localhost:3000/api/link/${link}`,
     };
 

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { v4 as uuidv4 } from 'uuid';
 import { testEntity } from 'src/entity/test.entity';
@@ -33,6 +33,8 @@ export class TestService {
     const participants = await this.getParticipantsFromDatabase(
       test,
     );
+
+    console.log(participants)
     participants.forEach(participant => {
       const linkGuid = uuidv4();
       const link: linkEntity = {
@@ -47,7 +49,7 @@ export class TestService {
   }
 
   private getParticipantsFromDatabase(test: string) {
-    return this.participantRepository.find({where : {test : test}})
+    return this.participantRepository.find({where : {test_id : test}})
   }
 
 
@@ -109,8 +111,23 @@ export class TestService {
     });
   }
 
-  async getOneTest(test: testEntity) {
-    return await this.testRepository.findOne(test);
+  async getOneTest(test_id: string) {
+    console.log(test_id)
+
+    const foundOwnedTest = await this.testRepository.findOne(test_id);
+    if (foundOwnedTest === undefined) {
+      const participateLink = await this.linkRepository.findOne({where: {link_id: test_id}});
+
+      console.log(participateLink.participant)
+      // const participant = await this.participantRepository.findOne({where: {li: participateLink.participant}})
+
+      if(participateLink === undefined) {
+        throw new BadRequestException('Invalid test id');
+      }
+
+      return participateLink;
+    }
+    return foundOwnedTest;
   }
 
   async updateTest(test: testEntity, editedTest: testEntity) {
@@ -122,6 +139,8 @@ export class TestService {
     existingTest.name = editedTest.name;
     existingTest.owner_email = editedTest.owner_email;
     existingTest.owner_name = editedTest.owner_name;
+    existingTest.time_end = editedTest.time_end;
+    existingTest.time_start = editedTest.time_start;
     await this.testRepository.save(existingTest);
     return editedTest;
   }

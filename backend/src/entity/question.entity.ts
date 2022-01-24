@@ -21,5 +21,9 @@ export class questionEntity{
         type: "enum",
         enum: QuestionTypeEnum,
     })
-    role: QuestionTypeEnum;
+    question_type: QuestionTypeEnum;
+
+
+    @Column({length: 45})
+    name: string;
 }

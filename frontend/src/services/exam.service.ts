@@ -62,8 +62,9 @@ export const apiCreateExam = async (): Promise<APIResponse<LocalExam>> => {
   const settings = await settingsRequest.json()
 
   const examRequest = await post(`/tests/`, {
-    name: 'some exam',
-    owner_name: 'jan kowalski',
+    name: '',
+    owner_name: '',
+    owner_email: '',
     settings_id: settings.data.settings_id,
   });
 
@@ -194,13 +195,14 @@ export const apiUpdateExamQuestions = async (update: UpdateExamQuestions): Promi
   } as APIResponse<{questions: Question[], questionChoices: QuestionChoice[]}>;
 };
 
-export const apiPublishExam = async (exam: Exam): Promise<APIResponse<Exam>> => {
-  // todo
+export const apiPublishExam = async (test_id: string): Promise<APIResponse<any>> => {
+  const req = await get(`/publish/${test_id}/`);
+
+  const response = (await req.json()).data
 
   return {
     statusCode: 200,
     message: [],
-    // @ts-ignore
-    data: {}
-  } as APIResponse<Exam>;
+    data: response
+  } as APIResponse<any>;
 };

@@ -74,10 +74,12 @@ export const getExamByUuid = (uuid: string) => async (dispatch) => {
     return console.error(e.message);
   }
 };
-export const publishExam = (exam: Exam) => async (dispatch) => {
+export const publishExam = (test_id: string) => async (dispatch) => {
   try {
-    const publishedExam = await apiPublishExam(exam);
-    return dispatch(setExam(publishedExam.data));
+    const response = await apiPublishExam(test_id);
+    console.log(response)
+    return true;
+    // return dispatch(setExam(publishedExam.data));
   } catch (e) {
     return console.error(e.message);
   }

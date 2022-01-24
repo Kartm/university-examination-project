@@ -50,7 +50,12 @@ export class TestService {
   }
 
 
-  async sendOwnerMail(owner_link, owner_email) {
+  async sendOwnerMail(test_id: string) {
+    const test = await this.testRepository.findOne({where: {test_id: test_id}})
+    const link = `http://localhost:8080/${test_id}/results`;
+
+    console.log(test)
+
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -60,9 +65,9 @@ export class TestService {
     });
     const mailOptions = {
       from: 'berkaymertkocak99@gmail.com',
-      to: `${owner_email}` ,
+      to: test.owner_email,
       subject: 'Please participate to exam',
-      text: `${owner_link}`,
+      text: link,
     };
 
     transporter.sendMail(mailOptions, function(error, info) {

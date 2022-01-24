@@ -114,11 +114,14 @@ export class TestService {
   }
 
   async updateTest(test: testEntity, editedTest: testEntity) {
+    // return this.testRepository.update(test.test_id, editedTest);
     const existingTest = await this.testRepository.findOne(test);
     if (!existingTest) {
       throw new NotFoundException('Test is not found');
     }
     existingTest.name = editedTest.name;
+    existingTest.owner_email = editedTest.owner_email;
+    existingTest.owner_name = editedTest.owner_name;
     await this.testRepository.save(existingTest);
     return editedTest;
   }

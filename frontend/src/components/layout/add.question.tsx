@@ -138,7 +138,15 @@ const AddQuestion= (props: AddQuestionParams) => {
         for (const q in QuestionTypeEnum) {
             const questionEnumValue: QuestionTypeEnum = QuestionTypeEnum[q as keyof typeof QuestionTypeEnum];
 
-            results.push(questionEnumValue)
+
+            results.push(<a
+              key={questionEnumValue}
+              style={{cursor:'pointer'}}
+              onClick={() => {
+                  handleQuestionTypeChange(questionEnumValue)
+              }}>
+                {questionTypeToString[questionEnumValue]}
+            </a>)
         }
 
         return results;
@@ -157,16 +165,6 @@ const AddQuestion= (props: AddQuestionParams) => {
 
                 {openSelection && <DropdownContent>
                     {getQuestionTypeDropdownOptions()}
-                    {/*{props.questionTypes.map(qt =>*/}
-                    {/*  <a*/}
-                    {/*    key={qt.id}*/}
-                    {/*    style={{cursor:'pointer'}}*/}
-                    {/*    onClick={() => {*/}
-                    {/*        handleQuestionTypeChange(qt)*/}
-                    {/*    }}>*/}
-                    {/*      {questionTypeToString[qt.name]}*/}
-                    {/*  </a>*/}
-                    {/*)}*/}
                 </DropdownContent>}
             </DropdownWrapper>
             <br/>

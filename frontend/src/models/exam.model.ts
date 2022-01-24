@@ -6,13 +6,13 @@ export interface Settings {
 }
 
 export interface QuestionChoice {
-    id: string;
+    questionChoice_id: string;
     question_id: string;
     text: string;
     is_correct: boolean;
 }
 
-export interface QuestionChoiceDraft extends Omit<Omit<QuestionChoice, 'id'>, 'question_id'> {id?: string; question_id?: string}
+export interface QuestionChoiceDraft extends Omit<Omit<QuestionChoice, 'questionChoice_id'>, 'question_id'> {questionChoice_id?: string; question_id?: string}
 
 export enum QuestionTypeEnum {
     OPEN = "OPEN",
@@ -21,14 +21,14 @@ export enum QuestionTypeEnum {
 }
 
 export interface LocalQuestion {
-    id?: string;
+    question_id?: string;
     name: string;
     question_type: QuestionTypeEnum;
     question_choices: QuestionChoiceDraft[];
 }
 
 export interface Question {
-    id: string;
+    question_id: string;
     name: string;
     test_id : string;
     question_type : QuestionTypeEnum;

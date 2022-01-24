@@ -37,10 +37,10 @@ export interface UpdateExamQuestions {
 
 export const questionToLocalQuestion = (q: Question, questionChoices: QuestionChoice[]): LocalQuestion => (
   {
-    id: q.id,
+    question_id: q.question_id,
     name: q.name,
     question_type: q.question_type,
-    question_choices: questionChoices.filter(qc => qc.question_id === q.id),
+    question_choices: questionChoices.filter(qc => qc.question_id === q.question_id),
   }
 )
 

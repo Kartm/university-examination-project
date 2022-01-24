@@ -43,7 +43,7 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
       onValidChange(!!e.target.value)
 
       const answer: QuestionAnswer = {
-        question_id: localQuestion.id,
+        question_id: localQuestion.question_id,
         question_choice_ids: [],
         answer_text: e.target.value
       }
@@ -55,7 +55,7 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
       onValidChange(true)
 
     const answer: QuestionAnswer = {
-        question_id: localQuestion.id,
+        question_id: localQuestion.question_id,
         question_choice_ids: [question_choice_id],
         answer_text: null
       }
@@ -77,7 +77,7 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
     onValidChange(newSelectedCheckboxIds.length > 0)
 
     const answer: QuestionAnswer = {
-      question_id: localQuestion.id,
+      question_id: localQuestion.question_id,
       question_choice_ids: newSelectedCheckboxIds,
       answer_text: null
     }
@@ -100,10 +100,10 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
               <input
                 type={localQuestion.question_type === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
                 required={localQuestion.question_type === 'SINGLE_CHOICE'}
-                name={localQuestion.id}
+                name={localQuestion.question_id}
                 id={i.toString()}
                 onChange={() => {
-                  localQuestion.question_type === 'SINGLE_CHOICE' ? onRadioChange(choice.id) : onCheckboxChange(choice.id)
+                  localQuestion.question_type === 'SINGLE_CHOICE' ? onRadioChange(choice.questionChoice_id) : onCheckboxChange(choice.questionChoice_id)
                 }}
               />
               <Label htmlFor={i.toString()}>{choice.text}</Label>

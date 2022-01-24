@@ -145,14 +145,14 @@ export const apiUpdateExamParticipants = async (update: UpdateExamParticipants):
 };
 
 export const apiUpdateExamQuestions = async (update: UpdateExamQuestions): Promise<APIResponse<{questions: Question[], questionChoices: QuestionChoice[]}>> => {
-  const localQuestionToQuestion = (lc: LocalQuestion): Omit<Question, "id"> => ({
+  const localQuestionToQuestion = (lc: LocalQuestion): Omit<Question, "question_id"> => ({
     name: lc.name,
     question_type: lc.question_type,
     test_id: update.testId,
   })
 
-  const questionPromises = update.questions.map(localQuestionToQuestion).map(question => "id" in question ?
-    put(`/question/${(question as any).id}/`, question) :
+  const questionPromises = update.questions.map(localQuestionToQuestion).map(question => "question_id" in question ?
+    put(`/question/${(question as Question).question_id}/`, question) :
     post(`/question/`, question))
 
   const updatedQuestions: Question[] = await new Promise((res, rej) => {
@@ -170,12 +170,12 @@ export const apiUpdateExamQuestions = async (update: UpdateExamQuestions): Promi
     const updatedQuestion = updatedQuestions.find(uq => uq.name === q.name) // i hate it
 
     q.question_choices.forEach(qc => {
-      questionChoicesToSave.push({...qc, question_id: updatedQuestion.id, id:qc.id})
+      questionChoicesToSave.push({...qc, question_id: updatedQuestion.question_id, questionChoice_id:qc.questionChoice_id})
     })
   })
 
-  const questionChoicePromises = questionChoicesToSave.map(qc => "id" in qc && qc.id !== undefined ?
-    put(`/questionChoice/${(qc as any).id}/`, qc) :
+  const questionChoicePromises = questionChoicesToSave.map(qc => "questionChoice_id" in qc && qc.questionChoice_id !== undefined ?
+    put(`/questionChoice/${(qc as QuestionChoice).questionChoice_id}/`, qc) :
     post(`/questionChoice/`, qc))
 
   const updatedQuestionChoices: QuestionChoice[] = await new Promise((res, rej) => {

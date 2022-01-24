@@ -22,13 +22,13 @@ export class TestService {
     return await this.testRepository.find();
   }
 
-  async addTest(test: TestInterface) {
+  async addTest(test: testEntity) {
     const newTest = this.testRepository.create(test);
     await this.testRepository.save(newTest);
     return newTest;
   }
 
-  private generateLinks(test: testEntity) {
+  public generateLinks(test: testEntity) {
     const participants: ParticipantInterface[] = this.getParticipantsFromDatabase(
       test,
     );
@@ -102,7 +102,7 @@ export class TestService {
     };
   }
 
-  private saveLinkInDatabase(link: LinkInterface) {
+  protected saveLinkInDatabase(link: LinkInterface) {
     LinkService.links.push(link);
   }
 }

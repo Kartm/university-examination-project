@@ -13,14 +13,29 @@ import {ParticipantService} from "../participant/participant.service";
 import {QuestionAnswerService} from "../questionAnswer/questionAnswer.service";
 import {QuestionService} from "../question/question.service";
 import {QuestionChoiceService} from "../questionChoice/questionChoice.service";
+import {InjectRepository} from "@nestjs/typeorm";
+import {testEntity} from "../../entity/test.entity";
+import {Repository} from "typeorm";
+import {questionChoiceEntity} from "../../entity/questionChoice.entity";
+import {participantEntity} from "../../entity/participant.entity";
 
 
 @Injectable()
 export class ResultsService {
 
-    getResults(testId: string) {
-        const test = this.getTestFromDatabase(testId);
-        const participants: ParticipantInterface[] = this.getParticipantsFromTest(testId);
+    constructor(
+        @InjectRepository(testEntity)
+        private testRepository: Repository<testEntity>,
+        @InjectRepository(questionChoiceEntity)
+        private questionChoiceRepository: Repository<questionChoiceEntity>,
+        @InjectRepository(participantEntity)
+        private participantRepository: Repository<participantEntity>,
+    ) {
+    }
+
+    async getResults(testId: string) {
+        const test = await this.testRepository.findOne(testId);
+        const participants = await this.participantRepository.find(test);
 
         const testResult: TestResultsInterface = {test: test, results: []};
 
@@ -32,8 +47,8 @@ export class ResultsService {
         return testResult;
     }
 
-    private createResult(participant: ParticipantInterface): ResultInterface {
-        const questionAnswers: QuestionAnswerInterface[] = this.getQuestionsAnswersWithParticipantId(participant.id)
+    private createResult(participant: ParticipantInterface) {
+        const questionAnswers: QuestionAnswerInterface[] = this.getQuestionsAnswersWithParticipantId(participant)
 
 
         const result: ResultInterface = {participant: participant, questionResults: []};
@@ -41,17 +56,13 @@ export class ResultsService {
         const questionAndQuestionAnswers: QuestionAndQuestionAnswersInterface[] = [];
 
         // This loop is filling up questionAndQuestionAnswers
-        questionAnswers.forEach(questionAnswer => {
-            // Get the question that the answer is answering
-            const questionChoiceId = questionAnswer.question_choice_id;
-            const questionChoice = this.getQuestionChoiceFromDatabase(questionChoiceId)
-            const question = this.getQuestionFromDatabase(questionChoice.question_id);
-
+        for (const questionAnswer of questionAnswers) {
+            const question = questionAnswer.questionChoice.question
             // check if this question is added already, if yes put the answer there
             let added = false;
 
             questionAndQuestionAnswers.forEach(element => {
-                if (element.question.id === question.id) {
+                if (element.question.question_id === question.question_id) {
                     added = true;
                     element.questionAnswers.push(questionAnswer)
                 }
@@ -66,19 +77,21 @@ export class ResultsService {
                 questionAndQuestionAnswers.push(questionAndAnswer)
             }
 
-        })
+        }
 
         // Fill questionResults array with questionResults
         questionAndQuestionAnswers.forEach(questionAndQuestionAnswer => {
-            const questionResult = this.createQuestionResult(questionAndQuestionAnswer)
-            result.questionResults.push(questionResult)
+            this.createQuestionResult(questionAndQuestionAnswer)
+                .then(questionResult => {
+                    result.questionResults.push(questionResult)
+                })
         })
 
         return result
 
     }
 
-    private createQuestionResult(questionAndQuestionAnswer: QuestionAndQuestionAnswersInterface): QuestionResultInterface {
+    private async createQuestionResult(questionAndQuestionAnswer: QuestionAndQuestionAnswersInterface) {
         const question = questionAndQuestionAnswer.question;
 
         // TODO add text to question interface
@@ -86,19 +99,17 @@ export class ResultsService {
 
         const answerTexts = questionAndQuestionAnswer.questionAnswers.map(questionAnswer => questionAnswer.answer_text)
 
-        const allQuestionChoices = this.getQuestionChoicesFromDatabase(question.id);
+        const allQuestionChoices = await this.getQuestionChoicesFromDatabase(question);
 
         const correctQuestionChoices = allQuestionChoices.filter(questionChoice => questionChoice.is_correct)
 
-        const answeredQuestionChoices = questionAndQuestionAnswer.questionAnswers.map(questionAnswer => {
-            return this.getQuestionChoiceFromDatabase(questionAnswer.question_choice_id);
-        })
+        const answeredQuestionChoices = questionAndQuestionAnswer.questionAnswers.map(questionAnswer => questionAnswer.questionChoice)
 
         // TODO Implement checking a text question
         // check if for every correct question choice, there is an answer
         const correct = correctQuestionChoices.every(correctQuestionChoice =>
             !answeredQuestionChoices.every(questionChoice =>
-                questionChoice.id === correctQuestionChoice.id)
+                questionChoice.questionChoice_id === correctQuestionChoice.questionChoice_id)
         )
 
 
@@ -115,32 +126,13 @@ export class ResultsService {
     }
 
 
-    private getTestFromDatabase(testId: string): TestInterface {
-        return TestService.getOneTestWithoutIs(testId);
-    }
-
-    private getParticipantsFromTest(testId: string): ParticipantInterface[] {
-       const participants = ParticipantService.getAllParticipants();
-       return participants.filter(participant => participant.test_id === testId)
-    }
-
-    private getQuestionsAnswersWithParticipantId(participantId: string): QuestionAnswerInterface[] {
+    private getQuestionsAnswersWithParticipantId(participant: ParticipantInterface): QuestionAnswerInterface[] {
         const allQuestionAnswers = QuestionAnswerService.getAllQuestions();
-        return allQuestionAnswers.filter(questionAnswer => questionAnswer.participant_id === participantId);
+        return allQuestionAnswers.filter(questionAnswer => questionAnswer.participant === participant);
     }
 
 
-    private getQuestionChoiceFromDatabase(questionChoiceId: string): QuestionChoiceInterface {
-        return QuestionAnswerService.getOneQuestionAnswer(questionChoiceId);
-    }
-
-    private getQuestionFromDatabase(questionId: string): QuestionInterface {
-        return QuestionService.getOneQuestion(questionId)
-    }
-
-
-    private getQuestionChoicesFromDatabase(question_id: string): QuestionChoiceInterface[] {
-        const allQuestionChoices = QuestionChoiceService.getAllQuestionChoice();
-        return allQuestionChoices.filter(questionChoice => questionChoice.question_id === question_id)
+    private async getQuestionChoicesFromDatabase(question: QuestionInterface) {
+        return await this.questionChoiceRepository.find({where: {question: question, is_correct: true}});
     }
 }

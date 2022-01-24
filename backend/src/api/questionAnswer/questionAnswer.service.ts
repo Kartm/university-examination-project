@@ -1,47 +1,43 @@
 import {Injectable} from "@nestjs/common";
 import {CommonApi} from "../../APIHelpers/CommonApi";
 import {QuestionAnswerInterface} from "./interfaces/questionAnswer.interface";
+import {InjectRepository} from "@nestjs/typeorm";
+import {testEntity} from "../../entity/test.entity";
+import {Repository} from "typeorm";
+import {questionAnswerEntity} from "../../entity/questionAnswer.entity";
 
 @Injectable()
 export class QuestionAnswerService
 {
-    static questionAnswers: QuestionAnswerInterface[] = [];
+    constructor(
+        @InjectRepository(questionAnswerEntity)
+        private repository: Repository<questionAnswerEntity>,
+    ) {}
 
-    static getAllQuestions() {
-        return this.questionAnswers;
+     async getAllQuestions() {
+         return await this.repository.find();
+     }
+
+     async getOneQuestionAnswer(id: string) {
+         return await this.repository.findOne(id);
+     }
+
+     addQuestionAnswer(questionAnswer: questionAnswerEntity) {
+        return this.repository.save(questionAnswer)
     }
 
-    static getOneQuestionAnswer(id: string) {
-        return CommonApi.findEntity(id, this.questionAnswers)[0];
+     async removeAllQuestionAnswer() {
+         this.repository.find()
+             .then(test => {
+                 this.repository.remove(test);
+             });
+     }
+
+     removeOneQuestionAnswer(id: string) {
+        return this.repository.delete(id);
     }
 
-    static addQuestionAnswer(questionAnswer: QuestionAnswerInterface) {
-        return CommonApi.addEntity(questionAnswer, this.questionAnswers);
-    }
-
-    static removeAllQuestionAnswer() {
-        return CommonApi.removeAllEntities(this.questionAnswers);
-    }
-
-    static removeOneQuestionAnswer(id: string) {
-        return CommonApi.removeEntity(id, this.questionAnswers)
-    }
-
-    static updateQuestionAnswer(id: string, newQuestionAnswer: QuestionAnswerInterface) {
-        const [questionAnswer, index] = CommonApi.findEntity(id, this.questionAnswers);
-        if(newQuestionAnswer.questionChoice)
-        {
-            questionAnswer.questionChoice = newQuestionAnswer.questionChoice;
-        }
-        if(newQuestionAnswer.participant)
-        {
-            questionAnswer.participant = newQuestionAnswer.participant;
-        }
-        if(newQuestionAnswer.answer_text)
-        {
-            questionAnswer.answer_text = newQuestionAnswer.answer_text;
-        }
-        this.questionAnswers[index] = questionAnswer;
-        return questionAnswer;
-    }
+     async updateQuestionAnswer(id: string, newQuestionAnswer: questionAnswerEntity) {
+         return this.repository.update(id, newQuestionAnswer);
+     }
 }

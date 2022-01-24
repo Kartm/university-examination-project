@@ -17,33 +17,33 @@ export class LinkController {
 
     @Get()
     getAllLinks() {
-    return this.linkService.getAllLinks();
+    return LinkService.getAllLinks();
 }
 
     @Get(":link_id")
     getSingleLink(@Param('link_id') id: string) : LinkInterface {
 
-        return this.linkService.getSingleLink(id);
+        return LinkService.getSingleLink(id);
     }
 
     @Post()
     addLink(@Body() link : LinkInterface) {
 
-        return this.linkService.addLink(link);
+        return LinkService.addLink(link);
 
     }
 
     @Delete("link_id")
     deleteLink(@Param('link_id') link_id: string) {
 
-        return this.linkService.deleteLink(link_id);
+        return LinkService.deleteLink(link_id);
 
     }
 
     @Patch("link_id" )
     updateLink(@Param('link_id') id : string, @Body() test : LinkInterface)
     {
-        return this.linkService.updateLink(id, test);
+        return LinkService.updateLink(id, test);
     }
 }
 

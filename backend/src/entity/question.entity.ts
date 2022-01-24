@@ -1,6 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, OneToOne, ManyToOne } from 'typeorm';
-import { questionTypeEntity } from './questionType.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne } from 'typeorm';
 import { testEntity } from './test.entity';
+
+export enum QuestionTypeEnum {
+    OPEN = "OPEN",
+    SINGLE_CHOICE = "SINGLE_CHOICE",
+    MULTI_CHOICE = "MULTI_CHOICE"
+}
 
 @Entity("question")
 export class questionEntity{
@@ -12,9 +17,9 @@ export class questionEntity{
     @JoinColumn()
     test: testEntity
 
-    @OneToOne(() => questionTypeEntity)
-    @JoinColumn()
-    questionType: questionTypeEntity
-
-    
+    @Column({
+        type: "enum",
+        enum: QuestionTypeEnum,
+    })
+    role: QuestionTypeEnum;
 }

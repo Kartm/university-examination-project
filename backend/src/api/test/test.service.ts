@@ -9,12 +9,18 @@ import { LinkService } from '../link/link.service';
 import { testEntity } from 'src/entity/test.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import {linkEntity} from "../../entity/link.entity";
+import {participantEntity} from "../../entity/participant.entity";
 
 @Injectable()
 export class TestService {
   constructor(
     @InjectRepository(testEntity)
     private testRepository: Repository<testEntity>,
+    @InjectRepository(linkEntity)
+    private linkRepository: Repository<linkEntity>,
+    @InjectRepository(participantEntity)
+    private participantRepository: Repository<participantEntity>,
   ) {}
   tests: TestInterface[] = [];
 
@@ -28,8 +34,8 @@ export class TestService {
     return newTest;
   }
 
-  public generateLinks(test: string) {
-    const participants: ParticipantInterface[] = this.getParticipantsFromDatabase(
+  async generateLinks(test: string) {
+    const participants = await this.getParticipantsFromDatabase(
       test,
     );
     participants.forEach(participant => {
@@ -47,9 +53,7 @@ export class TestService {
   }
 
   private getParticipantsFromDatabase(test: string) {
-    return ParticipantService.participants.filter(
-      participant => participant.test.test_id === test,
-    );
+    return this.participantRepository.find({where : {test : test}})
   }
 
   private sendMail(link: string, email: string) {
@@ -103,6 +107,6 @@ export class TestService {
   }
 
   protected saveLinkInDatabase(link: LinkInterface) {
-    LinkService.links.push(link);
+    this.linkRepository.save(link);
   }
 }

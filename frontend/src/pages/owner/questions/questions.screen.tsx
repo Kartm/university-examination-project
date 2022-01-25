@@ -79,6 +79,7 @@ const QuestionsScreen = () => {
               localQuestion={localQuestion}
               showPoints={true}
               visible={true}
+              previewOnly={true}
               onValidChange={() => {}}
               onAnswerChange={(answer) => handleAnswerChange(localQuestion, answer)}
             />)

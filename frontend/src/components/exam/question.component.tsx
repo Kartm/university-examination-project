@@ -6,6 +6,7 @@ interface QuestionParams {
   localQuestion: LocalQuestion;
   showPoints: boolean;
   visible: boolean;
+  previewOnly?: boolean;
   onValidChange: (isValid: boolean) => void;
   onAnswerChange: (answer: LocalQuestionAnswer) => void;
 }
@@ -32,7 +33,7 @@ const Label = styled.label`
   margin-left: 8px;
 `
 
-const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, onAnswerChange}: QuestionParams) => {
+const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, onAnswerChange, previewOnly}: QuestionParams) => {
   const [selectedCheckboxIds, setSelectedCheckboxIds] = useState<string[]>([])
 
   function onTextChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -85,27 +86,32 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
     <Wrapper style={{display: visible ? 'flex':'none'}}>
       <h2>{localQuestion.name} {showPoints && <i style={{fontSize: '10px'}}>({localQuestion.points} points)</i>}</h2>
 
-      <Divider/>
+      {previewOnly ? null :
+      <>
+        <Divider/>
 
-      {
-        localQuestion.question_type === 'OPEN' ?
-          <input type="text" required placeholder="Your answer here..." onChange={(e) => onTextChange(e)}/>
-          :
-          localQuestion.question_choices.map((choice, i) =>
-            <div key={i.toString()} style={{marginBottom: '8px'}}>
-              <input
-                type={localQuestion.question_type === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
-                required={localQuestion.question_type === 'SINGLE_CHOICE'}
-                name={localQuestion.question_id}
-                id={i.toString()}
-                onChange={() => {
-                  localQuestion.question_type === 'SINGLE_CHOICE' ? onRadioChange(choice.questionChoice_id) : onCheckboxChange(choice.questionChoice_id)
-                }}
-              />
-              <Label htmlFor={i.toString()}>{choice.text}</Label>
-            </div>
-          )
+        {
+          localQuestion.question_type === 'OPEN' ?
+            <input type="text" required placeholder="Your answer here..." onChange={(e) => onTextChange(e)}/>
+            :
+            localQuestion.question_choices.map((choice, i) =>
+              <div key={i.toString()} style={{marginBottom: '8px'}}>
+                <input
+                  type={localQuestion.question_type === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
+                  required={localQuestion.question_type === 'SINGLE_CHOICE'}
+                  name={localQuestion.question_id}
+                  id={i.toString()}
+                  onChange={() => {
+                    localQuestion.question_type === 'SINGLE_CHOICE' ? onRadioChange(choice.questionChoice_id) : onCheckboxChange(choice.questionChoice_id)
+                  }}
+                />
+                <Label htmlFor={i.toString()}>{choice.text}</Label>
+              </div>
+            )
+        }
+      </>
       }
+
 
     </Wrapper>
   );

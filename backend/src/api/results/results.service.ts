@@ -7,7 +7,7 @@ import {participantEntity} from "../../entity/participant.entity";
 import {questionAnswerEntity} from "../../entity/questionAnswer.entity";
 import {ResultInterface} from "./interfaces/result.interface";
 import {QuestionAndQuestionAnswersInterface} from "./interfaces/questionAndQuestionAnswersInterface";
-import {questionEntity} from "../../entity/question.entity";
+import {questionEntity, QuestionTypeEnum} from "../../entity/question.entity";
 import {TestResultsInterface} from "./interfaces/testResults.interface";
 
 
@@ -35,7 +35,7 @@ export class ResultsService {
         for (const participant of participants) {
             await this.createResult(participant)
                 .then(result => {
-                    console.log(result)
+                    // console.log(result)
                     testResult.results.push(result)
                 });
         }
@@ -92,29 +92,33 @@ export class ResultsService {
 
         const answerTexts = questionAndQuestionAnswer.questionAnswers.map(questionAnswer => questionAnswer.answer_text)
 
-        const allQuestionChoices = await this.getQuestionChoicesFromDatabase(question);
-
-        const correctQuestionChoices = allQuestionChoices.filter(questionChoice => questionChoice.is_correct)
-
         const answeredQuestionChoices = questionAndQuestionAnswer.questionAnswers.map(questionAnswer => questionAnswer.questionChoice)
 
+        const allCorrectQuestionChoices = (await this.getQuestionChoicesFromDatabase(question)).filter(questionChoice => questionChoice.is_correct);
+
         // TODO Implement checking a text question
-        // check if for every correct question choice, there is an answer
-        const correct = correctQuestionChoices.every(correctQuestionChoice =>
-            !answeredQuestionChoices.every(questionChoice =>
-                questionChoice.questionChoice_id === correctQuestionChoice.questionChoice_id)
-        )
 
+        let scoreForQuestion = 0
 
-        let points = 0;
-        if (correct) {
-            points = 1;
+        if(question.question_type === QuestionTypeEnum.MULTI_CHOICE) {
+            // participant must select all available correct question choices
+            const allQuestionChoicesCorrect = answeredQuestionChoices.every(qc => allCorrectQuestionChoices.includes(qc))
+
+            if(allQuestionChoicesCorrect) {
+                scoreForQuestion += question.points
+            }
+        } else {
+            const anyQuestionChoicesCorrect = answeredQuestionChoices.some(qc => qc.is_correct)
+
+            if(anyQuestionChoicesCorrect) {
+                scoreForQuestion += question.points
+            }
         }
 
         return {
             questionText: question.name,
             answerTexts: answerTexts,
-            points: points
+            points: scoreForQuestion
         };
     }
 

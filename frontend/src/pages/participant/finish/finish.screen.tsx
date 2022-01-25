@@ -37,7 +37,6 @@ const ParticipateFinishScreen = () => {
           <div>Congratulations!</div>
           <br/>
         </Text>
-        <h3>Your points: {participantPoints}/{maxPoints}</h3>
       </Content>
     </Container>
   );

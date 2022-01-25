@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   Exam, LocalExam,
-  LocalQuestion, Participant,
+  LocalQuestion, LocalQuestionAnswer, Participant,
   ParticipantDraft,
   Question, QuestionChoice,
   Settings
 } from "../../models/exam.model";
 import {
   apiCreateExam, apiGetParticipantByLinkUuid,
-  apiPublishExam, apiUpdateExamParticipants, apiUpdateExamQuestions, apiUpdateExamSettings,
+  apiPublishExam, apiSendParticipantAnswers, apiUpdateExamParticipants, apiUpdateExamQuestions, apiUpdateExamSettings,
   getExam
 } from "../../services/exam.service";
 
@@ -108,6 +108,14 @@ export const updateExamSettings = (update: UpdateExamSettings) => async (dispatc
 export const updateExamParticipants = (update: UpdateExamParticipants) => async (dispatch) => {
   try {
     await apiUpdateExamParticipants(update);
+    return true;
+  } catch (e) {
+    return console.error(e.message);
+  }
+};
+export const sendQuestionAnswers = (questionAnswers: LocalQuestionAnswer[], participant_uuid: string) => async (dispatch) => {
+  try {
+    await apiSendParticipantAnswers(questionAnswers, participant_uuid);
     return true;
   } catch (e) {
     return console.error(e.message);

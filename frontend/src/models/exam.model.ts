@@ -49,10 +49,17 @@ export interface LocalExam extends Exam {
     questions: LocalQuestion[];
 }
 
-export interface QuestionAnswer {
+export interface LocalQuestionAnswer {
     question_answer_id?: string;
     question_id: string;
     question_choice_ids: string[];
+    answer_text: string | null;
+}
+
+export interface QuestionAnswer {
+    questionAnswer_id?: string;
+    questionChoiceId: string;
+    participant_id: string;
     answer_text: string | null;
 }
 

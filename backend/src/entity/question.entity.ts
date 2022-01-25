@@ -1,6 +1,5 @@
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne, OneToOne} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne} from 'typeorm';
 import { testEntity } from './test.entity';
-import {settingsEntity} from "./settings.entity";
 
 export enum QuestionTypeEnum {
     OPEN = "OPEN",
@@ -26,7 +25,6 @@ export class questionEntity{
         enum: QuestionTypeEnum,
     })
     question_type: QuestionTypeEnum;
-
 
     @Column({length: 45})
     name: string;

@@ -10,7 +10,7 @@ import {updateTitleAction} from "../../../store/slices/ui.slice";
 import Popup from "../../../components/layout/popup";
 import AddQuestion from "../../../components/layout/add.question";
 import QuestionComponent from "../../../components/exam/question.component";
-import {LocalQuestion, Question, QuestionAnswer} from "../../../models/exam.model";
+import {LocalQuestion, Question, LocalQuestionAnswer} from "../../../models/exam.model";
 import {
   getExamByUuid,
   questionToLocalQuestion,
@@ -48,7 +48,7 @@ const QuestionsScreen = () => {
     }
   }, [examState.exam?.questions])
 
-  function handleAnswerChange(localQuestion: LocalQuestion, answer: QuestionAnswer) {
+  function handleAnswerChange(localQuestion: LocalQuestion, answer: LocalQuestionAnswer) {
     console.log(localQuestion, answer)
   }
 

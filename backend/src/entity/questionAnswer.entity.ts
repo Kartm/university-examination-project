@@ -8,27 +8,20 @@ export class questionAnswerEntity{
     @PrimaryGeneratedColumn('uuid')
     questionAnswer_id: string;
 
-    @Column()
-    name: string;
+    @Column({ nullable: true })
+    questionChoiceId: string;
 
     @OneToOne(() => questionChoiceEntity)
-    @JoinColumn()
+    @JoinColumn({ name: "questionChoiceId" })
     questionChoice: questionChoiceEntity;
 
+    @Column({ nullable: true })
+    participant_id: string;
+
     @ManyToOne(() => participantEntity, participant => participant.participant_id )
-    @JoinColumn()
+    @JoinColumn({ name: "participant_id" })
     participant: participantEntity
 
     @Column()
     answer_text: string;
-
-    @Column()
-    seconds_spent: number;
-
-    @Column()
-    tab_focus_lost_count: number;
-
-    @Column()
-    check_status: 'Non Displayed' | 'Displaying' | 'Skipped' | 'Done';
-
 }

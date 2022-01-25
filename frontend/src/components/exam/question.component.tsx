@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {LocalQuestion, Question, QuestionAnswer} from "../../models/exam.model";
+import {LocalQuestion, Question, LocalQuestionAnswer} from "../../models/exam.model";
 import styled from "styled-components";
 
 interface QuestionParams {
@@ -7,7 +7,7 @@ interface QuestionParams {
   showPoints: boolean;
   visible: boolean;
   onValidChange: (isValid: boolean) => void;
-  onAnswerChange: (answer: QuestionAnswer) => void;
+  onAnswerChange: (answer: LocalQuestionAnswer) => void;
 }
 
 const Wrapper = styled.div`
@@ -38,7 +38,7 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
   function onTextChange(e: React.ChangeEvent<HTMLInputElement>) {
       onValidChange(!!e.target.value)
 
-      const answer: QuestionAnswer = {
+      const answer: LocalQuestionAnswer = {
         question_id: localQuestion.question_id,
         question_choice_ids: [],
         answer_text: e.target.value
@@ -50,7 +50,7 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
   function onRadioChange(question_choice_id: string) {
       onValidChange(true)
 
-    const answer: QuestionAnswer = {
+    const answer: LocalQuestionAnswer = {
         question_id: localQuestion.question_id,
         question_choice_ids: [question_choice_id],
         answer_text: null
@@ -72,7 +72,7 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
 
     onValidChange(newSelectedCheckboxIds.length > 0)
 
-    const answer: QuestionAnswer = {
+    const answer: LocalQuestionAnswer = {
       question_id: localQuestion.question_id,
       question_choice_ids: newSelectedCheckboxIds,
       answer_text: null

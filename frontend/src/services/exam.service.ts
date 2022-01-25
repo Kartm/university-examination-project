@@ -1,9 +1,9 @@
 import {APIResponse} from "../models/api.model";
 import {
   Exam, LocalExam,
-  LocalQuestion,
+  LocalQuestion, LocalQuestionAnswer,
   Participant,
-  ParticipantDraft, Question, QuestionChoice,
+  ParticipantDraft, Question, QuestionAnswer, QuestionChoice,
   QuestionTypeEnum,
   Settings
 } from "../models/exam.model";
@@ -205,6 +205,49 @@ export const apiGetParticipantByLinkUuid = async (link_uuid: string): Promise<AP
     message: [],
     data: response
   } as APIResponse<Participant>;
+};
+
+export const apiSendParticipantAnswers = async (answers: LocalQuestionAnswer[], participant_uuid: string): Promise<APIResponse<QuestionAnswer[]>> => {
+  const questionAnswers: QuestionAnswer[] = []
+
+  answers.forEach((localAnswer) => {
+
+
+    localAnswer.question_choice_ids.forEach(qc_id => {
+      const answer: QuestionAnswer = {
+        questionChoiceId: qc_id,
+        participant_id: participant_uuid,
+        answer_text: '',
+      }
+
+      questionAnswers.push(answer)
+    })
+
+
+  })
+
+  const questionAnswerPromises = questionAnswers.map(qa => post(`/questionAnswer/`, qa))
+
+  const receivedAnswersFromBackend: QuestionAnswer[] = await new Promise((res, rej) => {
+    Promise.all(questionAnswerPromises).then(values => {
+      Promise.all(values.map(response => response.json())).then(jsons => {
+        const finalQuestionAnswers = jsons.map(j => j.data)
+        res(finalQuestionAnswers)
+      })
+    });
+  });
+
+  console.log(receivedAnswersFromBackend)
+
+  // const req = await get(`/link/${link_uuid}/`);
+  //
+  // const response = (await req.json()).data
+
+  return {
+    statusCode: 200,
+    message: [],
+    data: []
+  } as APIResponse<QuestionAnswer[]>;
 };
 
 export const apiPublishExam = async (test_id: string): Promise<APIResponse<any>> => {

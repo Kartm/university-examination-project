@@ -15,6 +15,10 @@ export class QuestionService
         return await this.questionRepository.find();
     }
 
+    async getQuestionsOfTest(test_id: string) {
+        return await this.questionRepository.find({where: {test: {test_id: test_id}}});
+    }
+
     async getOneQuestion(question: string) {
         return await this.questionRepository.findOne(question);
     }

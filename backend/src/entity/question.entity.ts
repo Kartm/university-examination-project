@@ -1,6 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, OneToOne, ManyToOne } from 'typeorm';
-import { questionTypeEntity } from './questionType.entity';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne} from 'typeorm';
 import { testEntity } from './test.entity';
+
+export enum QuestionTypeEnum {
+    OPEN = "OPEN",
+    SINGLE_CHOICE = "SINGLE_CHOICE",
+    MULTI_CHOICE = "MULTI_CHOICE"
+}
 
 @Entity("question")
 export class questionEntity{
@@ -8,13 +13,22 @@ export class questionEntity{
     @PrimaryGeneratedColumn('uuid')
     question_id: string;
 
+    @Column({ nullable: true })
+    test_id: string;
+
     @ManyToOne(() => testEntity, test => test.test_id)
-    @JoinColumn()
+    @JoinColumn({ name: "test_id" })
     test: testEntity
 
-    @OneToOne(() => questionTypeEntity)
-    @JoinColumn()
-    questionType: questionTypeEntity
+    @Column({
+        type: "enum",
+        enum: QuestionTypeEnum,
+    })
+    question_type: QuestionTypeEnum;
 
-    
+    @Column({length: 45})
+    name: string;
+
+    @Column()
+    points: number;
 }

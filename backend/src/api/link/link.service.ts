@@ -31,8 +31,9 @@ export class LinkService {
 
     async checkLink(linkFromPath: string) {
         const link = await this.linkRepository.findOne(linkFromPath)
+        console.log(link)
         if (!link) return null;
-        if (link.used) return null;
+        // if (link.used) return null;
         const participant = link.participant
         link.used = true;
         await this.linkRepository.update(link.link_id, link)

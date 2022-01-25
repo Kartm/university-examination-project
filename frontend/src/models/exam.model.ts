@@ -1,68 +1,75 @@
 export interface Settings {
-    id: string;
+    settings_id?: string;
     show_results_overview: boolean;
     allow_going_back: boolean;
     show_points_per_question: boolean;
 }
 
-export type SettingsDraft = Omit<Settings, 'id'>
-
 export interface QuestionChoice {
-    id: string;
+    questionChoice_id: string;
     question_id: string;
     text: string;
     is_correct: boolean;
 }
 
-export interface QuestionChoiceDraft extends Omit<Omit<QuestionChoice, 'id'>, 'question_id'> {id?: string; question_id?: string}
+export interface QuestionChoiceDraft extends Omit<Omit<QuestionChoice, 'questionChoice_id'>, 'question_id'> {questionChoice_id?: string; question_id?: string}
 
-export interface QuestionType {
-    id: string;
-    name: 'OPEN' | 'SINGLE_CHOICE' | 'MULTI_CHOICE';
+export enum QuestionTypeEnum {
+    OPEN = "OPEN",
+    SINGLE_CHOICE = "SINGLE_CHOICE",
+    MULTI_CHOICE = "MULTI_CHOICE"
 }
 
-export type QuestionTypeDraft = Omit<QuestionType, 'id'>
-
 export interface LocalQuestion {
-    id?: string;
+    question_id?: string;
     name: string;
-    question_type: QuestionType;
+    question_type: QuestionTypeEnum;
+    points: number;
     question_choices: QuestionChoiceDraft[];
 }
 
 export interface Question {
-    id: string;
+    question_id: string;
     name: string;
     test_id : string;
-    question_type_id : string;
+    points: number;
+    question_type : QuestionTypeEnum;
 }
 
 export interface Exam {
-    id: string;
-    name: string;
+    test_id: string;
+    owner_email: string;
     owner_name: string;
+    name: string;
+    settings_id: string;
+    time_end: string;
+    time_start: string;
+}
+
+export interface LocalExam extends Exam {
     settings: Settings;
     questions: LocalQuestion[];
 }
 
-export interface ExamDraft extends Omit<Omit<Omit<Exam, 'id'>, 'settings'>, 'questions'> {settings: SettingsDraft, questions: Question[]}
-
-export interface QuestionAnswer {
+export interface LocalQuestionAnswer {
     question_answer_id?: string;
     question_id: string;
     question_choice_ids: string[];
     answer_text: string | null;
-    seconds_spent?: number;
-    tab_focus_lost_count?: number;
-    // todo check_status
+}
+
+export interface QuestionAnswer {
+    questionAnswer_id?: string;
+    questionChoiceId: string;
+    participant_id: string;
+    answer_text: string | null;
 }
 
 export interface Participant {
-    id: string;
+    participant_id: string;
     test_id: string,
-  email: string,
-  name: string,
-  score: number,
+    email: string,
+    name: string,
 }
 
-export interface ParticipantDraft extends Omit<Omit<Participant, 'id'>, 'score'> {};
+export interface ParticipantDraft extends Omit<Participant, 'participant_id'> {};

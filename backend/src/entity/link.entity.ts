@@ -7,7 +7,7 @@ export class linkEntity{
     @PrimaryGeneratedColumn('uuid')
     link_id: string;
 
-    @OneToOne(() => participantEntity)
+    @OneToOne(() => participantEntity, {eager: true})
     @JoinColumn()
     participant?: participantEntity;
 

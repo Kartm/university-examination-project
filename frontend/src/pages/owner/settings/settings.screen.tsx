@@ -11,7 +11,6 @@ import Dropdown from "../../../components/forms/dropdown";
 import {
   createExam,
   getExamByUuid,
-  getQuestionTypes,
   UpdateExamSettings,
   updateExamSettings
 } from "../../../store/slices/exam.slice";
@@ -26,7 +25,6 @@ const SettingsScreen = () => {
   const [testName, setTestName] = useState('')
   const [ownerEmail, setOwnerEmail] = useState('')
   const [ownerName, setOwnerName] = useState('')
-  const [startDate, setStartDate] = useState('')
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
   const [selectedOptions, setSelectedOptions] = useState<string[]>([])
@@ -42,30 +40,30 @@ const SettingsScreen = () => {
   });
 
   useEffect(() => {
-    dispatch(getQuestionTypes());
-  }, []);
-
-  useEffect(() => {
-    dispatch(getExamByUuid(testOwnerUuid, examState.questionTypes));
-  }, [examState.questionTypes])
+    dispatch(getExamByUuid(testOwnerUuid));
+  }, [])
 
 
 
   const settings = [
-      "Show results overview",
-      "Allow going back to previous question",
+      // "Show results overview",
+      // "Allow going back to previous question",
       "Display points per question"
   ]
 
   function onNextButtonClicked() {
     // convert component's state to something backend will understand
-
+    console.log(startTime, endTime)
+    // .replace('T',' ').replace('-','/')
     const update: UpdateExamSettings = {
-      id: testOwnerUuid,
+      test_id: testOwnerUuid,
       name: testName,
       owner_name: ownerName,
+      owner_email: ownerEmail,
+      time_start: new Date(startTime).toISOString(), // 2022-01-25T08:32  to 2022-01-25T10:27:00.000Z
+      time_end: new Date(endTime).toISOString(),
       settings: {
-        id: examState.exam.settings.id,
+        settings_id: examState.exam.settings.settings_id,
         show_points_per_question: selectedOptions.includes('Display points per question'),
         show_results_overview: selectedOptions.includes('Show results overview'),
         allow_going_back: selectedOptions.includes('Allow going back to previous question')
@@ -102,10 +100,6 @@ const SettingsScreen = () => {
                 </div>
 
                 <div>
-                  Start Date
-                </div>
-
-                <div>
                   Test Duration
                 </div>
 
@@ -128,22 +122,12 @@ const SettingsScreen = () => {
                        placeholder='Write your name'
                        value={ownerName}
                        onChange={(e) => setOwnerName(e.target.value)}/>
-                <input type='text'
-                       onFocus={
-                         (e)=> {
-                           e.currentTarget.type = "date";
-                           e.currentTarget.focus();
-                         }
-                       }
-                       placeholder='Start Date'
-                       value={startDate}
-                       onChange={(e) => setStartDate(e.target.value)}/>
 
                 <div style={{display: 'flex', flexDirection: 'row'}}>
                   <input type='text'
                          onFocus={
                            (e)=> {
-                             e.currentTarget.type = "time";
+                             e.currentTarget.type = "datetime-local";
                              e.currentTarget.focus();
                            }
                          }
@@ -153,7 +137,7 @@ const SettingsScreen = () => {
                   <input type='text'
                          onFocus={
                            (e)=> {
-                             e.currentTarget.type = "time";
+                             e.currentTarget.type = "datetime-local";
                              e.currentTarget.focus();
                            }
                          }

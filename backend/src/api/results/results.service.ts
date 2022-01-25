@@ -7,7 +7,7 @@ import {participantEntity} from "../../entity/participant.entity";
 import {questionAnswerEntity} from "../../entity/questionAnswer.entity";
 import {ResultInterface} from "./interfaces/result.interface";
 import {QuestionAndQuestionAnswersInterface} from "./interfaces/questionAndQuestionAnswersInterface";
-import {questionEntity} from "../../entity/question.entity";
+import {questionEntity, QuestionTypeEnum} from "../../entity/question.entity";
 import {TestResultsInterface} from "./interfaces/testResults.interface";
 
 
@@ -28,13 +28,16 @@ export class ResultsService {
 
     async getResults(testId: string) {
         const test = await this.testRepository.findOne(testId);
-        const participants = await this.participantRepository.find(test);
+        const participants = await this.participantRepository.find({where : {test : test}});
 
         const testResult: TestResultsInterface = {test: test, results: []};
 
         for (const participant of participants) {
-            this.createResult(participant)
-                .then(result => testResult.results.push(result));
+            await this.createResult(participant)
+                .then(result => {
+                    // console.log(result)
+                    testResult.results.push(result)
+                });
         }
 
         return testResult;
@@ -42,7 +45,6 @@ export class ResultsService {
 
     private async createResult(participant: participantEntity) {
         const questionAnswers = await this.getQuestionsAnswersWithParticipantId(participant)
-
 
         const result: ResultInterface = {participant: participant, questionResults: []};
 
@@ -70,15 +72,16 @@ export class ResultsService {
                 questionAndQuestionAnswers.push(questionAndAnswer)
             }
 
+            // console.log(questionAndQuestionAnswers)
         }
 
         // Fill questionResults array with questionResults
-        questionAndQuestionAnswers.forEach(questionAndQuestionAnswer => {
-            this.createQuestionResult(questionAndQuestionAnswer)
+        for (const questionAndQuestionAnswer of questionAndQuestionAnswers) {
+            await this.createQuestionResult(questionAndQuestionAnswer)
                 .then(questionResult => {
                     result.questionResults.push(questionResult)
                 })
-        })
+        }
 
         return result
 
@@ -87,34 +90,33 @@ export class ResultsService {
     private async createQuestionResult(questionAndQuestionAnswer: QuestionAndQuestionAnswersInterface) {
         const question = questionAndQuestionAnswer.question;
 
-        // TODO add text to question interface
-        const questionText = "question.text";
-
-        const answerTexts = questionAndQuestionAnswer.questionAnswers.map(questionAnswer => questionAnswer.answer_text)
-
-        const allQuestionChoices = await this.getQuestionChoicesFromDatabase(question);
-
-        const correctQuestionChoices = allQuestionChoices.filter(questionChoice => questionChoice.is_correct)
-
         const answeredQuestionChoices = questionAndQuestionAnswer.questionAnswers.map(questionAnswer => questionAnswer.questionChoice)
 
-        // TODO Implement checking a text question
-        // check if for every correct question choice, there is an answer
-        const correct = correctQuestionChoices.every(correctQuestionChoice =>
-            !answeredQuestionChoices.every(questionChoice =>
-                questionChoice.questionChoice_id === correctQuestionChoice.questionChoice_id)
-        )
+        const answerTexts = answeredQuestionChoices.map(qc => qc.text)
 
+        const allCorrectQuestionChoices = (await this.getQuestionChoicesFromDatabase(question)).filter(questionChoice => questionChoice.is_correct);
 
-        let points = 0;
-        if (correct) {
-            points = 1;
+        let scoreForQuestion = 0
+
+        if(question.question_type === QuestionTypeEnum.MULTI_CHOICE) {
+            // participant must select all available correct question choices
+            const allQuestionChoicesCorrect = answeredQuestionChoices.every(qc => allCorrectQuestionChoices.includes(qc))
+
+            if(allQuestionChoicesCorrect) {
+                scoreForQuestion += question.points
+            }
+        } else {
+            const anyQuestionChoicesCorrect = answeredQuestionChoices.some(qc => qc.is_correct)
+
+            if(anyQuestionChoicesCorrect) {
+                scoreForQuestion += question.points
+            }
         }
 
         return {
-            questionText: questionText,
+            questionText: question.name,
             answerTexts: answerTexts,
-            points: points
+            points: scoreForQuestion
         };
     }
 

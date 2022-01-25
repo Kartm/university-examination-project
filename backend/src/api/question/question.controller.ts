@@ -7,13 +7,16 @@ export class QuestionController
 {
     constructor(private questionService : QuestionService) {}
 
-
     @Get()
-    getAllQuestion()
+    getQuestions(@Query('test_id') test_id: string)
     {
-        return this.questionService.getAllQuestions();
-    }
+        if(test_id) {
+            return this.questionService.getQuestionsOfTest(test_id);
+        } else {
+            return this.questionService.getAllQuestions();
+        }
 
+    }
 
     @Get(":id")
     getOneQuestion(@Param("id") question : string)

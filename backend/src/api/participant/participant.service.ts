@@ -32,7 +32,6 @@ export class ParticipantService {
         }
         existingParticipant.name = editedParticipant.name;
         existingParticipant.email = editedParticipant.email;
-        existingParticipant.score = editedParticipant.score;
 
         await this.participantRepository.save(existingParticipant);
         return editedParticipant;

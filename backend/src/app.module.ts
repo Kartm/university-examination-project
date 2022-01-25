@@ -15,6 +15,7 @@ import {QuestionAnswerModule} from './api/questionAnswer/questionAnswer.module';
 import {ParticipantModule} from './api/participant/participant.module';
 import {LinkModule} from './api/link/link.module';
 import {ResultsModule} from "./api/results/results.module";
+import {PublishModule} from "./api/publish/publishModule";
 
 @Module({
     imports: [
@@ -49,6 +50,7 @@ import {ResultsModule} from "./api/results/results.module";
         QuestionModule,
         QuestionAnswerModule,
         ParticipantModule,
+        PublishModule,
         LinkModule,
         ResultsModule
     ],

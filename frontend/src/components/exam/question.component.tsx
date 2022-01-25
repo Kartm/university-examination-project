@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from "react";
-import {LocalQuestion, Question, QuestionAnswer} from "../../models/exam.model";
+import {LocalQuestion, Question, LocalQuestionAnswer} from "../../models/exam.model";
 import styled from "styled-components";
 
 interface QuestionParams {
   localQuestion: LocalQuestion;
   showPoints: boolean;
   visible: boolean;
+  previewOnly?: boolean;
   onValidChange: (isValid: boolean) => void;
-  onAnswerChange: (answer: QuestionAnswer) => void;
+  onAnswerChange: (answer: LocalQuestionAnswer) => void;
 }
 
 const Wrapper = styled.div`
@@ -32,18 +33,14 @@ const Label = styled.label`
   margin-left: 8px;
 `
 
-const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, onAnswerChange}: QuestionParams) => {
+const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, onAnswerChange, previewOnly}: QuestionParams) => {
   const [selectedCheckboxIds, setSelectedCheckboxIds] = useState<string[]>([])
-
-  useEffect(() => {
-    console.log(localQuestion)
-  }, [])
 
   function onTextChange(e: React.ChangeEvent<HTMLInputElement>) {
       onValidChange(!!e.target.value)
 
-      const answer: QuestionAnswer = {
-        question_id: localQuestion.id,
+      const answer: LocalQuestionAnswer = {
+        question_id: localQuestion.question_id,
         question_choice_ids: [],
         answer_text: e.target.value
       }
@@ -54,8 +51,8 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
   function onRadioChange(question_choice_id: string) {
       onValidChange(true)
 
-    const answer: QuestionAnswer = {
-        question_id: localQuestion.id,
+    const answer: LocalQuestionAnswer = {
+        question_id: localQuestion.question_id,
         question_choice_ids: [question_choice_id],
         answer_text: null
       }
@@ -76,8 +73,8 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
 
     onValidChange(newSelectedCheckboxIds.length > 0)
 
-    const answer: QuestionAnswer = {
-      question_id: localQuestion.id,
+    const answer: LocalQuestionAnswer = {
+      question_id: localQuestion.question_id,
       question_choice_ids: newSelectedCheckboxIds,
       answer_text: null
     }
@@ -87,29 +84,34 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
 
   return (
     <Wrapper style={{display: visible ? 'flex':'none'}}>
-      <h2>{localQuestion.name} {showPoints && <i style={{fontSize: '10px'}}>({5} points)</i>}</h2>
+      <h2>{localQuestion.name} {showPoints && <i style={{fontSize: '10px'}}>({localQuestion.points} points)</i>}</h2>
 
-      <Divider/>
+      {previewOnly ? null :
+      <>
+        <Divider/>
 
-      {
-        localQuestion.question_type.name === 'OPEN' ?
-          <input type="text" required placeholder="Your answer here..." onChange={(e) => onTextChange(e)}/>
-          :
-          localQuestion.question_choices.map((choice, i) =>
-            <div key={i.toString()} style={{marginBottom: '8px'}}>
-              <input
-                type={localQuestion.question_type.name === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
-                required={localQuestion.question_type.name === 'SINGLE_CHOICE'}
-                name={localQuestion.id}
-                id={i.toString()}
-                onChange={() => {
-                  localQuestion.question_type.name === 'SINGLE_CHOICE' ? onRadioChange(choice.id) : onCheckboxChange(choice.id)
-                }}
-              />
-              <Label htmlFor={i.toString()}>{choice.text}</Label>
-            </div>
-          )
+        {
+          localQuestion.question_type === 'OPEN' ?
+            <input type="text" required placeholder="Your answer here..." onChange={(e) => onTextChange(e)}/>
+            :
+            localQuestion.question_choices.map((choice, i) =>
+              <div key={i.toString()} style={{marginBottom: '8px'}}>
+                <input
+                  type={localQuestion.question_type === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
+                  required={localQuestion.question_type === 'SINGLE_CHOICE'}
+                  name={localQuestion.question_id}
+                  id={i.toString()}
+                  onChange={() => {
+                    localQuestion.question_type === 'SINGLE_CHOICE' ? onRadioChange(choice.questionChoice_id) : onCheckboxChange(choice.questionChoice_id)
+                  }}
+                />
+                <Label htmlFor={i.toString()}>{choice.text}</Label>
+              </div>
+            )
+        }
+      </>
       }
+
 
     </Wrapper>
   );

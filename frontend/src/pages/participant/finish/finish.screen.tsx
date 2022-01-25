@@ -7,7 +7,7 @@ import Text from "../../../components/style/text.component";
 import {useDispatch, useSelector} from "react-redux";
 import {updateTitleAction} from "../../../store/slices/ui.slice";
 import {RootState} from "../../../store/configure.store";
-import {getExamByUuid, getQuestionTypes} from "../../../store/slices/exam.slice";
+import {getExamByUuid} from "../../../store/slices/exam.slice";
 
 interface ParticipateFinishParams {
   testParticipateUuid: string;
@@ -22,12 +22,8 @@ const ParticipateFinishScreen = () => {
   const examState = useSelector((state: RootState) => state.exam);
 
   useEffect(() => {
-    dispatch(getQuestionTypes());
-  }, []);
-
-  useEffect(() => {
-    dispatch(getExamByUuid(testParticipateUuid, examState.questionTypes));
-  }, [examState.questionTypes])
+    dispatch(getExamByUuid(testParticipateUuid));
+  }, [])
 
   useEffect(() => {
     dispatch(updateTitleAction(`Pass | ${examState.exam?.name || ''} - finish attempt`));
@@ -41,7 +37,6 @@ const ParticipateFinishScreen = () => {
           <div>Congratulations!</div>
           <br/>
         </Text>
-        <h3>Your points: {participantPoints}/{maxPoints}</h3>
       </Content>
     </Container>
   );

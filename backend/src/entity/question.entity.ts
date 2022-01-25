@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne } from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne, OneToOne} from 'typeorm';
 import { testEntity } from './test.entity';
+import {settingsEntity} from "./settings.entity";
 
 export enum QuestionTypeEnum {
     OPEN = "OPEN",
@@ -13,8 +14,11 @@ export class questionEntity{
     @PrimaryGeneratedColumn('uuid')
     question_id: string;
 
+    @Column({ nullable: true })
+    test_id: string;
+
     @ManyToOne(() => testEntity, test => test.test_id)
-    @JoinColumn()
+    @JoinColumn({ name: "test_id" })
     test: testEntity
 
     @Column({

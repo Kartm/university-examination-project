@@ -32,10 +32,7 @@ export const getExam = async (uuid: string): Promise<APIResponse<LocalExam>> => 
 
   const questionChoices = await questionsChoicesRequest.json()
 
-  console.log(examFromBackend, settings, questions)
-
   const mergedQuestionsWithChoices: LocalQuestion[] = (questions.data as Question[]).map(q => questionToLocalQuestion(q, questionChoices.data))
-  console.log(mergedQuestionsWithChoices)
 
   const localExam = {
     test_id: examFromBackend.test_id,

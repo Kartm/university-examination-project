@@ -21,13 +21,16 @@ it('fills the form', () => {
     const now = new Date();
     const inOneMinute = new Date(now.getTime() + 60_000 * 1)
     const inTwoMinutes = new Date(now.getTime() + 60_000 * 2)
-    const dateString = now.toISOString().split('T')[0]
-    cy.get('input').eq(0).type('kubaserdynski@gmail.com')
+
+    const formatDateForDatetimeField = (date) => {
+        return date.toISOString().substring(0, 16)
+    }
+
+    cy.get('input').eq(0).type('254597@student.pwr.edu.pl')
     cy.get('input').eq(1).type('TestTitle')
     cy.get('input').eq(2).type('OwnerName')
-    cy.get('input').eq(3).type(dateString)
-    cy.get('input').eq(4).type(`${inTwoMinutes.getHours()}:${inTwoMinutes.getMinutes()}`)
-    cy.get('input').eq(5).type(`${inOneMinute.getHours()}:${inOneMinute.getMinutes()}`)
+    cy.get('input').eq(3).type(formatDateForDatetimeField(inTwoMinutes), {delay: 100}).trigger('change')
+    cy.get('input').eq(4).type(formatDateForDatetimeField(inOneMinute), {delay: 100}).trigger('change')
 })
 
 it('navigates to adding participant page', () => {
@@ -36,7 +39,7 @@ it('navigates to adding participant page', () => {
 })
 
 it('adds a participant', () => {
-    const email = 'kubaserdynski@gmail.com'
+    const email = '254597@student.pwr.edu.pl'
     const name = 'PersonName'
     cy.get('input').eq(0).type(email)
     cy.get('input').eq(1).type(name)

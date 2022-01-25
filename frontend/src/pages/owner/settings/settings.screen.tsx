@@ -126,7 +126,7 @@ const SettingsScreen = () => {
                   <input type='text'
                          onFocus={
                            (e)=> {
-                             e.currentTarget.type = "time";
+                             e.currentTarget.type = "datetime-local";
                              e.currentTarget.focus();
                            }
                          }
@@ -136,7 +136,7 @@ const SettingsScreen = () => {
                   <input type='text'
                          onFocus={
                            (e)=> {
-                             e.currentTarget.type = "time";
+                             e.currentTarget.type = "datetime-local";
                              e.currentTarget.focus();
                            }
                          }

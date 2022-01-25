@@ -33,8 +33,11 @@ export class ResultsService {
         const testResult: TestResultsInterface = {test: test, results: []};
 
         for (const participant of participants) {
-            this.createResult(participant)
-                .then(result => testResult.results.push(result));
+            await this.createResult(participant)
+                .then(result => {
+                    console.log(result)
+                    testResult.results.push(result)
+                });
         }
 
         return testResult;
@@ -42,7 +45,6 @@ export class ResultsService {
 
     private async createResult(participant: participantEntity) {
         const questionAnswers = await this.getQuestionsAnswersWithParticipantId(participant)
-
 
         const result: ResultInterface = {participant: participant, questionResults: []};
 
@@ -70,15 +72,16 @@ export class ResultsService {
                 questionAndQuestionAnswers.push(questionAndAnswer)
             }
 
+            // console.log(questionAndQuestionAnswers)
         }
 
         // Fill questionResults array with questionResults
-        questionAndQuestionAnswers.forEach(questionAndQuestionAnswer => {
-            this.createQuestionResult(questionAndQuestionAnswer)
+        for (const questionAndQuestionAnswer of questionAndQuestionAnswers) {
+            await this.createQuestionResult(questionAndQuestionAnswer)
                 .then(questionResult => {
                     result.questionResults.push(questionResult)
                 })
-        })
+        }
 
         return result
 
@@ -86,9 +89,6 @@ export class ResultsService {
 
     private async createQuestionResult(questionAndQuestionAnswer: QuestionAndQuestionAnswersInterface) {
         const question = questionAndQuestionAnswer.question;
-
-        // TODO add text to question interface
-        const questionText = "question.text";
 
         const answerTexts = questionAndQuestionAnswer.questionAnswers.map(questionAnswer => questionAnswer.answer_text)
 
@@ -112,7 +112,7 @@ export class ResultsService {
         }
 
         return {
-            questionText: questionText,
+            questionText: question.name,
             answerTexts: answerTexts,
             points: points
         };

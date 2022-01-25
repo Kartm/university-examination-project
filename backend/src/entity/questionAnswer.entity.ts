@@ -11,8 +11,8 @@ export class questionAnswerEntity{
     @Column({ nullable: true })
     questionChoiceId: string;
 
-    @OneToOne(() => questionChoiceEntity)
-    @JoinColumn({ name: "questionChoiceId" })
+    @OneToOne(() => questionChoiceEntity, {eager: true})
+    @JoinColumn({ name: "questionChoiceId"})
     questionChoice: questionChoiceEntity;
 
     @Column({ nullable: true })

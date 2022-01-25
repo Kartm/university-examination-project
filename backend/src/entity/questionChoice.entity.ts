@@ -10,7 +10,7 @@ export class questionChoiceEntity{
     @Column({ nullable: true })
     question_id: string;
     
-    @ManyToOne(() => questionEntity)
+    @ManyToOne(() => questionEntity, {eager: true})
     @JoinColumn({ name: "question_id" })
     question: questionEntity;
 

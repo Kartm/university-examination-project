@@ -7,7 +7,7 @@ import Button from "../../../components/forms/button.component";
 import Text from "../../../components/style/text.component";
 import {useDispatch, useSelector} from "react-redux";
 import {updateTitleAction} from "../../../store/slices/ui.slice";
-import {getExamByUuid} from "../../../store/slices/exam.slice";
+import {getExamByUuid, getParticipantByLinkUuid} from "../../../store/slices/exam.slice";
 import {RootState} from "../../../store/configure.store";
 
 interface ParticipateParams {
@@ -26,6 +26,7 @@ const ParticipateScreen = () => {
 
   useEffect(() => {
     dispatch(getExamByUuid(testParticipateUuid));
+    dispatch(getParticipantByLinkUuid(testParticipateUuid));
   }, [])
 
   useEffect(() => {
@@ -55,6 +56,10 @@ const ParticipateScreen = () => {
       <Content>
         <Text h1 style={{ marginBottom: 20 }}>
           {examState.exam?.name || ''}
+          <br/>
+        </Text>
+        <Text h2 style={{ marginBottom: 20 }}>
+          Hello {examState.participant?.name || ''}
           <br/>
         </Text>
         <Text h2 style={{ marginBottom: 20 }}>

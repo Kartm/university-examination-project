@@ -198,6 +198,18 @@ export const apiUpdateExamQuestions = async (update: UpdateExamQuestions): Promi
   } as APIResponse<{questions: Question[], questionChoices: QuestionChoice[]}>;
 };
 
+export const apiGetParticipantByLinkUuid = async (link_uuid: string): Promise<APIResponse<Participant>> => {
+  const req = await get(`/link/${link_uuid}/`);
+
+  const response = (await req.json()).data
+
+  return {
+    statusCode: 200,
+    message: [],
+    data: response
+  } as APIResponse<Participant>;
+};
+
 export const apiPublishExam = async (test_id: string): Promise<APIResponse<any>> => {
   const req = await get(`/publish/${test_id}/`);
 

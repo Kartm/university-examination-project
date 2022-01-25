@@ -1,19 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   Exam, LocalExam,
-  LocalQuestion,
+  LocalQuestion, Participant,
   ParticipantDraft,
   Question, QuestionChoice,
   Settings
 } from "../../models/exam.model";
 import {
-  apiCreateExam,
+  apiCreateExam, apiGetParticipantByLinkUuid,
   apiPublishExam, apiUpdateExamParticipants, apiUpdateExamQuestions, apiUpdateExamSettings,
   getExam
 } from "../../services/exam.service";
 
 export interface State {
   exam: LocalExam | null,
+  participant: Participant | null,
 }
 
 export interface UpdateExamSettings {
@@ -48,16 +49,20 @@ const slice = createSlice({
   name: "exam",
   initialState: {
     exam: null,
+    participant: null,
   } as State,
   reducers: {
     setExam: (state, action) => {
       state.exam = action.payload;
     },
+    setParticipant: (state, action) => {
+      state.participant = action.payload;
+    },
   },
 });
 export default slice.reducer;
 
-const { setExam } = slice.actions;
+const { setExam, setParticipant} = slice.actions;
 export const createExam = () => async (dispatch) => {
   try {
     const exam = await apiCreateExam();
@@ -70,6 +75,14 @@ export const getExamByUuid = (uuid: string) => async (dispatch) => {
   try {
     const exam = await getExam(uuid);
     return dispatch(setExam(exam.data));
+  } catch (e) {
+    return console.error(e.message);
+  }
+};
+export const getParticipantByLinkUuid = (uuid: string) => async (dispatch) => {
+  try {
+    const participant = await apiGetParticipantByLinkUuid(uuid);
+    return dispatch(setParticipant(participant.data));
   } catch (e) {
     return console.error(e.message);
   }

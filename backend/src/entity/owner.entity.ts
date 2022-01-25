@@ -1,8 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { OwnerInterface } from '../api/owner/interfaces/owner.interface';
 
 @Entity("owner")
-export class ownerEntity implements OwnerInterface {
+export class ownerEntity{
 
     @PrimaryGeneratedColumn('uuid')
     owner_id: string;
@@ -10,5 +9,7 @@ export class ownerEntity implements OwnerInterface {
     @Column({length: 45})
     name: string;
 
-    
+    @Column({length: 45})
+    email: string;
+
 }

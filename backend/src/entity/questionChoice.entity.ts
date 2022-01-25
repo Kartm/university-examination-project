@@ -1,15 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne } from 'typeorm';
-import { QuestionChoiceInterface } from '../api/questionChoice/interfaces/questionChoice.interface';
+import {Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne, ManyToOne} from 'typeorm';
 import { questionEntity } from './question.entity';
 
 @Entity("questionChoice")
-export class questionChoiceEntity implements QuestionChoiceInterface {
+export class questionChoiceEntity{
 
     @PrimaryGeneratedColumn('uuid')
     questionChoice_id: string;
+
+    @Column({ nullable: true })
+    question_id: string;
     
-    @OneToOne(() => questionEntity)
-    @JoinColumn()
+    @ManyToOne(() => questionEntity, {eager: true})
+    @JoinColumn({ name: "question_id" })
     question: questionEntity;
 
     @Column()

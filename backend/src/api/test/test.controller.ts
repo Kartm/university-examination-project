@@ -9,7 +9,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { TestService } from './test.service';
-import { TestInterface } from './interfaces/test.interface';
 import { testEntity } from 'src/entity/test.entity';
 
 @Controller('tests')
@@ -22,8 +21,8 @@ export class TestsController {
   }
 
   @Get(':id')
-  getOneTest(@Param('id') test: testEntity) {
-    return this.service.getOneTest(test);
+  getOneTest(@Param('id') test_id: string) {
+    return this.service.getOneTest(test_id);
   }
 
   @Post()

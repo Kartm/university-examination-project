@@ -5,27 +5,28 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { TestInterface } from '../api/test/interfaces/test.interface';
 import { ownerEntity } from './owner.entity';
 import { settingsEntity } from './settings.entity';
 
 @Entity('test')
-export class testEntity implements TestInterface {
+export class testEntity{
   @PrimaryGeneratedColumn('uuid')
   test_id: string;
 
+  @Column({ nullable: true })
+  settings_id: number;
+
   @OneToOne(() => settingsEntity, { eager: true })
-  @JoinColumn()
+  @JoinColumn({ name: "settings_id" })
   setting: settingsEntity;
 
-  @OneToOne(() => ownerEntity, { eager: true })
-  @JoinColumn()
-  owner: ownerEntity;
+  @Column({ length: 45, default: '' })
+  owner_email: string;
 
-  @Column({ length: 45 })
-  owner_link?: string;
+  @Column({ length: 45, default: '' })
+  owner_name: string;
 
-  @Column({ length: 45 })
+  @Column({ length: 45, default: '' })
   name: string;
 
   @Column({default : '1970-01-01 00:00:00'})

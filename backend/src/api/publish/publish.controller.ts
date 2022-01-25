@@ -1,7 +1,9 @@
-import {Controller, Get, Param, Post} from "@nestjs/common";
+import {Body, Controller, Get, Param, Post} from "@nestjs/common";
 import {publishService} from "./publish.service";
+import {ownerEntity} from "../../entity/owner.entity";
+import {testEntity} from "../../entity/test.entity";
 
-@Controller()
+@Controller('publish')
 export class publishController{
     constructor(private publishService: publishService) {
     }

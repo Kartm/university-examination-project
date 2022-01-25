@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 import styled from "styled-components";
 import {useState} from 'react'
 import colors from '../../themes/colors.theme';
-import {LocalQuestion, Question, QuestionChoice, QuestionChoiceDraft, QuestionType} from "../../models/exam.model";
+import {LocalQuestion, Question, QuestionChoice, QuestionChoiceDraft, QuestionTypeEnum} from "../../models/exam.model";
 
 const DropdownButton = styled.button`
   background-color: ${colors["primary"]};
@@ -41,23 +41,17 @@ const DropdownWrapper = styled.div`
   }`
 
 const Wrapper = styled.div`
-  background-color: ${colors["secondary"]};
   display: flex;
   flex-direction: column;
   width: 100%;
   max-width: 450px;
+  height: 80%;
   border-radius: 8px;
-  padding: 16px;
-  box-sizing: border-box;`
-
-const Divider = styled.div`
-    background-color: #ccc;
-    width: 100%;
-    height: 0.5px;
-    margin: 16px 0;`
+  padding: 16px 0 16px 10%;
+  box-sizing: border-box;
+  margin: 0;`
 
 const PopupInput = styled.input`
-  width: 100%; 
   height: 20px;
   padding: 16px;
   font-size: 16px;`
@@ -66,22 +60,32 @@ const Label = styled.label`
   margin-left: 8px;
 `
 
+const SaveButton = styled.button`
+  background-color: ${colors["primary"]};
+  color: ${colors["secondary"]};
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  width: 15vh;
+  position: absolute;
+  margin-top: 62.3vh;
+  margin-left: 27vh`
+
 interface AddQuestionParams {
     onAddQuestion : (localQuestion: LocalQuestion) => void
     onClose : () => void
-    questionTypes: QuestionType[];
 }
 
 const AddQuestion= (props: AddQuestionParams) => {
     const [openSelection, setOpenSelection] = useState(false)
-    const [questionType, setQuestionType] = useState<QuestionType | null>(null)
+    const [questionType, setQuestionType] = useState<QuestionTypeEnum | null>(null)
     const [questionText, setQuestionText] = useState('')
     const [optionText, setOptionText] = useState("")
     const [points, setPoints] = useState(0)
     const [questionChoices, setQuestionChoices] = useState<QuestionChoiceDraft[]>([])
     const [idForRadio, setIdForRadio] = useState(-1)
 
-    function handleQuestionTypeChange(questionType: QuestionType) {
+    function handleQuestionTypeChange(questionType: QuestionTypeEnum) {
         setQuestionType(questionType)
         setOpenSelection(false)
     }
@@ -91,6 +95,7 @@ const AddQuestion= (props: AddQuestionParams) => {
             name: questionText,
             question_choices: questionChoices,
             question_type: questionType,
+            points
         }
 
         props.onAddQuestion(question)
@@ -128,6 +133,27 @@ const AddQuestion= (props: AddQuestionParams) => {
         'MULTI_CHOICE': 'Multiple Choice Answer',
     }
 
+    const getQuestionTypeDropdownOptions = () => {
+        const results = [];
+
+        for (const q in QuestionTypeEnum) {
+            const questionEnumValue: QuestionTypeEnum = QuestionTypeEnum[q as keyof typeof QuestionTypeEnum];
+
+
+            results.push(<a
+              key={questionEnumValue}
+              style={{cursor:'pointer'}}
+              onClick={() => {
+                  handleQuestionTypeChange(questionEnumValue)
+              }}>
+                {questionTypeToString[questionEnumValue]}
+            </a>)
+        }
+
+        return results;
+    }
+
+
     return(
         <Wrapper>
             <PopupInput type="text" required placeholder="Please write your question here" onChange={(e) => setQuestionText(e.target.value)}/>
@@ -135,37 +161,32 @@ const AddQuestion= (props: AddQuestionParams) => {
                 <DropdownButton onClick={(e) => {setOpenSelection(!openSelection)
                     e.preventDefault()
                 }}>
-                    {questionType === null ? 'Select question type' : questionTypeToString[questionType.name]}
+                    {questionType === null ? 'Select question type' : questionTypeToString[questionType]}
                 </DropdownButton>
 
                 {openSelection && <DropdownContent>
-                    {props.questionTypes.map(qt =>
-                      <a
-                        key={qt.id}
-                        style={{cursor:'pointer'}}
-                        onClick={() => {
-                            handleQuestionTypeChange(qt)
-                        }}>
-                          {questionTypeToString[qt.name]}
-                      </a>
-                    )}
+                    {getQuestionTypeDropdownOptions()}
                 </DropdownContent>}
             </DropdownWrapper>
+            <br/>
             <input type="number" onChange={(e) => setPoints(Number(e.target.value))} required placeholder="Please write the number of points for this exercise" />
-            <Divider/>
+
             {/*question options go here*/}
 
+            <h3 style={{marginBottom: "0"}}>Answer Options</h3>
+            <p style={{color: "lightgrey", marginTop: "5px"}}>When you add question options please mark the correct ones by selecting them</p>
             {questionType !== null && questionChoices.length > 0 &&
+
                     questionChoices.map((choice, i) =>
                     <div key={i}>
                         <input
-                            type={questionType.name === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
-                            required={questionType.name === 'SINGLE_CHOICE'}
+                            type={questionType === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
+                            required={questionType === 'SINGLE_CHOICE'}
                             name="Answer Choice"
                             value={choice.text}
                             id={i.toString()}
                             onChange={() => {
-                                questionType.name === 'SINGLE_CHOICE' ?
+                                questionType === 'SINGLE_CHOICE' ?
                                     setQuestionChoices(
                                         questionChoices.map((qc, j) =>  ({...qc, is_correct: j === i}))
                                     ) : handleCheck(i)
@@ -189,9 +210,9 @@ const AddQuestion= (props: AddQuestionParams) => {
 
 
 
-        <button onClick={
+        <SaveButton onClick={
             () => handleQuestionSave()
-        }>Save</button>
+        }>Save</SaveButton>
         </Wrapper>
     )
 }

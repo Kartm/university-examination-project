@@ -24,9 +24,7 @@ const FinishScreen = () => {
   });
 
   function onPublish() {
-    console.log('publish')
-    console.log(examState.exam)
-    dispatch(publishExam(examState.exam))
+    dispatch(publishExam(testOwnerUuid))
   }
 
   return (
@@ -36,7 +34,7 @@ const FinishScreen = () => {
           <b>You</b> will now receive an email with a link to examination results.
         </Text>
         <Text style={{ marginBottom: 20 }}>
-          <b>Every student</b> will receive an emails with a link to the examination <b>15 minutes</b> before it starts.
+          <b>Every student</b> will now receive an emails with a link to the examination.
         </Text>
         <Button onClick={() => onPublish()} text="Publish"/>
       </Content>

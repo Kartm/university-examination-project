@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import {useState} from 'react'
-import Text from "../../components/style/text.component";
+import colors from "../../themes/colors.theme";
 import AddQuestion from "./add.question";
 
 const PopupWrapper = styled.div`
@@ -23,6 +23,15 @@ const PopupInner = styled.div`
   background-color: #fff`
 
 const PopupCancel = styled.button`
+  background-color: lightgrey;
+  color: ${colors["dark"]};
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  width: 15vh;
+  max-width: 450px;
+  position: absolute;
+  margin-left: 17vh;
 `
 
 

@@ -1,31 +1,30 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  Exam,
-  ExamDraft,
-  LocalQuestion,
+  Exam, LocalExam,
+  LocalQuestion, LocalQuestionAnswer, Participant,
   ParticipantDraft,
   Question, QuestionChoice,
-  QuestionType,
   Settings
 } from "../../models/exam.model";
 import {
-  apiCreateExam,
-  apiGetExamTemplates, apiGetQuestionTypes,
-  apiPublishExam, apiUpdateExamParticipants, apiUpdateExamQuestions, apiUpdateExamSettings,
-  apiUseExamTemplate,
+  apiCreateExam, apiGetParticipantByLinkUuid, apiGetExamResults,
+  apiPublishExam, apiSendParticipantAnswers, apiUpdateExamParticipants, apiUpdateExamQuestions, apiUpdateExamSettings,
   getExam
 } from "../../services/exam.service";
 
 export interface State {
-  exam: Exam | null,
-  examTemplates: ExamDraft[],
-  questionTypes: QuestionType[];
+  exam: LocalExam | null,
+  participant: Participant | null,
+  examResults: ExamResults | null,
 }
 
 export interface UpdateExamSettings {
-  id: string;
+  test_id: string;
   name: string;
   owner_name: string;
+  owner_email: string;
+  time_start: string;
+  time_end: string;
   settings: Settings;
 }
 
@@ -38,12 +37,27 @@ export interface UpdateExamQuestions {
   testId: string;
 }
 
-export const questionToLocalQuestion = (q: Question, questionChoices: QuestionChoice[], questionTypes: QuestionType[]): LocalQuestion => (
+export interface ExamSpecificResult {
+  participant: Participant,
+  questionResults: {
+    answerTexts: string[],
+    points: number,
+    questionText: string;
+  }[]
+}
+
+export interface ExamResults {
+  results: ExamSpecificResult[],
+  test: Exam
+}
+
+export const questionToLocalQuestion = (q: Question, questionChoices: QuestionChoice[]): LocalQuestion => (
   {
-    id: q.id,
+    question_id: q.question_id,
     name: q.name,
-    question_type: questionTypes.find(qt => qt.id === q.question_type_id)!,
-    question_choices: questionChoices.filter(qc => qc.question_id === q.id),
+    question_type: q.question_type,
+    question_choices: questionChoices.filter(qc => qc.question_id === q.question_id),
+    points: q.points
   }
 )
 
@@ -51,24 +65,24 @@ const slice = createSlice({
   name: "exam",
   initialState: {
     exam: null,
-    examTemplates: [],
-    questionTypes: [],
+    participant: null,
+    examResults: null,
   } as State,
   reducers: {
     setExam: (state, action) => {
       state.exam = action.payload;
     },
-    setExamTemplates: (state, action) => {
-      state.examTemplates = action.payload;
+    setParticipant: (state, action) => {
+      state.participant = action.payload;
     },
-    setQuestionTypes: (state, action) => {
-      state.questionTypes = action.payload;
+    setExamResults: (state, action) => {
+      state.examResults = action.payload;
     },
   },
 });
 export default slice.reducer;
 
-const { setExam, setExamTemplates, setQuestionTypes} = slice.actions;
+const { setExam, setParticipant, setExamResults} = slice.actions;
 export const createExam = () => async (dispatch) => {
   try {
     const exam = await apiCreateExam();
@@ -77,34 +91,28 @@ export const createExam = () => async (dispatch) => {
     return console.error(e.message);
   }
 };
-export const getExamByUuid = (uuid: string, questionTypes: QuestionType[]) => async (dispatch) => {
+export const getExamByUuid = (uuid: string) => async (dispatch) => {
   try {
-    const exam = await getExam(uuid, questionTypes);
+    const exam = await getExam(uuid);
     return dispatch(setExam(exam.data));
   } catch (e) {
     return console.error(e.message);
   }
 };
-export const getExamTemplates = () => async (dispatch) => {
+export const getParticipantByLinkUuid = (uuid: string) => async (dispatch) => {
   try {
-    const exam = await apiGetExamTemplates();
-    return dispatch(setExamTemplates(exam.data));
+    const participant = await apiGetParticipantByLinkUuid(uuid);
+    return dispatch(setParticipant(participant.data));
   } catch (e) {
     return console.error(e.message);
   }
 };
-export const useExamTemplate = (examTemplate: ExamDraft) => async (dispatch) => {
+export const publishExam = (test_id: string) => async (dispatch) => {
   try {
-    const exam = await apiUseExamTemplate(examTemplate);
-    return dispatch(setExam(exam.data));
-  } catch (e) {
-    return console.error(e.message);
-  }
-};
-export const publishExam = (exam: Exam) => async (dispatch) => {
-  try {
-    const publishedExam = await apiPublishExam(exam);
-    return dispatch(setExam(publishedExam.data));
+    const response = await apiPublishExam(test_id);
+    console.log(response)
+    return true;
+    // return dispatch(setExam(publishedExam.data));
   } catch (e) {
     return console.error(e.message);
   }
@@ -125,6 +133,14 @@ export const updateExamParticipants = (update: UpdateExamParticipants) => async 
     return console.error(e.message);
   }
 };
+export const sendQuestionAnswers = (questionAnswers: LocalQuestionAnswer[], participant_uuid: string) => async (dispatch) => {
+  try {
+    await apiSendParticipantAnswers(questionAnswers, participant_uuid);
+    return true;
+  } catch (e) {
+    return console.error(e.message);
+  }
+};
 export const updateExamQuestions = (update: UpdateExamQuestions) => async (dispatch) => {
   try {
     await apiUpdateExamQuestions(update);
@@ -133,10 +149,10 @@ export const updateExamQuestions = (update: UpdateExamQuestions) => async (dispa
     return console.error(e.message);
   }
 };
-export const getQuestionTypes = () => async (dispatch) => {
+export const getExamResults = (test_id: string) => async (dispatch) => {
   try {
-    const questionTypes = await apiGetQuestionTypes();
-    return dispatch(setQuestionTypes(questionTypes.data));
+    const results = await apiGetExamResults(test_id);
+    return dispatch(setExamResults(results.data));
   } catch (e) {
     return console.error(e.message);
   }

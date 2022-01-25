@@ -90,15 +90,11 @@ export class ResultsService {
     private async createQuestionResult(questionAndQuestionAnswer: QuestionAndQuestionAnswersInterface) {
         const question = questionAndQuestionAnswer.question;
 
-        let answerTexts = questionAndQuestionAnswer.questionAnswers.filter(questionAnswer => questionAnswer.answer_text !== '').map(questionAnswer => questionAnswer.answer_text)
-
         const answeredQuestionChoices = questionAndQuestionAnswer.questionAnswers.map(questionAnswer => questionAnswer.questionChoice)
 
-        answerTexts = [...answerTexts, ...answeredQuestionChoices.map(qc => qc.text)]
+        const answerTexts = answeredQuestionChoices.map(qc => qc.text)
 
         const allCorrectQuestionChoices = (await this.getQuestionChoicesFromDatabase(question)).filter(questionChoice => questionChoice.is_correct);
-
-        // TODO Implement checking a text question
 
         let scoreForQuestion = 0
 

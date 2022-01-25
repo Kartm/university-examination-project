@@ -28,7 +28,7 @@ export class ResultsService {
 
     async getResults(testId: string) {
         const test = await this.testRepository.findOne(testId);
-        const participants = await this.participantRepository.find({where : {test : test}});
+        const participants = await this.participantRepository.find({where: {test: test}});
 
         const testResult: TestResultsInterface = {test: test, results: []};
 
@@ -92,25 +92,34 @@ export class ResultsService {
 
         const answeredQuestionChoices = questionAndQuestionAnswer.questionAnswers.map(questionAnswer => questionAnswer.questionChoice)
 
+
         const answerTexts = answeredQuestionChoices.map(qc => qc.text)
 
-        const allCorrectQuestionChoices = (await this.getQuestionChoicesFromDatabase(question)).filter(questionChoice => questionChoice.is_correct);
+        const allCorrectQuestionChoices = (await this.getQuestionChoicesFromDatabase(question))
+
 
         let scoreForQuestion = 0
 
-        if(question.question_type === QuestionTypeEnum.MULTI_CHOICE) {
-            // participant must select all available correct question choices
-            const allQuestionChoicesCorrect = answeredQuestionChoices.every(qc => allCorrectQuestionChoices.includes(qc))
+        switch (question.question_type) {
+            case QuestionTypeEnum.MULTI_CHOICE: // participant must select all available correct question choices
+                // const allQuestionChoicesCorrect = answeredQuestionChoices.every(qc => {return allCorrectQuestionChoices.includes(qc)})
 
-            if(allQuestionChoicesCorrect) {
-                scoreForQuestion += question.points
-            }
-        } else {
-            const anyQuestionChoicesCorrect = answeredQuestionChoices.some(qc => qc.is_correct)
+                const allQuestionChoicesCorrect = answeredQuestionChoices.every(answeredQuestionChoice => {
+                    return allCorrectQuestionChoices.some(allCorrectQuestionChoice => allCorrectQuestionChoice.questionChoice_id === answeredQuestionChoice.questionChoice_id)
+                })
 
-            if(anyQuestionChoicesCorrect) {
-                scoreForQuestion += question.points
-            }
+
+                if (allQuestionChoicesCorrect) {
+                    scoreForQuestion += question.points
+                }
+                break;
+            default:
+                const anyQuestionChoicesCorrect = answeredQuestionChoices.some(qc => qc.is_correct)
+
+                if (anyQuestionChoicesCorrect) {
+                    scoreForQuestion += question.points
+                }
+                break;
         }
 
         return {
@@ -122,7 +131,7 @@ export class ResultsService {
 
 
     private async getQuestionsAnswersWithParticipantId(participant: participantEntity) {
-        return this.questionAnswerRepository.find( {where : {participant : participant}});
+        return this.questionAnswerRepository.find({where: {participant: participant}});
     }
 
 

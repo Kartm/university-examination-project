@@ -26,7 +26,7 @@ describe('Create exam flow', () => {
         cy.get('button').click()
     })
 
-    it('Chooses a template', () => {
+    it('Navigates to editor page', () => {
         cy.url().should('include', '/editor')
     })
 

@@ -6,7 +6,7 @@ import Content from "../../../components/style/content.component";
 import Button from "../../../components/forms/button.component";
 import Text from "../../../components/style/text.component";
 import {useDispatch, useSelector} from "react-redux";
-import {updateTitleAction} from "../../../store/slices/ui.slice";
+import {updateTimeLeft, updateTitleAction} from "../../../store/slices/ui.slice";
 import {RootState} from "../../../store/configure.store";
 import {getExamByUuid, updateExamSettings, sendQuestionAnswers} from "../../../store/slices/exam.slice";
 import QuestionComponent from "../../../components/exam/question.component";
@@ -41,6 +41,13 @@ const ParticipateQuestionsScreen = () => {
 
   useEffect(() => {
     dispatch(getExamByUuid(testParticipateUuid));
+
+    setInterval(() => {
+      if(examState.exam.time_end) {
+        const endDate = new Date(Date.parse(examState.exam.time_end))
+        dispatch(updateTimeLeft(`Pass | ${examState.exam?.name || ''}`, endDate));
+      }
+    }, 1000);
   }, [])
 
   useEffect(() => {
@@ -51,7 +58,7 @@ const ParticipateQuestionsScreen = () => {
 
   useEffect(() => {
     dispatch(updateTitleAction(`Pass | ${examState.exam?.name || ''}`));
-  });
+  }, [examState.exam]);
 
 
   function questionValidChange(question: LocalQuestion, isValid: boolean) {

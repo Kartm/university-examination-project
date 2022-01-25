@@ -18,3 +18,11 @@ export const updateTitleAction = (title: string) => async (dispatch) => {
   document.title = title;
   dispatch(updateTitle(title));
 };
+export const updateTimeLeft = (title, time_end: Date) => async (dispatch) => {
+  const diff = Math.abs(time_end.getTime() - new Date().getTime());
+
+  const minutes = Math.floor((diff/1000)/60);
+
+  document.title = `${title} | ${minutes} minutes left`;
+  dispatch(updateTitle(document.title));
+};

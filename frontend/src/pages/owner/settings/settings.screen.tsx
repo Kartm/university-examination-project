@@ -46,8 +46,8 @@ const SettingsScreen = () => {
 
 
   const settings = [
-      "Show results overview",
-      "Allow going back to previous question",
+      // "Show results overview",
+      // "Allow going back to previous question",
       "Display points per question"
   ]
 

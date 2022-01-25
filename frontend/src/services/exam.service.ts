@@ -151,6 +151,7 @@ export const apiUpdateExamQuestions = async (update: UpdateExamQuestions): Promi
     name: lc.name,
     question_type: lc.question_type,
     test_id: update.testId,
+    points: lc.points,
   })
 
   const questionPromises = update.questions.map(localQuestionToQuestion).map(question => "question_id" in question ?

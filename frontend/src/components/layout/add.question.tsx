@@ -95,6 +95,7 @@ const AddQuestion= (props: AddQuestionParams) => {
             name: questionText,
             question_choices: questionChoices,
             question_type: questionType,
+            points
         }
 
         props.onAddQuestion(question)

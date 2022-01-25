@@ -24,6 +24,7 @@ export interface LocalQuestion {
     question_id?: string;
     name: string;
     question_type: QuestionTypeEnum;
+    points: number;
     question_choices: QuestionChoiceDraft[];
 }
 
@@ -31,6 +32,7 @@ export interface Question {
     question_id: string;
     name: string;
     test_id : string;
+    points: number;
     question_type : QuestionTypeEnum;
 }
 

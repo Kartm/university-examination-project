@@ -83,7 +83,7 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
 
   return (
     <Wrapper style={{display: visible ? 'flex':'none'}}>
-      <h2>{localQuestion.name} {showPoints && <i style={{fontSize: '10px'}}>({5} points)</i>}</h2>
+      <h2>{localQuestion.name} {showPoints && <i style={{fontSize: '10px'}}>({localQuestion.points} points)</i>}</h2>
 
       <Divider/>
 

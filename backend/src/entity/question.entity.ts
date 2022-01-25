@@ -28,4 +28,7 @@ export class questionEntity{
 
     @Column({length: 45})
     name: string;
+
+    @Column()
+    points: number;
 }

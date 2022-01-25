@@ -57,6 +57,7 @@ export const questionToLocalQuestion = (q: Question, questionChoices: QuestionCh
     name: q.name,
     question_type: q.question_type,
     question_choices: questionChoices.filter(qc => qc.question_id === q.question_id),
+    points: q.points
   }
 )
 

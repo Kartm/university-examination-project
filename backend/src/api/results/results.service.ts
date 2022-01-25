@@ -90,9 +90,11 @@ export class ResultsService {
     private async createQuestionResult(questionAndQuestionAnswer: QuestionAndQuestionAnswersInterface) {
         const question = questionAndQuestionAnswer.question;
 
-        const answerTexts = questionAndQuestionAnswer.questionAnswers.map(questionAnswer => questionAnswer.answer_text)
+        let answerTexts = questionAndQuestionAnswer.questionAnswers.filter(questionAnswer => questionAnswer.answer_text !== '').map(questionAnswer => questionAnswer.answer_text)
 
         const answeredQuestionChoices = questionAndQuestionAnswer.questionAnswers.map(questionAnswer => questionAnswer.questionChoice)
+
+        answerTexts = [...answerTexts, ...answeredQuestionChoices.map(qc => qc.text)]
 
         const allCorrectQuestionChoices = (await this.getQuestionChoicesFromDatabase(question)).filter(questionChoice => questionChoice.is_correct);
 

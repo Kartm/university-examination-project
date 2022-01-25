@@ -112,22 +112,20 @@ export class TestService {
   }
 
   async getOneTest(test_id: string) {
-    console.log(test_id)
+    const relatedOwnedTest = await this.testRepository.findOne(test_id);
+    if (relatedOwnedTest === undefined) {
+      const relatedParticipateLink = await this.linkRepository.findOne({where: {link_id: test_id}});
 
-    const foundOwnedTest = await this.testRepository.findOne(test_id);
-    if (foundOwnedTest === undefined) {
-      const participateLink = await this.linkRepository.findOne({where: {link_id: test_id}});
-
-      console.log(participateLink.participant)
-      // const participant = await this.participantRepository.findOne({where: {li: participateLink.participant}})
-
-      if(participateLink === undefined) {
+      if(relatedParticipateLink === undefined) {
         throw new BadRequestException('Invalid test id');
       }
 
-      return participateLink;
+      // participant flow
+      return relatedParticipateLink.participant.test;
     }
-    return foundOwnedTest;
+
+    // owner flow
+    return relatedOwnedTest;
   }
 
   async updateTest(test: testEntity, editedTest: testEntity) {
@@ -141,6 +139,11 @@ export class TestService {
     existingTest.owner_name = editedTest.owner_name;
     existingTest.time_end = editedTest.time_end;
     existingTest.time_start = editedTest.time_start;
+
+    // todo participating in tests
+    // todo results page
+    // todo time left view
+    // todo check if exam has already started
     await this.testRepository.save(existingTest);
     return editedTest;
   }

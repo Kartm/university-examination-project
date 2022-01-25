@@ -11,7 +11,7 @@ export class participantEntity{
     @Column({ nullable: true })
     test_id: number;
 
-    @OneToOne(() => testEntity)
+    @OneToOne(() => testEntity, {eager: true})
     @JoinColumn({ name: "test_id" })
     test: testEntity;
 

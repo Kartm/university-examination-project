@@ -53,14 +53,15 @@ const SettingsScreen = () => {
 
   function onNextButtonClicked() {
     // convert component's state to something backend will understand
-
+    console.log(startTime, endTime)
+    // .replace('T',' ').replace('-','/')
     const update: UpdateExamSettings = {
       test_id: testOwnerUuid,
       name: testName,
       owner_name: ownerName,
       owner_email: ownerEmail,
-      time_start: startTime,
-      time_end: endTime,
+      time_start: new Date(startTime).toISOString(), // 2022-01-25T08:32  to 2022-01-25T10:27:00.000Z
+      time_end: new Date(endTime).toISOString(),
       settings: {
         settings_id: examState.exam.settings.settings_id,
         show_points_per_question: selectedOptions.includes('Display points per question'),

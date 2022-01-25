@@ -42,6 +42,8 @@ export const getExam = async (uuid: string): Promise<APIResponse<LocalExam>> => 
     name: examFromBackend.name,
     owner_name: examFromBackend.owner_name,
     owner_email: examFromBackend.owner_email,
+    time_end: examFromBackend.time_end,
+    time_start: examFromBackend.time_start,
     settings: settings,
     questions: mergedQuestionsWithChoices
   }

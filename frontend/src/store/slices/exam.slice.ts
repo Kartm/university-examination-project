@@ -7,7 +7,7 @@ import {
   Settings
 } from "../../models/exam.model";
 import {
-  apiCreateExam, apiGetParticipantByLinkUuid,
+  apiCreateExam, apiGetParticipantByLinkUuid, apiGetExamResults,
   apiPublishExam, apiSendParticipantAnswers, apiUpdateExamParticipants, apiUpdateExamQuestions, apiUpdateExamSettings,
   getExam
 } from "../../services/exam.service";
@@ -15,6 +15,7 @@ import {
 export interface State {
   exam: LocalExam | null,
   participant: Participant | null,
+  examResults: ExamResults | null,
 }
 
 export interface UpdateExamSettings {
@@ -36,6 +37,20 @@ export interface UpdateExamQuestions {
   testId: string;
 }
 
+export interface ExamSpecificResult {
+  participant: Participant,
+  questionResults: {
+    answerTexts: string[],
+    points: number,
+    questionText: string;
+  }[]
+}
+
+export interface ExamResults {
+  results: ExamSpecificResult[],
+  test: Exam
+}
+
 export const questionToLocalQuestion = (q: Question, questionChoices: QuestionChoice[]): LocalQuestion => (
   {
     question_id: q.question_id,
@@ -50,6 +65,7 @@ const slice = createSlice({
   initialState: {
     exam: null,
     participant: null,
+    examResults: null,
   } as State,
   reducers: {
     setExam: (state, action) => {
@@ -58,11 +74,14 @@ const slice = createSlice({
     setParticipant: (state, action) => {
       state.participant = action.payload;
     },
+    setExamResults: (state, action) => {
+      state.examResults = action.payload;
+    },
   },
 });
 export default slice.reducer;
 
-const { setExam, setParticipant} = slice.actions;
+const { setExam, setParticipant, setExamResults} = slice.actions;
 export const createExam = () => async (dispatch) => {
   try {
     const exam = await apiCreateExam();
@@ -125,6 +144,14 @@ export const updateExamQuestions = (update: UpdateExamQuestions) => async (dispa
   try {
     await apiUpdateExamQuestions(update);
     return true;
+  } catch (e) {
+    return console.error(e.message);
+  }
+};
+export const getExamResults = (test_id: string) => async (dispatch) => {
+  try {
+    const results = await apiGetExamResults(test_id);
+    return dispatch(setExamResults(results.data));
   } catch (e) {
     return console.error(e.message);
   }

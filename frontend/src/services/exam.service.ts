@@ -9,6 +9,7 @@ import {
 } from "../models/exam.model";
 import {patch, put, post, get} from "./utils.service";
 import {
+  ExamResults,
   questionToLocalQuestion,
   UpdateExamParticipants,
   UpdateExamQuestions,
@@ -260,4 +261,16 @@ export const apiPublishExam = async (test_id: string): Promise<APIResponse<any>>
     message: [],
     data: response
   } as APIResponse<any>;
+};
+
+export const apiGetExamResults = async (participant_id: string): Promise<APIResponse<ExamResults>> => {
+  const req = await get(`/results/${participant_id}/`);
+
+  const response = (await req.json()).data
+
+  return {
+    statusCode: 200,
+    message: [],
+    data: response
+  } as APIResponse<ExamResults>;
 };

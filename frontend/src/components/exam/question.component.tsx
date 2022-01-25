@@ -100,12 +100,12 @@ const QuestionComponent = ({localQuestion, showPoints, visible, onValidChange, o
                   type={localQuestion.question_type === 'SINGLE_CHOICE' ? "radio" : "checkbox"}
                   required={localQuestion.question_type === 'SINGLE_CHOICE'}
                   name={localQuestion.question_id}
-                  id={i.toString()}
+                  id={localQuestion.question_id + i}
                   onChange={() => {
                     localQuestion.question_type === 'SINGLE_CHOICE' ? onRadioChange(choice.questionChoice_id) : onCheckboxChange(choice.questionChoice_id)
                   }}
                 />
-                <Label htmlFor={i.toString()}>{choice.text}</Label>
+                <Label htmlFor={localQuestion.question_id + i}>{choice.text}</Label>
               </div>
             )
         }

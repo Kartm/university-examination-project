@@ -79,11 +79,11 @@ const ParticipateQuestionsScreen = () => {
   }
 
   function goSubmit() {
-    if (invalidQuestionIds.length > 0) {
-      console.log(invalidQuestionIds)
-      alert("You must answer all questions!");
-      return;
-    }
+    // if (invalidQuestionIds.length > 0) {
+    //   console.log(invalidQuestionIds)
+    //   alert("You must answer all questions!");
+    //   return;
+    // }
 
     // @ts-ignore
     dispatch(sendQuestionAnswers(questionAnswers, examState.participant.participant_id)).then(x => {

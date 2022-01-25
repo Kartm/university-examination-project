@@ -21,6 +21,7 @@ export class QuestionAnswerService
 
      addQuestionAnswer(questionAnswer: questionAnswerEntity) {
       // todo handle text answers
+      //  const question =
 
         return this.repository.save(questionAnswer)
     }

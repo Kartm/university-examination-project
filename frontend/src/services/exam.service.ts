@@ -212,7 +212,7 @@ export const apiGetParticipantByLinkUuid = async (link_uuid: string): Promise<AP
 export const apiSendParticipantAnswers = async (answers: LocalQuestionAnswer[], participant_uuid: string): Promise<APIResponse<QuestionAnswer[]>> => {
   const questionAnswers: QuestionAnswer[] = []
 
-  answers.forEach((localAnswer) => {
+  for (const localAnswer of answers) {
 
 
     localAnswer.question_choice_ids.forEach(qc_id => {
@@ -225,8 +225,20 @@ export const apiSendParticipantAnswers = async (answers: LocalQuestionAnswer[], 
       questionAnswers.push(answer)
     })
 
+    if(localAnswer.answer_text !== '') {
+      const answerTextQuestionChoicePromise = await get(`/questionChoice/question/${localAnswer.question_id}/?answer_text=${localAnswer.answer_text}`)
+      const answerTextQuestionChoice = (await answerTextQuestionChoicePromise.json()).data as QuestionChoice
 
-  })
+      const answer: QuestionAnswer = {
+        questionChoiceId: answerTextQuestionChoice.questionChoice_id,
+        participant_id: participant_uuid,
+        answer_text: localAnswer.answer_text,
+      }
+
+      questionAnswers.push(answer)
+    }
+
+  }
 
   const questionAnswerPromises = questionAnswers.map(qa => post(`/questionAnswer/`, qa))
 
